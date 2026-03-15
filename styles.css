@@ -272,6 +272,13 @@ a {
   margin: 0 auto 3rem;
 }
 
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -295,6 +302,34 @@ a {
 }
 
 .btn-primary svg {
+  transition: transform 0.3s;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 1.25rem 3rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+.btn-secondary:hover svg {
+  transform: translateY(3px);
+}
+
+.btn-secondary svg {
   transition: transform 0.3s;
 }
 
