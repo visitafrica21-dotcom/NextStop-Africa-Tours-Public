@@ -258,7 +258,7 @@ a {
 }
 
 .hero-title {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(1.5rem, 3.5vw, 2.75rem);
   font-weight: 700;
   font-style: italic;
   line-height: 1.1;
@@ -543,7 +543,58 @@ a {
 /* Pricing Section */
 .pricing-section {
   padding: 8rem 0;
+  background-color: var(--card-bg);
+  border-top: 1px solid rgba(217, 210, 199, 0.4);
+}
+
+/* Why Choose Us */
+.why-choose-us-section {
+  padding: 8rem 0;
   background-color: var(--bg);
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+@media (min-width: 768px) {
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .why-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.why-item {
+  text-align: center;
+  padding: 2.5rem;
+  background-color: var(--card-bg);
+  border: 1px solid rgba(217, 210, 199, 0.4);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+
+.why-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+  border-color: rgba(200, 75, 49, 0.3);
+}
+
+.why-icon {
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  width: 48px;
+  height: 48px;
+}
+
+.why-item h3 {
+  font-size: 1.125rem;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 600;
 }
 
 .pricing-icon {
