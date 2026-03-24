@@ -19,8 +19,8 @@ jobs:
       # Replicate files to public repo
       - name: Replicate Content
         run: |
-          # Use rsync to synchronize everything except .git and .github
-          rsync -av --delete --exclude '.git' --exclude '.github' ./ out/
+          # Use rsync to synchronize everything except .git, .github and the 'out' folder
+          rsync -av --delete --exclude '.git' --exclude '.github' --exclude 'out' ./ out/
 
       # Push to public repo
       - name: Deploy
