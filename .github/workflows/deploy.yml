@@ -9,32 +9,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the private repo
+      # 1. Checkout private repo
       - uses: actions/checkout@v4
 
-      # 2. Build artifacts (for simple static site, copy HTML/CSS/JS)
-      - name: Prepare build folder
+      # 2. Install Node.js (for minification)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # 3. Install minifiers
+      - name: Install terser and csso
+        run: |
+          npm install -g terser csso-cli
+
+      # 4. Prepare build folder
+      - name: Minify files
         run: |
           mkdir build
-          cp -r *.html *.css *.js build/
+          # Copy HTML as-is
+          cp *.html build/
+          # Minify JS
+          for f in *.js; do terser "$f" -c -m -o "build/$f"; done
+          # Minify CSS
+          for f in *.css; do csso "$f" --output "build/$f"; done
 
-      # 3. Clone public repo into temp folder
+      # 5. Clone public repo
       - name: Clone public repo
         run: |
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
 
-      # 4. Copy built artifacts into public repo
-      - name: Copy artifacts
+      # 6. Copy minified build into public repo
+      - name: Copy build to public repo
         run: |
           rm -rf out/*
           cp -r build/* out/
 
-      # 5. Commit & push to public repo
+      # 7. Commit & push
       - name: Deploy
         run: |
           cd out
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Deploy from private repo" || echo "No changes to commit"
+          git commit -m "Deploy minified site" || echo "No changes to commit"
           git push
