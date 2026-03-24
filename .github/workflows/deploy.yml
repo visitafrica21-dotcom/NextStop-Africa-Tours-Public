@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Push to public repo
         run: |
-          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/USER/PUBLIC-REPO.git out
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
           cp -r * out/
           cd out
           git config user.name "github-actions"
