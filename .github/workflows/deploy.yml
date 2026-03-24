@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Replicate to Public Repo
 
 on:
   push:
@@ -11,46 +11,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # Install minifiers
-      - name: Install minifiers
-        run: |
-          npm install -g terser csso html-minifier
-
-      # Prepare build folder
-      - name: Install minifiers
-        run: |
-          npm install terser csso html-minifier
-      - name: Minify files and copy assets
-        run: |
-          mkdir build
-          # Minify HTML
-          for f in *.html; do npx html-minifier "$f" -o "build/$f" --collapse-whitespace --remove-comments --minify-css true --minify-js true; done
-          # Minify JS
-          for f in *.js; do npx terser "$f" -c -m -o "build/$f"; done
-          # Minify CSS
-          for f in *.css; do npx csso "$f" --output "build/$f"; done
-          # Copy images
-          cp -r images build/
-
       # Clone public repo
       - name: Clone public repo
         run: |
           git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
 
-      # Copy build to public repo
+      # Replicate files to public repo
+      - name: Replicate Content
+        run: |
+          # Use rsync to synchronize everything except .git and .github
+          rsync -av --delete --exclude '.git' --exclude '.github' ./ out/
+
+      # Push to public repo
       - name: Deploy
         run: |
-          rm -rf out/*
-          cp -r build/* out/
           cd out
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add .
-          git commit -m "Deploy minified site with images" || echo "No changes to commit"
-          git push
+          git commit -m "Replicate private repo content" || echo "No changes to commit"
+          git push
