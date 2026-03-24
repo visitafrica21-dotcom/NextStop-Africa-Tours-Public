@@ -11,11 +11,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Push to public repo
         run: |
-          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
-          cp -r * out/
-          cd out
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "deploy" || echo "no changes"
-          git push
+              git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
+              shopt -s extglob  # if using bash
+              cp -r !(out) out/
+              cd out
+              git config user.name "github-actions"
+              git config user.email "actions@github.com"
+              git add .
+              git commit -m "deploy" || echo "no changes"
+              git push
