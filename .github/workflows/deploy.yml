@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push to public repo
+        run: |
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/USER/PUBLIC-REPO.git out
+          cp -r * out/
+          cd out
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "deploy" || echo "no changes"
+          git push
