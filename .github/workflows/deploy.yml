@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -7,16 +7,34 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout the private repo
       - uses: actions/checkout@v4
-      - name: Push to public repo
+
+      # 2. Build artifacts (for simple static site, copy HTML/CSS/JS)
+      - name: Prepare build folder
         run: |
-              git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
-              shopt -s extglob  # if using bash
-              cp -r !(out) out/
-              cd out
-              git config user.name "github-actions"
-              git config user.email "actions@github.com"
-              git add .
-              git commit -m "deploy" || echo "no changes"
-              git push
+          mkdir build
+          cp -r *.html *.css *.js build/
+
+      # 3. Clone public repo into temp folder
+      - name: Clone public repo
+        run: |
+          git clone https://x-access-token:${{ secrets.TOKEN }}@github.com/visitafrica21-dotcom/NextStop-Africa-Tours-Public.git out
+
+      # 4. Copy built artifacts into public repo
+      - name: Copy artifacts
+        run: |
+          rm -rf out/*
+          cp -r build/* out/
+
+      # 5. Commit & push to public repo
+      - name: Deploy
+        run: |
+          cd out
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy from private repo" || echo "No changes to commit"
+          git push
