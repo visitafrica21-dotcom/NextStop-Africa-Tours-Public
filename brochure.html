@@ -1414,15 +1414,15 @@
   <nav id="navbar" class="navbar">
     <div class="container nav-container">
       <div class="logo-container">
-        <a href="index.html" class="logo">VISIT AFRICA</a>
-        <span id="logo-subtitle" class="logo-subtitle">Tours & Travel</span>
+        <a href="index.html" class="logo">NextStop Africa</a>
+        <span id="logo-subtitle" class="logo-subtitle">Tours Agency</span>
       </div>
 
       <div class="nav-links">
         <a href="index.html#destinations">Tourism Activities</a>
         <a href="index.html#destinations">Destinations</a>
         <a href="index.html#about">About</a>
-        <a href="#contact" class="btn-inquire">Inquire Now</a>
+        <a href="#contact-form" class="btn-inquire">Inquire Now</a>
       </div>
 
       <button id="mobile-menu-btn" class="mobile-menu-btn">
@@ -1440,7 +1440,7 @@
       <a href="index.html#destinations" class="mobile-link">Tourism Activities</a>
       <a href="index.html#destinations" class="mobile-link">Destinations</a>
       <a href="index.html#about" class="mobile-link">About</a>
-      <a href="#contact" class="btn-inquire mobile-inquire">Inquire Now</a>
+      <a href="#contact-form" class="btn-inquire mobile-inquire">Inquire Now</a>
     </div>
   </nav>
 
@@ -1917,6 +1917,42 @@
       </div>
     </div>
   </div>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact-form">
+    <div class="container">
+      <div class="contact-wrapper">
+        <div class="contact-header text-center">
+          <h2 class="section-title">Get in Touch</h2>
+          <p class="section-desc">Ready to explore Africa? Send us your details and we'll be in touch within 24 hours to discuss your dream adventure.</p>
+        </div>
+        
+        <form class="contact-form" action="https://formspree.io/f/meepakev" method="POST">
+          <div class="form-group">
+            <label for="contact-name" class="form-label">Your Name *</label>
+            <input type="text" id="contact-name" name="name" class="form-input" placeholder="Enter your full name" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="contact-email" class="form-label">Your Email *</label>
+            <input type="email" id="contact-email" name="email" class="form-input" placeholder="Enter your email address" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="contact-phone" class="form-label">Phone Number</label>
+            <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="Optional: Your phone number">
+          </div>
+          
+          <div class="form-group">
+            <label for="contact-message" class="form-label">Tell Us About Your Dream Trip *</label>
+            <textarea id="contact-message" name="message" class="form-textarea" placeholder="Destination, dates, group size, activities, and any special requests..." rows="6" required></textarea>
+          </div>
+          
+          <button type="submit" class="btn-submit">Send My Enquiry ✈️</button>
+        </form>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <p>© 2026 <span>NextStop Africa Tours Agency</span> — Explore Africa's Beauty, Culture & Adventure</p>

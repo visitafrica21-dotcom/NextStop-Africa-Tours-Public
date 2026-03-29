@@ -818,3 +818,134 @@ a {
   }
 }
 
+
+/* Contact Section */
+.contact-section {
+  padding: 6rem 0;
+  background-color: var(--bg);
+  border-top: 1px solid rgba(217, 210, 199, 0.5);
+  border-bottom: 1px solid rgba(217, 210, 199, 0.5);
+}
+
+.contact-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.contact-header {
+  margin-bottom: 3rem;
+}
+
+.contact-header .section-title {
+  margin-bottom: 1rem;
+  color: var(--fg);
+}
+
+.contact-header .section-desc {
+  color: var(--muted-fg);
+  font-size: 1rem;
+}
+
+.contact-form {
+  background-color: var(--card-bg);
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--fg);
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  background-color: #FAFAF8;
+  color: var(--fg);
+  transition: all 0.3s ease;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--muted-fg);
+  opacity: 0.7;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--card-bg);
+  box-shadow: 0 0 0 3px rgba(200, 75, 49, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 1.25rem;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.btn-submit:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -5px rgba(200, 75, 49, 0.3);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 4rem 0;
+  }
+
+  .contact-form {
+    padding: 2rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    padding: 0.875rem;
+    font-size: 16px;
+  }
+
+  .btn-submit {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+}
