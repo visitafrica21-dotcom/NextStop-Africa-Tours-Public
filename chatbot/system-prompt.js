@@ -29,6 +29,14 @@ export function buildSystemPrompt() {
     .map(p => `  - ${p.filename} (${p.url}): ${p.description}`)
     .join('\n')
 
+  const whyChooseUs = kb.whyChooseUs
+    .map(item => `  - ${item.title}: ${item.description}`)
+    .join('\n')
+
+  const wildlifeActivities = kb.tourismActivities.wildlifeAndNature.activities.join(', ')
+  const adventureActivities = kb.tourismActivities.adventureAndOutdoor.activities.join(', ')
+  const culturalActivities = kb.tourismActivities.culturalAndHistorical.activities.join(', ')
+
   const destinationNames = kb.destinations.map(d => d.name).join(', ')
   const serviceNames = kb.services.map(s => s.name).join(', ')
 
@@ -87,6 +95,30 @@ ${destinationNames}
 
 COMPLETE LIST OF SERVICE NAMES — you may ONLY refer to these:
 ${serviceNames}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ABOUT ${kb.business.name}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Mission: ${kb.aboutUs.mission}
+
+Our Story: ${kb.aboutUs.story}
+
+Our Impact: ${kb.aboutUs.impact}
+
+WHY CHOOSE ${kb.business.name}?
+${whyChooseUs}
+
+TOURISM ACTIVITIES AVAILABLE:
+
+Wildlife & Nature:
+${wildlifeActivities}
+
+Adventure & Outdoor Activities:
+${adventureActivities}
+
+Cultural & Historical Activities:
+${culturalActivities}
 
 BOOKING INFORMATION:
 - How to book: ${kb.bookingInfo.howToBook}

@@ -204,5 +204,119 @@ export const kb = {
       'We cater to solo travellers, couples, families, and groups of any size.',
     paymentMethods:
       'Bank transfer, mobile money, and major credit cards accepted.' // ← UPDATE
+  },
+
+  aboutUs: {
+    mission: 'We are a people-centred tourism company creating authentic African experiences. Our mission is to connect travelers with the real Africa — its people, cultures, nature, and history — through professionally guided tours and fully tailor-made packages.',
+    story: 'From lush rainforests to golden deserts, from gorillas to ancient kingdoms, Africa offers the world\'s most diverse and authentic travel experiences. Our company connects you to nature, culture, and adventure with professionally guided tours and tailor-made packages.',
+    impact: 'Every journey leaves a deeper understanding of who we are and what we aspire to become as a continent.'
+  },
+
+  whyChooseUs: [
+    {
+      title: 'People-Centred',
+      description: 'We put people first — including our clients and the communities we visit. Every tour supports local guides, businesses, and families.'
+    },
+    {
+      title: 'Authentic Experiences',
+      description: 'We don\'t do tourist traps. We connect you with real Africa — its true culture, genuine communities, and unfiltered beauty.'
+    },
+    {
+      title: 'Expert Local Guides',
+      description: 'Our professionally trained guides know Africa intimately. They know its stories, secrets, and the best moments to be in the right place.'
+    },
+    {
+      title: 'Fully Tailor-Made',
+      description: 'Choose your country, your activities, your pace, your budget. We build the journey around you, not the other way around.'
+    },
+    {
+      title: 'All Budget Levels',
+      description: 'From budget-conscious explorers to luxury seekers, we have beautifully crafted packages for every type of traveller.'
+    },
+    {
+      title: 'Responsible Tourism',
+      description: 'We travel with purpose. Our tours minimise environmental impact, support conservation, and give back to local communities.'
+    }
+  ],
+
+  tourismActivities: {
+    wildlifeAndNature: {
+      category: 'Wildlife & Nature',
+      activities: [
+        'Safari game drives',
+        'Walking safaris',
+        'Birdwatching',
+        'Whale watching',
+        'Gorilla trekking',
+        'Chimpanzee trekking',
+        'Elephant tracking',
+        'Wildlife photography',
+        'Night safaris',
+        'Canoe safaris',
+        'River cruises',
+        'Wildlife sanctuaries',
+        'National parks exploration',
+        'Botanical gardens'
+      ]
+    },
+    adventureAndOutdoor: {
+      category: 'Adventure & Outdoor Activities',
+      activities: [
+        'Hiking',
+        'Mountain climbing',
+        'Rock climbing',
+        'Dune bashing',
+        'Camel trekking',
+        'Horseback riding',
+        'Mountain biking',
+        'Ziplining',
+        'Paragliding',
+        'Skydiving',
+        'Bungee jumping',
+        'Camping',
+        'Quad biking (ATV)',
+        'Hot-air balloon rides'
+      ]
+    },
+    culturalAndHistorical: {
+      category: 'Cultural & Historical Activities',
+      activities: [
+        'Historical monuments',
+        'Museums',
+        'Ancient ruins',
+        'Old cities and medinas',
+        'UNESCO heritage sites',
+        'Cultural festivals',
+        'Traditional dance',
+        'Traditional villages',
+        'Storytelling nights'
+      ]
+    }
+  },
+
+  indexPageContent: {
+    heroTitle: 'Explore Africa\'s Beauty, Culture & Adventure',
+    heroDescription: 'From lush rainforests to golden deserts, from gorillas to ancient kingdoms, Africa offers the world\'s most diverse and authentic travel experiences.',
+    whatYouCanDoText: 'From thrilling safaris to ancient cultural encounters, Africa offers experiences found nowhere else on Earth.',
+    destinationsIntroText: 'We specialize in unforgettable travel experiences across Africa\'s most iconic landscapes.',
+    callToAction: 'View our detailed brochure for full itineraries, package options, and pricing information for all our destinations.'
+  },
+
+  brochurePageContent: {
+    title: 'Africa Tour Packages & Pricing Brochure',
+    description: 'Complete packages with detailed itineraries, day-by-day journey plans, pricing for all budget levels (Budget, Standard, Luxury), and customizable options for each African destination we offer.',
+    sections: [
+      'Hero Section: Company introduction and value proposition',
+      'Countries Banner: Clickable navigation to each destination\'s journey plans',
+      'Our Story: About NextStop Africa Tours Agency',
+      'Day-by-Day Journey Plans: Detailed itineraries for Uganda, Algeria, Benin, Kenya, Tanzania, Morocco, Rwanda, and Other African Countries',
+      'Pricing Table: Complete pricing for Budget, Standard, and Luxury packages across all destinations',
+      'Ready to Explore Africa Section: Contact information and inquiry form for bookings'
+    ],
+    packageTiers: {
+      budget: 'Affordable options for cost-conscious travelers with comfortable accommodations and activities',
+      standard: 'Mid-range packages balancing comfort and experience for most travelers',
+      luxury: 'Premium packages with high-end accommodations and VIP experiences'
+    }
   }
 }
