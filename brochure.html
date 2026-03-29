@@ -1406,24 +1406,24 @@
       }
     }
 
-    /* Contact Form Section Styling */
-    #contact-form.contact-section {
+    /* Contact Section */
+    .contact-section {
       padding: 6rem 0;
       background-color: var(--cream);
       border-top: 1px solid rgba(20, 17, 16, 0.1);
-      border-bottom: 1px solid rgba(20, 17, 17, 0.1);
+      border-bottom: 1px solid rgba(20, 17, 16, 0.1);
     }
 
-    #contact-form .contact-wrapper {
+    .contact-wrapper {
       max-width: 700px;
       margin: 0 auto;
     }
 
-    #contact-form .contact-header {
+    .contact-header {
       margin-bottom: 3rem;
     }
 
-    #contact-form .contact-header .section-title {
+    .contact-header .section-title {
       font-family: 'Playfair Display', serif;
       font-size: clamp(1.75rem, 4vw, 3rem);
       line-height: 1.3;
@@ -1431,27 +1431,27 @@
       color: var(--dark);
     }
 
-    #contact-form .contact-header .section-desc {
+    .contact-header .section-desc {
       color: #6B5B53;
       font-size: 1rem;
     }
 
-    #contact-form .contact-form {
+    .contact-form {
       background-color: white;
       padding: 3rem;
       border-radius: 8px;
       box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
     }
 
-    #contact-form .form-group {
+    .form-group {
       margin-bottom: 2rem;
     }
 
-    #contact-form .form-group:last-child {
+    .form-group:last-child {
       margin-bottom: 0;
     }
 
-    #contact-form .form-label {
+    .form-label {
       display: block;
       margin-bottom: 0.75rem;
       font-family: 'Playfair Display', serif;
@@ -1460,8 +1460,8 @@
       color: var(--dark);
     }
 
-    #contact-form .form-input,
-    #contact-form .form-textarea {
+    .form-input,
+    .form-textarea {
       width: 100%;
       padding: 1rem;
       border: 1px solid #D9D2C7;
@@ -1473,27 +1473,27 @@
       transition: all 0.3s ease;
     }
 
-    #contact-form .form-input::placeholder,
-    #contact-form .form-textarea::placeholder {
+    .form-input::placeholder,
+    .form-textarea::placeholder {
       color: #6B5B53;
       opacity: 0.7;
     }
 
-    #contact-form .form-input:focus,
-    #contact-form .form-textarea:focus {
+    .form-input:focus,
+    .form-textarea:focus {
       outline: none;
       border-color: #C84B31;
       background-color: white;
       box-shadow: 0 0 0 3px rgba(200, 75, 49, 0.1);
     }
 
-    #contact-form .form-textarea {
+    .form-textarea {
       resize: vertical;
       font-family: 'Plus Jakarta Sans', sans-serif;
       line-height: 1.6;
     }
 
-    #contact-form .btn-submit {
+    .btn-submit {
       width: 100%;
       padding: 1.25rem;
       background-color: #C84B31;
@@ -1509,34 +1509,105 @@
       margin-top: 1rem;
     }
 
-    #contact-form .btn-submit:hover {
+    .btn-submit:hover {
       background-color: #b33e24;
       transform: translateY(-2px);
       box-shadow: 0 10px 20px -5px rgba(200, 75, 49, 0.3);
     }
 
-    #contact-form .btn-submit:active {
+    .btn-submit:active {
       transform: translateY(0);
     }
 
     @media (max-width: 768px) {
-      #contact-form.contact-section {
+      .contact-section {
         padding: 4rem 0;
       }
 
-      #contact-form .contact-form {
+      .contact-form {
         padding: 2rem;
       }
 
-      #contact-form .form-input,
-      #contact-form .form-textarea {
+      .form-input,
+      .form-textarea {
         padding: 0.875rem;
         font-size: 16px;
       }
 
-      #contact-form .btn-submit {
+      .btn-submit {
         padding: 1rem;
         font-size: 0.95rem;
+      }
+    }
+
+    /* Countries Banner */
+    .countries-banner {
+      background: linear-gradient(135deg, #C84B31 0%, #b33e24 100%);
+      padding: 2rem 0;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .countries-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .banner-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 1rem;
+    }
+
+    .countries-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .country-link {
+      padding: 0.75rem 1.5rem;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .country-link:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 768px) {
+      .countries-banner {
+        padding: 1.5rem 0;
+      }
+
+      .banner-label {
+        font-size: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .countries-list {
+        gap: 0.5rem;
+      }
+
+      .country-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -1595,6 +1666,23 @@
       to nature, culture, and adventure with professionally guided tours and tailor-made packages.</p>
     <div class="scroll-hint"><span>Discover</span>
       <div class="arrow"></div>
+    </div>
+  </div>
+
+  <!-- Countries Banner -->
+  <div class="countries-banner">
+    <div class="countries-container">
+      <div class="banner-label">Explore Our Destinations</div>
+      <div class="countries-list">
+        <a href="#pricing-uganda" class="country-link">Uganda</a>
+        <a href="#pricing-tanzania" class="country-link">Tanzania</a>
+        <a href="#pricing-kenya" class="country-link">Kenya</a>
+        <a href="#pricing-rwanda" class="country-link">Rwanda</a>
+        <a href="#pricing-benin" class="country-link">Benin</a>
+        <a href="#pricing-morocco" class="country-link">Morocco</a>
+        <a href="#pricing-algeria" class="country-link">Algeria</a>
+        <a href="#pricing-other" class="country-link">More</a>
+      </div>
     </div>
   </div>
 
@@ -1707,49 +1795,49 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr id="pricing-uganda">
               <td>Uganda</td>
               <td class="budget-price">€830 – €1,200</td>
               <td class="standard-price">€1,290 – €1,840</td>
               <td class="luxury-price">€7,000 – €15,000</td>
             </tr>
-            <tr>
+            <tr id="pricing-tanzania">
               <td>Tanzania</td>
               <td class="budget-price">€1,100 – €1,660</td>
               <td class="standard-price">€1,840 – €2,760</td>
               <td class="luxury-price">€7,220 – €15,060</td>
             </tr>
-            <tr>
+            <tr id="pricing-kenya">
               <td>Kenya</td>
               <td class="budget-price">€1,010 – €1,560</td>
               <td class="standard-price">€1,750 – €2,580</td>
               <td class="luxury-price">€9,940 – €15,420</td>
             </tr>
-            <tr>
+            <tr id="pricing-rwanda">
               <td>Rwanda</td>
               <td class="budget-price">€1,470 – €2,120</td>
               <td class="standard-price">€2,300 – €3,220</td>
               <td class="luxury-price">€7,680 – €15,520</td>
             </tr>
-            <tr>
+            <tr id="pricing-benin">
               <td>Benin</td>
               <td class="budget-price">€640 – €1,010</td>
               <td class="standard-price">€1,100 – €1,660</td>
               <td class="luxury-price">€6,020 – €10,220</td>
             </tr>
-            <tr>
+            <tr id="pricing-morocco">
               <td>Morocco</td>
               <td class="budget-price">€550 – €920</td>
               <td class="standard-price">€1,100 – €1,750</td>
               <td class="luxury-price">€6,300 – €13,680</td>
             </tr>
-            <tr>
+            <tr id="pricing-algeria">
               <td>Algeria</td>
               <td class="budget-price">€740 – €1,100</td>
               <td class="standard-price">€1,200 – €1,840</td>
               <td class="luxury-price">€7,300 – €13,680</td>
             </tr>
-            <tr style="background:rgba(200,75,49,0.06)">
+            <tr id="pricing-other" style="background:rgba(200,75,49,0.06)">
               <td>Other African Countries</td>
               <td class="budget-price">Custom Quote</td>
               <td class="standard-price">Custom Quote</td>
@@ -2035,15 +2123,11 @@
     <div class="contact-cards">
       <div class="contact-card"><span class="icon">✉️</span>
         <div class="info"><label>Email Us</label><span><a
-              href="mailto:visitafrica21@gmail.com">visitafrica21@gmail.com</a></span></div>
+              href="mailto:inquire@visitafricatt.com">inquire@visitafricatt.com</a></span></div>
       </div>
       <div class="contact-card"><span class="icon">📱</span>
         <div class="info"><label>Call Us</label><span><a href="tel:+256770307890">+256 770 307890</a> · <a
               href="tel:+32476821973">+32 476 821973</a></span></div>
-      </div>
-      <div class="contact-card"><span class="icon"></span>
-        <div class="info"><label>We Cover</label><span>Uganda · Tanzania · Kenya · Rwanda · Benin · Morocco · Algeria ·
-            More</span></div>
       </div>
       <div class="contact-card"><span class="icon">📅</span>
         <div class="info"><label>All Year Round</label><span>Tours available every month. We guide on timing</span>
