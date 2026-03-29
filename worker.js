@@ -42,6 +42,8 @@ export default {
 
     // ── Call Workers AI ─────────────────────────────────────────────────────
     try {
+      console.log(system.slice(0, 200))
+
       const aiResponse = await env.chatbot_llm_binding.run(
         '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
         {
