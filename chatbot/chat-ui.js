@@ -1,7 +1,7 @@
 /**
  * chat-ui.js
  * ──────────
- * Self-contained chat widget module for Visit Africa 21.
+ * Self-contained chat widget module for NextStop Africa Tours Agency.
  * Injects the bubble, panel, and all interaction logic into document.body.
  * No external libraries — vanilla JS + ES modules only.
  */
@@ -19,7 +19,7 @@ const QUICK_REPLIES = [
 ]
 
 const GREETING =
-  "Hi there 😊 I'm Miremba, the Visit Africa 21 site assistant. " +
+  "Hi there 😊 I'm Miremba, the NextStop Africa Tours Agency site assistant. " +
   "I can help you explore our destinations, services, and tours. " +
   "What would you like to know?"
 
@@ -80,7 +80,7 @@ function injectHTML() {
           <div class="vaf-header-name">Miremba (Site Assistant)</div>
           <div class="vaf-header-status">
             <span class="vaf-status-dot"></span>
-            Online · Visit Africa 21
+            Online · NextStop Africa Tours Agency
           </div>
         </div>
       </div>

@@ -110,7 +110,7 @@ export function checkForLeadCapture(responseText, messageListEl, inputAreaEl, on
           'Content-Type': 'application/json',
           Accept: 'application/json'
         },
-        body: JSON.stringify({ name, email, message, _subject: 'New Visit Africa 21 Enquiry' })
+        body: JSON.stringify({ name, email, message, _subject: 'New NextStop Africa Tours Agency Enquiry' })
       })
 
       if (res.ok) {
@@ -119,11 +119,11 @@ export function checkForLeadCapture(responseText, messageListEl, inputAreaEl, on
         throw new Error('Formspree responded with an error')
       }
     } catch (err) {
-      console.error('[Visit Africa Chat] Lead capture error:', err)
+      console.error('[NextStop Africa Chat] Lead capture error:', err)
       submitBtn.textContent = 'Send My Enquiry ✈️'
       submitBtn.disabled = false
       errorEl.textContent =
-        'Something went wrong. Please email us directly at visitafrica21@gmail.com'
+        'Something went wrong. Please email us directly at nexttopafrica@gmail.com'
       errorEl.style.display = 'block'
     }
   })

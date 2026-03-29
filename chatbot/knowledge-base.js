@@ -11,7 +11,7 @@
 export const kb = {
 
   business: {
-    name: 'Visit Africa 21',
+    name: 'NextStop Africa Tours Agency',
     tagline: "Explore Africa's Beauty, Culture & Adventure",
     description:
       'A people-centred tourism company creating authentic African travel experiences. ' +
