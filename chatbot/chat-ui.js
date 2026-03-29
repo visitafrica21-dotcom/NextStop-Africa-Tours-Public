@@ -19,9 +19,9 @@ const QUICK_REPLIES = [
 ]
 
 const GREETING =
-  "🌍 Jambo! I'm Amara, your Visit Africa 21 travel guide. " +
-  "Whether you're dreaming of gorillas in Uganda, safaris in the Serengeti, " +
-  "or the sands of the Sahara — I'm here to help. What can I plan for you today?"
+  "Hi there 😊 I'm Miremba, the Visit Africa 21 site assistant. " +
+  "I can help you explore our destinations, services, and tours. " +
+  "What would you like to know?"
 
 // ── State ────────────────────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ function injectHTML() {
       <div class="vaf-header">
         <div class="vaf-header-avatar" aria-hidden="true">🦁</div>
         <div class="vaf-header-text">
-          <div class="vaf-header-name">Amara — Africa Travel Guide</div>
+          <div class="vaf-header-name">Miremba (Site Assistant)</div>
           <div class="vaf-header-status">
             <span class="vaf-status-dot"></span>
             Online · Visit Africa 21
@@ -224,7 +224,7 @@ async function handleSend() {
       leadCaptureActive = false
       resetLeadCapture(inputArea)
       const confirmMsg =
-        `Thanks ${name}! We'll be in touch within 24 hours. 🌍 ` +
+        `Thanks ${name}! We'll be in touch within 24 hours. ` +
         `Is there anything else I can help you with?`
       appendBotMessage(confirmMsg)
       history.push({ role: 'assistant', content: confirmMsg })
@@ -285,7 +285,11 @@ function appendUserMessage(text) {
 }
 
 function appendBotMessage(text) {
-  const msg = createMessageEl('bot', text)
+  // Strip markdown bold/italic markers (**text** and *text*) before rendering
+  const cleaned = text
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\*([^*]+)\*/g, '$1')
+  const msg = createMessageEl('bot', cleaned)
   messageList.appendChild(msg)
   scrollToBottom()
 }
@@ -317,7 +321,7 @@ function showTyping() {
   if (typingEl) return
   typingEl = document.createElement('div')
   typingEl.className = 'vaf-typing'
-  typingEl.setAttribute('aria-label', 'Amara is typing')
+  typingEl.setAttribute('aria-label', 'Miremba is typing')
   typingEl.innerHTML = `
     <span class="vaf-typing-dot"></span>
     <span class="vaf-typing-dot"></span>
