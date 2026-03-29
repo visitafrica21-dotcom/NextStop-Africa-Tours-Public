@@ -1,0 +1,8 @@
+{
+  "name": "nextstop-africa-tours-public",
+  "main": "worker.js",
+  "compatibility_date": "2025-01-01",
+  "ai": {
+    "binding": "chatbot_llm_binding"
+  }
+}
