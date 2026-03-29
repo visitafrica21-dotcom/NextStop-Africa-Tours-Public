@@ -45,10 +45,12 @@ export default {
       const aiResponse = await env.chatbot_llm_binding.run(
         '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
         {
-          system,
-          messages,
-          temperature: 0.3,       // Lower temperature = more deterministic, less creative
-          max_tokens: 1024        // Limit output length to force concise responses
+          messages: [
+            { role: "system", content: system },
+            ...messages
+          ],
+          temperature: 0.3,
+          max_tokens: 1024
         }
       )
 
