@@ -29,11 +29,19 @@ export async function sendMessage(history) {
   }
 
   try {
+    const prompt = buildSystemPrompt()
+
+    // ── DEBUG — remove this block once system prompt is confirmed working ──
+    console.log('[DEBUG] System prompt length:', prompt ? prompt.length : 'EMPTY/UNDEFINED')
+    console.log('[DEBUG] System prompt preview:', prompt ? prompt.slice(0, 300) : 'NOTHING')
+    console.log('[DEBUG] Messages being sent:', JSON.stringify(history, null, 2))
+    // ───────────────────────────────────────────────────────────────────────
+
     const res = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: buildSystemPrompt(),
+        system: prompt,
         messages: history
       })
     })
@@ -43,6 +51,11 @@ export async function sendMessage(history) {
     }
 
     const data = await res.json()
+
+    // ── DEBUG — log raw AI response ─────────────────────────────────────────
+    console.log('[DEBUG] Raw AI response:', JSON.stringify(data, null, 2))
+    // ───────────────────────────────────────────────────────────────────────
+
     return data
   } catch (err) {
     console.error('[Visit Africa Chat] Worker error:', err)
