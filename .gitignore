@@ -5,3 +5,10 @@ server/public
 vite.config.ts.*
 *.tar.gz
 .github/*
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
