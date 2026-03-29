@@ -70,4 +70,39 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Contact Form Submission Handler
+  const contactForms = document.querySelectorAll('.contact-form');
+  contactForms.forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Get form data
+      const formData = new FormData(form);
+      
+      try {
+        // Submit to Formspree
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          // Show confirmation message
+          alert('Thank you for your inquiry! We\'ll be in touch within 24 hours to discuss your dream African adventure.');
+          
+          // Clear form fields
+          form.reset();
+        } else {
+          alert('There was an issue sending your message. Please try again.');
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        alert('There was an error sending your message. Please try again.');
+      }
+    });
+  });
 });

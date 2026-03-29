@@ -64,7 +64,7 @@ export function checkForLeadCapture(responseText, messageListEl, inputAreaEl, on
         required
       ></textarea>
       <button type="submit" class="vaf-lead-submit">
-        Send My Enquiry ✈️
+        Send My Inquiry ✈️
       </button>
       <p class="vaf-lead-error" style="display:none;"></p>
     </form>
@@ -120,7 +120,7 @@ export function checkForLeadCapture(responseText, messageListEl, inputAreaEl, on
       }
     } catch (err) {
       console.error('[NextStop Africa Chat] Lead capture error:', err)
-      submitBtn.textContent = 'Send My Enquiry ✈️'
+      submitBtn.textContent = 'Send My Inquiry ✈️'
       submitBtn.disabled = false
       errorEl.textContent =
         'Something went wrong. Please email us directly at nexttopafrica@gmail.com'
