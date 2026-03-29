@@ -44,7 +44,12 @@ export default {
     try {
       const aiResponse = await env.chatbot_llm_binding.run(
         '@cf/meta/llama-3.1-8b-instruct',
-        { system, messages }
+        {
+          system,
+          messages,
+          temperature: 0.3,       // Lower temperature = more deterministic, less creative
+          max_tokens: 1024        // Limit output length to force concise responses
+        }
       )
 
       return new Response(JSON.stringify(aiResponse), {
