@@ -179,7 +179,7 @@ export const kb = {
     },
     {
       q: 'How do I book a tour?',
-      a: 'You can reach us by email at inquire@visitafricatt.com or by phone/WhatsApp on +256 770 307890 or +32 476 821973. You can also view our brochure at /brochure.html for package ideas before getting in touch.'
+      a: 'You can reach us by email at inquire@nextstopafricatours.com or by phone/WhatsApp on +256 770 307890 or +32 476 821973. You can also view our brochure at /brochure.html for package ideas before getting in touch.'
     },
     {
       q: 'Is travel to Africa safe?',
@@ -193,7 +193,7 @@ export const kb = {
 
   bookingInfo: {
     howToBook:
-      'Contact us by email (inquire@visitafricatt.com) or WhatsApp (+256 770 307890). ' +
+      'Contact us by email (inquire@nextstopafricatours.com) or WhatsApp (+256 770 307890). ' +
       'We\'ll discuss your interests, suggest an itinerary, and send a personalised quote.',
     depositPolicy:
       '30% deposit required to confirm your booking.', // ← UPDATE if different
