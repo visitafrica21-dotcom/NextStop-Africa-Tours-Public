@@ -124,7 +124,7 @@ a {
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--primary); /* Changed from white to orange */
   margin-top: -2px;
   transition: opacity 0.3s;
 }
