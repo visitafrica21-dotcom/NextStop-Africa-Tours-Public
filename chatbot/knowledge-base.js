@@ -17,7 +17,7 @@ export const kb = {
       'A people-centred tourism company creating authentic African travel experiences. ' +
       'We connect travellers with the real Africa — its people, cultures, nature, and history — ' +
       'through professionally guided tours and fully tailor-made packages.',
-    email: 'inquire@visitafricatt.com',
+    email: 'inquire@nextstopafricatours.com',
     phone: '+256 770 307890 | +32 476 821973',
     location: 'Uganda (East Africa) & Belgium (Europe)',  // ← UPDATE if needed
     social: {
