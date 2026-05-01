@@ -1,25 +1,12 @@
 /**
  * chat-api.js
- * ───────────
- * Handles all communication between the chat widget and the Cloudflare Worker.
+ * Handles communication between the chat widget and the Cloudflare Worker.
  */
 
 import { buildSystemPrompt } from './system-prompt.js'
 
-// ─── CONFIGURATION ─────────────────────────────────────────────────────────────
-// Your deployed Cloudflare Worker URL.
 export const WORKER_URL = 'https://nextstop-africa-tours-public.visitafrica21.workers.dev'
-// ───────────────────────────────────────────────────────────────────────────────
 
-/**
- * Sends the conversation history to the Cloudflare Worker and returns the
- * AI's reply.
- *
- * @param {Array<{role: 'user'|'assistant', content: string}>} history
- *   The full conversation history (excluding the system prompt).
- * @returns {Promise<{response: string}>}
- *   Resolves to an object with a `response` string field.
- */
 export async function sendMessage(history) {
   if (!WORKER_URL) {
     return {
@@ -31,13 +18,7 @@ export async function sendMessage(history) {
   try {
     const prompt = buildSystemPrompt()
 
-    // ── DEBUG — remove this block once system prompt is confirmed working ──
-    console.log('[DEBUG] System prompt length:', prompt ? prompt.length : 'EMPTY/UNDEFINED')
-    console.log('[DEBUG] System prompt preview:', prompt ? prompt.slice(0, 300) : 'NOTHING')
-    console.log('[DEBUG] Messages being sent:', JSON.stringify(history, null, 2))
-    // ───────────────────────────────────────────────────────────────────────
-
-    const res = await fetch(WORKER_URL, {
+    const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -46,22 +27,16 @@ export async function sendMessage(history) {
       })
     })
 
-    if (!res.ok) {
-      throw new Error(`Worker responded with status ${res.status}`)
+    if (!response.ok) {
+      throw new Error(`Worker responded with status ${response.status}`)
     }
 
-    const data = await res.json()
-
-    // ── DEBUG — log raw AI response ─────────────────────────────────────────
-    console.log('[DEBUG] Raw AI response:', JSON.stringify(data, null, 2))
-    // ───────────────────────────────────────────────────────────────────────
-
-    return data
-  } catch (err) {
-    console.error('[Visit Africa Chat] Worker error:', err)
+    return await response.json()
+  } catch (error) {
+    console.error('[NextStop Africa Chat] Worker error:', error)
     return {
       response:
-        'Sorry, I\'m having trouble connecting right now. Please try again in a moment, or reach us directly at visitafrica21@gmail.com.'
+        "Sorry, I'm having trouble connecting right now. Please try again in a moment, or reach us directly at inquire@nextstopafricatours.com."
     }
   }
 }

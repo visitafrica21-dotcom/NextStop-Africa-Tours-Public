@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YBDCFX3JWW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-YBDCFX3JWW');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextStop Africa Tours Agency – Brochure</title>
@@ -257,6 +266,49 @@
       display: inline-block;
       border-radius: 50px;
       transition: all 0.3s;
+    }
+
+    /*contact form section */
+
+    .contact-header {
+      margin-bottom: 40px;
+    }
+
+    .section-desc {
+      max-width: 600px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+      color: #6b5f58;
+    }
+
+    /* pill row */
+    .contact-reassurance {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .contact-reassurance .pill {
+      border: 1px solid #e7b7a3;
+      color: #e4572e;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: #fff7f3;
+    }
+
+    /* form card look */
+    .contact-form {
+      background: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      max-width: 720px;
+      margin: 0 auto;
     }
 
     /* HERO */
@@ -2046,7 +2098,8 @@
         <div class="itin-tabs">
           <button class="itin-btn active" onclick="showItin('ug1',this,'ug-group')">Package 1: Hiking + Safari</button>
           <button class="itin-btn" onclick="showItin('ug2',this,'ug-group')">Package 2: Source of the Nile</button>
-          <button class="itin-btn" onclick="showItin('ug3',this,'ug-group')">Package 3: Coffee Trails and Longhorn Encounters</button>
+          <button class="itin-btn" onclick="showItin('ug3',this,'ug-group')">Package 3: Coffee Trails and Longhorn
+            Encounters</button>
         </div>
         <div id="ug1" class="itin-panel active">
           <div class="itin-header">
@@ -2128,27 +2181,32 @@
             <div class="day-item">
               <div class="day-badge">Day 1</div>
               <h4>Journey from Kampala to Ntungamo</h4>
-              <p>Enjoy a scenic drive with stops at the Kayabwe Equator Line for photo opportunities and the vibrant Lukaya Roadside Market to experience local flavors and culture.</p>
+              <p>Enjoy a scenic drive with stops at the Kayabwe Equator Line for photo opportunities and the vibrant
+                Lukaya Roadside Market to experience local flavors and culture.</p>
             </div>
             <div class="day-item">
               <div class="day-badge">Day 2</div>
               <h4>Visit Inspire Africa Coffee Park</h4>
-              <p>Immerse yourself in Uganda's coffee heritage with a guided tour, followed by a unique canoe experience on Lake Nyabihoko.</p>
+              <p>Immerse yourself in Uganda's coffee heritage with a guided tour, followed by a unique canoe experience
+                on Lake Nyabihoko.</p>
             </div>
             <div class="day-item">
               <div class="day-badge">Day 3</div>
               <h4>Explore Nshenyi Cultural Village</h4>
-              <p>Discover the richness of Ankole culture through authentic interactions, traditional practices, and the beauty of the surrounding landscape.</p>
+              <p>Discover the richness of Ankole culture through authentic interactions, traditional practices, and the
+                beauty of the surrounding landscape.</p>
             </div>
             <div class="day-item">
               <div class="day-badge">Day 4</div>
               <h4>Hike to Karegyeya Rock</h4>
-              <p>Take part in a refreshing hike with stunning views, and engage in meaningful conversations with local community members.</p>
+              <p>Take part in a refreshing hike with stunning views, and engage in meaningful conversations with local
+                community members.</p>
             </div>
             <div class="day-item">
               <div class="day-badge">Day 5</div>
               <h4>Discover the Sources of Kyafoora Hot Springs</h4>
-              <p>Experience the natural wonder of the hot springs while connecting with the local community and learning about their traditions.</p>
+              <p>Experience the natural wonder of the hot springs while connecting with the local community and learning
+                about their traditions.</p>
             </div>
           </div>
         </div>
@@ -2351,37 +2409,49 @@
     </div>
   </div>
 
-   <!-- Contact Section -->
+  <!-- Contact Section -->
   <section class="contact-section" id="contact-form">
     <div class="container">
       <div class="contact-wrapper">
         <div class="contact-header text-center">
-          <h2 class="section-title">Get in Touch</h2>
-          <p class="section-desc">Ready to explore Africa? Send us your details and we'll be in touch within 24 hours to discuss your dream adventure.</p>
+          <h2 class="section-title" , style="width: 600px; margin: 0 auto; text-align: center">Get in Touch</h2>
+          <div class="section-desc" , style="text-align: center"> <span>Ready to explore Africa? Tell us what
+              you have in mind and we'll come back
+              with thoughtful, no-obligation guidance within 24 hours.</span></div>
+          <div class="contact-reassurance">
+            <div class="pill">Reply within 24 hours</div>
+            <div class="pill">No-obligation planning</div>
+            <div class="pill">Tailor-made guidance</div>
+          </div>
         </div>
-        
+
         <form class="contact-form" action="https://formspree.io/f/meepakev" method="POST">
           <div class="form-group">
             <label for="contact-name" class="form-label">Your Name *</label>
-            <input type="text" id="contact-name" name="name" class="form-input" placeholder="Enter your full name" required>
+            <input type="text" id="contact-name" name="name" class="form-input" placeholder="Enter your full name"
+              required>
           </div>
-          
+
           <div class="form-group">
             <label for="contact-email" class="form-label">Your Email *</label>
-            <input type="email" id="contact-email" name="email" class="form-input" placeholder="Enter your email address" required>
+            <input type="email" id="contact-email" name="email" class="form-input"
+              placeholder="Enter your email address" required>
           </div>
-          
+
           <div class="form-group">
             <label for="contact-phone" class="form-label">Phone Number</label>
-            <input type="tel" id="contact-phone" name="phone" class="form-input" placeholder="Optional: Your phone number">
+            <input type="tel" id="contact-phone" name="phone" class="form-input"
+              placeholder="Optional: Your phone number">
           </div>
-          
+
           <div class="form-group">
             <label for="contact-message" class="form-label">Tell Us About Your Dream Trip *</label>
-            <textarea id="contact-message" name="message" class="form-textarea" placeholder="Destination, dates, group size, activities, and any special requests..." rows="6" required></textarea>
+            <textarea id="contact-message" name="message" class="form-textarea"
+              placeholder="Destination, dates, group size, activities, and any special requests..." rows="6"
+              required></textarea>
           </div>
-          
-          <button type="submit" class="btn-submit">Send My Inquiry</button>
+
+          <button type="submit" class="btn-submit">Start Planning My Trip</button>
         </form>
       </div>
     </div>
