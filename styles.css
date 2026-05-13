@@ -20,13 +20,26 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: var(--bg);
   color: var(--fg);
   line-height: 1.6;
-  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 h1,
@@ -663,7 +676,11 @@ a {
 }
 
 .table-container {
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid rgba(217, 210, 199, 0.6);
   background-color: var(--card-bg);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
@@ -671,10 +688,9 @@ a {
 }
 
 .pricing-table {
-  width: 100%;
+  width: max(100%, 800px);
   border-collapse: collapse;
   text-align: left;
-  min-width: 800px;
 }
 
 .pricing-table th {
@@ -1606,6 +1622,23 @@ a {
 }
 
 @media (max-width: 767px) {
+  .pricing-section {
+    overflow-x: clip;
+  }
+
+  .table-container {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    width: calc(100% + 2rem);
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+
+  .pricing-table {
+    width: max(100%, 680px);
+  }
+
   .container {
     padding: 0 1rem;
   }
