@@ -425,6 +425,80 @@
       letter-spacing: 0.01em;
     }
 
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 56px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 210px;
+      padding: 0.95rem 1.6rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease,
+        border-color 0.3s ease;
+    }
+
+    .hero-cta-primary {
+      background: var(--gold);
+      color: #fff;
+      border: 1px solid var(--gold);
+      box-shadow: 0 14px 30px rgba(200, 75, 49, 0.2);
+    }
+
+    .hero-cta-primary:hover {
+      background: var(--orange);
+      border-color: var(--orange);
+      transform: translateY(-2px);
+      box-shadow: 0 18px 34px rgba(179, 62, 36, 0.24);
+    }
+
+    .hero-cta-secondary {
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--deep-green);
+      border: 1px solid rgba(26, 23, 20, 0.12);
+      box-shadow: 0 10px 24px rgba(20, 17, 16, 0.06);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-cta-secondary:hover {
+      background: #fff;
+      border-color: rgba(26, 23, 20, 0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(20, 17, 16, 0.1);
+    }
+
+    .hero-cta:focus-visible,
+    .scroll-hint:focus-visible {
+      outline: 3px solid rgba(200, 75, 49, 0.28);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-actions {
+        width: 100%;
+        gap: 0.85rem;
+        margin-bottom: 48px;
+      }
+
+      .hero-cta {
+        width: min(100%, 320px);
+      }
+    }
+
     .hero-divider {
       display: flex;
       align-items: center;
@@ -466,6 +540,7 @@
       font-weight: 700;
       transition: color 0.3s;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .scroll-hint:hover {
@@ -1898,20 +1973,24 @@
     </div>
     <p class="hero-sub">We are a people-centred tourism company creating authentic African experiences, connecting you
       to nature, culture, and adventure with professionally guided tours and tailor-made packages.</p>
-    <div class="scroll-hint"><span>Discover</span>
-      <div class="arrow"></div>
+    <div class="hero-actions">
+      <a href="#explore-destinations" class="hero-cta hero-cta-primary">View Destinations</a>
+      <a href="#contact-form" class="hero-cta hero-cta-secondary">Plan My Trip</a>
     </div>
+    <a href="#explore-destinations" class="scroll-hint" aria-label="Scroll to explore our destinations"><span>Discover</span>
+      <div class="arrow"></div>
+    </a>
   </div>
 
   <!-- Countries Banner -->
-  <div class="countries-banner">
+  <div class="countries-banner" id="explore-destinations">
     <div class="countries-container">
       <div class="banner-label">Explore Our Destinations</div>
       <div class="countries-list">
         <a href="#itin-uganda" class="country-link">Uganda</a>
         <a href="#itin-kenya-tanzania-morocco" class="country-link">Tanzania</a>
         <a href="#itin-kenya-tanzania-morocco" class="country-link">Kenya</a>
-        <a href="#itin-other" class="country-link">Rwanda</a>
+        <a href="#itin-rwanda" class="country-link">Rwanda</a>
         <a href="#itin-benin" class="country-link">Benin</a>
         <a href="#itin-kenya-tanzania-morocco" class="country-link">Morocco</a>
         <a href="#itin-algeria" class="country-link">Algeria</a>
@@ -2346,6 +2425,52 @@
           </div>
           <div class="itin-note">📅 Best to travel between December and March, flights from Cadjehoun Airport (Cotonou)
             are generally more affordable during this period.</div>
+        </div>
+      </div>
+
+      <!-- RWANDA -->
+      <div class="itin-country-group" id="itin-rwanda">
+        <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
+        <div class="itin-tabs">
+          <button class="itin-btn active" onclick="showItin('rw1',this,'rw-group')">Package 1: Rwanda Discovery</button>
+        </div>
+        <div id="rw1" class="itin-panel active">
+          <div class="itin-header">
+            <h3>Rwanda Discovery: 5 Nights / 6 Days of Culture, Nature & Adventure</h3>
+            <p>5 Nights / 6 Days · Kigali, Musanze, Bigogwe, Lake Kivu and Nyanza heritage highlights</p>
+          </div>
+          <div class="days-timeline">
+            <div class="day-item">
+              <div class="day-badge">Day 1</div>
+              <h4>Kigali City Tour</h4>
+              <p>Explore Kigali's highlights, including the Kigali Genocide Memorial, Nyandungu Eco Park in the
+                afternoon, Inema Arts Center, and the vibrant car-free zones by night.</p>
+            </div>
+            <div class="day-item">
+              <div class="day-badge">Day 2</div>
+              <h4>Mount Bisoke Adventure, Musanze</h4>
+              <p>Hike Mount Bisoke (3,711m) and discover its stunning crater lake, with the option to visit the Dian
+                Fossey Tomb and enjoy overnight camping at Red Rocks Rwanda.</p>
+            </div>
+            <div class="day-item">
+              <div class="day-badge">Day 3</div>
+              <h4>Bigogwe Cultural Experience</h4>
+              <p>Spend the day in Bigogwe with local herders, enjoying traditional cow milking, cultural dances, and
+                authentic community interaction.</p>
+            </div>
+            <div class="day-item">
+              <div class="day-badge">Day 4</div>
+              <h4>Lake Kivu Escape, Gisenyi</h4>
+              <p>Relax by Lake Kivu with activities like boat rides and kayaking, then choose from evening shopping or
+                lakeside nightlife.</p>
+            </div>
+            <div class="day-item">
+              <div class="day-badge">Day 5</div>
+              <h4>Nyanza Heritage Tour</h4>
+              <p>Visit the King's Palace Museum and see the iconic Inyambo cattle for a memorable close to Rwanda's
+                royal heritage experience.</p>
+            </div>
+          </div>
         </div>
       </div>
 
