@@ -44,6 +44,13 @@
       scroll-behavior: smooth;
     }
 
+    #explore-destinations,
+    #packages,
+    #contact,
+    #contact-form {
+      scroll-margin-top: 110px;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--cream);
@@ -385,14 +392,6 @@
       opacity: 0.9;
     }
 
-    @media (max-width: 768px) {
-      .hero-tagline {
-        text-align: center;
-        text-align-last: center;
-        -moz-text-align-last: center;
-      }
-    }
-
     .hero h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(34px, 5.5vw, 68px);
@@ -488,14 +487,148 @@
     }
 
     @media (max-width: 768px) {
+      .container,
+      .countries-container,
+      .story-inner,
+      .experiences-inner,
+      .packages-inner,
+      .itinerary-inner,
+      .whyus-inner,
+      .contact-wrapper {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .navbar {
+        padding: 1rem 0;
+      }
+
+      .navbar.scrolled {
+        padding: 0.8rem 0;
+      }
+
+      .nav-container {
+        gap: 0.75rem;
+      }
+
+      .logo-container {
+        gap: 0.55rem;
+      }
+
+      .navbar .logo {
+        font-size: 1.15rem;
+        letter-spacing: 0.12em;
+        line-height: 1.05;
+      }
+
+      .logo-subtitle {
+        font-size: 0.5rem;
+        letter-spacing: 0.22em;
+      }
+
+      .mobile-menu {
+        padding: 1rem 1.25rem;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 7rem 1rem 4rem;
+      }
+
+      .hero .logo-container {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero .logo-container img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .hero-tagline {
+        font-size: 0.58rem;
+        letter-spacing: 0.24em;
+        width: auto;
+        max-width: 100%;
+        text-align: center;
+        text-align-last: center;
+        -moz-text-align-last: center;
+      }
+
       .hero-actions {
         width: 100%;
+        flex-direction: column;
         gap: 0.85rem;
-        margin-bottom: 48px;
+        margin-bottom: 2rem;
       }
 
       .hero-cta {
-        width: min(100%, 320px);
+        width: 100%;
+        min-width: 0;
+      }
+
+      .hero-divider {
+        margin-bottom: 2rem;
+      }
+
+      .hero-sub {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.35rem, 11vw, 3.5rem);
+      }
+
+      .scroll-hint {
+        display: none;
+      }
+
+      .story-section,
+      .experiences-section,
+      .packages-section,
+      .whyus-section,
+      #contact-form {
+        padding: 4.5rem 0;
+      }
+
+      .section-label {
+        letter-spacing: 0.28em;
+      }
+
+      .section-title {
+        margin-bottom: 1rem;
+      }
+
+      .story-text p,
+      .section-desc,
+      .hero-sub {
+        font-size: 0.95rem;
+      }
+
+      .package-card.featured,
+      .package-card.featured:hover {
+        transform: none;
+      }
+
+      .pkg-header {
+        padding: 24px 22px 18px;
+      }
+
+      .pkg-price,
+      .pkg-body {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      .price-range {
+        font-size: 1.35rem;
+      }
+
+      .countries-container {
+        padding-left: 20px;
+        padding-right: 20px;
       }
     }
 
@@ -1919,6 +2052,59 @@
         font-size: 0.8rem;
       }
     }
+
+    @media (max-width: 480px) {
+      .container,
+      .countries-container,
+      .story-inner,
+      .experiences-inner,
+      .packages-inner,
+      .itinerary-inner,
+      .whyus-inner,
+      .contact-wrapper {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .hero {
+        padding: 6.25rem 0.85rem 3rem;
+      }
+
+      .hero .logo-container img {
+        width: 104px;
+        height: 104px;
+      }
+
+      .hero-tagline {
+        font-size: 0.54rem;
+        letter-spacing: 0.18em;
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 10vw, 2.9rem);
+      }
+
+      .hero-sub {
+        font-size: 0.9rem;
+      }
+
+      .section-title {
+        font-size: clamp(2rem, 8vw, 2.4rem);
+      }
+
+      .packages-header {
+        margin-bottom: 2rem;
+      }
+
+      .country-link {
+        width: 100%;
+      }
+
+      .contact-form {
+        padding: 1.4rem;
+        border-radius: 16px;
+      }
+    }
   </style>
 </head>
 
@@ -2539,8 +2725,8 @@
     <div class="container">
       <div class="contact-wrapper">
         <div class="contact-header text-center">
-          <h2 class="section-title" , style="width: 600px; margin: 0 auto; text-align: center">Get in Touch</h2>
-          <div class="section-desc" , style="text-align: center"> <span>Ready to explore Africa? Tell us what
+        <h2 class="section-title" style="max-width: 600px; margin: 0 auto; text-align: center">Get in Touch</h2>
+        <div class="section-desc" style="text-align: center"> <span>Ready to explore Africa? Tell us what
               you have in mind and we'll come back
               with thoughtful, no-obligation guidance within 24 hours.</span></div>
           <div class="contact-reassurance">
