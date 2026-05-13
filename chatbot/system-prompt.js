@@ -43,7 +43,7 @@ export function buildSystemPrompt() {
   const destinationNames = kb.destinations.map(d => d.name).join(', ')
   const serviceNames = kb.services.map(s => s.name).join(', ')
 
-  return `You are Miremba, the AI travel assistant for ${kb.business.name}.
+  return `You are Simba, the AI travel assistant for ${kb.business.name}.
 Your tagline: "${kb.business.tagline}"
 
 === CRITICAL INSTRUCTION - READ THIS FIRST ===
@@ -117,7 +117,7 @@ ${faqs}
 === BEHAVIOURAL RULES ===
 
 1. IDENTITY:
-You are Miremba, the site assistant for ${kb.business.name}.
+You are Simba, the site assistant for ${kb.business.name}.
 You are warm, helpful, and focused exclusively on the content of this website.
 You are NOT a general travel assistant. You do not have general travel knowledge.
 

@@ -9,7 +9,7 @@ import { checkForLeadCapture, resetLeadCapture } from './lead-capture.js'
 
 const WELCOME_ACTIONS = [
   {
-    label: 'Help me choose a destination',
+    label: 'Choose a destination',
     prompt: 'Help me choose the best destination for my trip.'
   },
   {
@@ -17,25 +17,17 @@ const WELCOME_ACTIONS = [
     prompt: 'I want help planning a safari.'
   },
   {
-    label: 'See pricing options',
+    label: 'See pricing',
     prompt: 'What pricing options do you offer?'
   },
   {
-    label: 'Build a custom itinerary',
+    label: 'Custom itinerary',
     prompt: 'I want a tailor-made African itinerary.'
   }
 ]
 
-const SERVICE_PILLS = [
-  'Destinations',
-  'Safaris',
-  'Pricing',
-  'Custom trips'
-]
-
 const WELCOME_COPY =
-  "I'm Miremba, your NextStop Africa trip planning concierge. " +
-  "How can I help you?"
+  'Ask about destinations, itineraries, or pricing.'
 
 let isOpen = false
 let isWaiting = false
@@ -72,7 +64,7 @@ function injectHTML() {
     <button
       class="vaf-bubble"
       id="vaf-bubble"
-      aria-label="Open chat"
+      aria-label="Open chat with Simba"
       aria-expanded="false"
       aria-controls="vaf-panel"
     >
@@ -83,14 +75,31 @@ function injectHTML() {
       <span class="vaf-badge" id="vaf-badge" aria-hidden="true">1</span>
     </button>
 
-    <div class="vaf-panel" id="vaf-panel" role="dialog" aria-label="NextStop Africa chat" aria-hidden="true">
+    <div class="vaf-panel" id="vaf-panel" role="dialog" aria-label="Chat with Simba" aria-hidden="true">
       <div class="vaf-header">
-        <div class="vaf-header-kicker">NextStop Africa concierge</div>
         <div class="vaf-header-main">
-          <div class="vaf-header-avatar" aria-hidden="true">NS</div>
+          <div class="vaf-header-avatar" aria-hidden="true">
+            <svg class="vaf-header-logo" viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="16" fill="#F5E4C7" />
+              <path d="M20 8.8C15.2 8.8 11.8 12 11.1 16.4C10.3 21.6 12.8 28.1 20 30.6C27.2 28.1 29.7 21.6 28.9 16.4C28.2 12 24.8 8.8 20 8.8Z" fill="#A05A2C" />
+              <path d="M20 12.1C16.6 12.1 14.5 14.5 14.5 18C14.5 21.8 16.5 25 20 27.1C23.5 25 25.5 21.8 25.5 18C25.5 14.5 23.4 12.1 20 12.1Z" fill="#D8A15B" />
+              <path d="M17.3 17.8C17.9 17.8 18.4 17.3 18.4 16.7C18.4 16.1 17.9 15.6 17.3 15.6C16.7 15.6 16.2 16.1 16.2 16.7C16.2 17.3 16.7 17.8 17.3 17.8Z" fill="#3B2416" />
+              <path d="M22.7 17.8C23.3 17.8 23.8 17.3 23.8 16.7C23.8 16.1 23.3 15.6 22.7 15.6C22.1 15.6 21.6 16.1 21.6 16.7C21.6 17.3 22.1 17.8 22.7 17.8Z" fill="#3B2416" />
+              <path d="M20 18.4L21.8 20.4L20 21.3L18.2 20.4L20 18.4Z" fill="#6E3B20" />
+              <path d="M17.2 22C18 23 18.9 23.5 20 23.5C21.1 23.5 22 23 22.8 22" stroke="#6E3B20" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M15.1 14.5C16.2 13.2 17.8 12.5 20 12.5C22.2 12.5 23.8 13.2 24.9 14.5" stroke="#7C4725" stroke-width="1.25" stroke-linecap="round" opacity="0.7" />
+              <path d="M20 9.4C16.2 9.4 13.2 11.3 11.8 14.5C10.2 18.1 10.9 22.7 13.6 26.2C11.8 23.1 12.1 19.4 13.5 16.4C14.7 13.8 17 12.2 20 12.2C23 12.2 25.3 13.8 26.5 16.4C27.9 19.4 28.2 23.1 26.4 26.2C29.1 22.7 29.8 18.1 28.2 14.5C26.8 11.3 23.8 9.4 20 9.4Z" fill="#8C4F28" opacity="0.7" />
+            </svg>
+          </div>
           <div class="vaf-header-text">
-            <div class="vaf-header-name">Miremba</div>
-            <div class="vaf-header-role">Trip planning concierge</div>
+            <div class="vaf-header-name">Simba</div>
+            <div class="vaf-header-meta">
+              <div class="vaf-header-role">Travel assistant</div>
+              <div class="vaf-header-status" aria-label="Simba is online">
+                <span class="vaf-status-dot"></span>
+                <span>Online now</span>
+              </div>
+            </div>
           </div>
           <button class="vaf-close-btn" id="vaf-close-btn" type="button" aria-label="Close chat">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -99,21 +108,16 @@ function injectHTML() {
             </svg>
           </button>
         </div>
-        <div class="vaf-header-status">
-          <span class="vaf-status-dot"></span>
-          Ready to help with destinations, itineraries, and pricing
-        </div>
       </div>
 
       <div class="vaf-messages" id="vaf-messages" role="log" aria-live="polite" aria-label="Conversation"></div>
 
       <div class="vaf-input-area" id="vaf-input-area">
-        <p class="vaf-input-copy">Ask a question or pick a starting point.</p>
         <div class="vaf-input-shell">
           <textarea
             class="vaf-textarea"
             id="vaf-textarea"
-            placeholder="Type your message here..."
+            placeholder="Ask Simba anything about your trip..."
             rows="1"
             aria-label="Your message"
             maxlength="1000"
@@ -126,8 +130,6 @@ function injectHTML() {
           </button>
         </div>
       </div>
-
-      <span class="vaf-powered">NextStop Africa concierge</span>
     </div>
   `
 
@@ -212,13 +214,12 @@ function renderWelcomeState() {
   welcomeCard.className = 'vaf-welcome-card'
   welcomeCard.setAttribute('data-vaf-welcome', 'true')
   welcomeCard.innerHTML = `
-    <p class="vaf-welcome-kicker">Plan faster</p>
-    <h3 class="vaf-welcome-title">Start with the kind of trip you want</h3>
+    <h3 class="vaf-welcome-title">How can Simba help?</h3>
     <p class="vaf-welcome-body">${WELCOME_COPY}</p>
     <div class="vaf-action-grid" data-vaf-action-grid="true"></div>
     <div class="vaf-welcome-links">
       <button class="vaf-inline-primary" type="button" data-vaf-start-inquiry="true">Start an inquiry</button>
-      <a class="vaf-inline-link" href="brochure.html">View brochure</a>
+      <a class="vaf-inline-primary" href="brochure.html#packages">View packages</a>
     </div>
   `
 
@@ -463,7 +464,7 @@ function showTyping() {
   if (typingEl) return
   typingEl = document.createElement('div')
   typingEl.className = 'vaf-typing'
-  typingEl.setAttribute('aria-label', 'Miremba is typing')
+  typingEl.setAttribute('aria-label', 'Simba is typing')
   typingEl.innerHTML = `
     <span class="vaf-typing-dot"></span>
     <span class="vaf-typing-dot"></span>

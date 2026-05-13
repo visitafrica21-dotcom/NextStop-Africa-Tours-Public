@@ -171,6 +171,7 @@ a {
   text-transform: uppercase;
   background-color: #fff;
   color: var(--primary);
+  border-radius: 999px;
   transition: all 0.3s;
   cursor: pointer;
 }
@@ -321,6 +322,7 @@ a {
   background-color: var(--primary);
   color: #fff;
   padding: 1.25rem 3rem;
+  border-radius: 20px;
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -1233,6 +1235,7 @@ a {
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.45);
   color: #fff;
+  border-radius: 999px;
 }
 
 .btn-inquire:hover {
@@ -1278,12 +1281,13 @@ a {
 
 .hero-buttons {
   gap: 1.25rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 0;
 }
 
 .btn-primary {
   padding: 1.2rem 2.6rem;
   border: 1px solid var(--primary);
+  border-radius: 20px;
   box-shadow: 0 16px 32px -18px rgba(200, 75, 49, 0.9);
   transition: all 0.3s ease;
 }
@@ -1293,54 +1297,6 @@ a {
   border-color: var(--primary-hover);
   transform: translateY(-2px);
   box-shadow: 0 22px 36px -18px rgba(200, 75, 49, 0.9);
-}
-
-.hero-brochure-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.15rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-  transition: color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-}
-
-.hero-brochure-link:hover {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.72);
-  transform: translateY(-1px);
-}
-
-.hero-brochure-link svg {
-  transition: transform 0.3s ease;
-}
-
-.hero-brochure-link:hover svg {
-  transform: translate(2px, -2px);
-}
-
-.hero-trust-list {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.hero-trust-item {
-  padding: 0.6rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 
 .experiences-section {
@@ -1656,26 +1612,9 @@ a {
     align-items: center;
   }
 
-  .btn-primary,
-  .hero-brochure-link {
+  .btn-primary {
     width: 100%;
     justify-content: center;
-  }
-
-  .hero-brochure-link {
-    border-bottom: none;
-    padding: 0.85rem 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  .hero-trust-list {
-    gap: 0.55rem;
-  }
-
-  .hero-trust-item {
-    width: 100%;
   }
 }
 
