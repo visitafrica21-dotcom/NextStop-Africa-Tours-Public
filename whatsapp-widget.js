@@ -50,6 +50,67 @@
 
     // Add to document body
     document.body.appendChild(widget);
+    // After insertion, try to position relative to chat widget
+    positionWidgetRelativeToChat(widget);
+    // Reposition on resize
+    window.addEventListener('resize', () => positionWidgetRelativeToChat(widget));
+    // Observe DOM changes to detect chat open/close
+    const observer = new MutationObserver(() => positionWidgetRelativeToChat(widget));
+    observer.observe(document.body, { attributes: false, childList: true, subtree: true });
+  }
+
+  // Position the WhatsApp widget to the left of the chat widget (bubble or panel)
+  function positionWidgetRelativeToChat(widget) {
+    try {
+      const chatWidget = document.querySelector('.vaf-chat-widget');
+      if (!chatWidget) {
+        // No chat widget — keep default offsets
+        widget.style.right = '';
+        widget.style.bottom = '';
+        return;
+      }
+
+      // Prefer the open panel if visible, otherwise the bubble
+      const panel = chatWidget.querySelector('.vaf-panel');
+      const bubble = chatWidget.querySelector('.vaf-bubble');
+      let target = null;
+
+      // Determine visibility: prefer panel if it is visible (offsetParent) or chatWidget has vaf-open
+      if (chatWidget.classList.contains('vaf-open') && panel && panel.offsetParent !== null) {
+        target = panel;
+      } else if (bubble && bubble.offsetParent !== null) {
+        target = bubble;
+      } else if (panel && panel.offsetParent !== null) {
+        target = panel;
+      }
+
+      if (!target) {
+        // fallback
+        widget.style.right = '';
+        widget.style.bottom = '';
+        return;
+      }
+
+      const rect = target.getBoundingClientRect();
+      const spacing = 12; // px space between widgets
+      const windowW = window.innerWidth;
+      const windowH = window.innerHeight;
+
+      // distance from right edge to target's right edge
+      const targetRightFromRight = Math.max(0, windowW - rect.right);
+      // compute new right so whatsapp sits to the left of target with spacing
+      const newRight = targetRightFromRight + rect.width + spacing;
+      // distance from bottom edge to target's bottom edge
+      const targetBottomFromBottom = Math.max(8, windowH - rect.bottom);
+
+      widget.style.right = `${Math.round(newRight)}px`;
+      widget.style.bottom = `${Math.round(targetBottomFromBottom)}px`;
+      // ensure it stays above the chat widget
+      widget.style.zIndex = '11000';
+    } catch (e) {
+      // silent fail
+      // leave default placement
+    }
   }
 
   // Initialize when DOM is ready
