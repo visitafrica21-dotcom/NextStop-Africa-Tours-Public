@@ -6,3 +6,4 @@ vite.config.ts.*
 *.tar.gz
 .github/*
 tourism work.xlsx
+.codex/
