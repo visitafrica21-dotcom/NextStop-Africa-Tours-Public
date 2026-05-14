@@ -8,16 +8,37 @@
   const WHATSAPP_MESSAGE = 'Hello! I would like to inquire about your African tours and packages.';
   const WHATSAPP_URL = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
 
+  // Inject minimal CSS so the widget is styled even on pages that don't
+  // include the main `styles.css` (e.g., `brochure.html`). Also set a
+  // high z-index and an offset to avoid overlapping the site's chat widget.
+  function injectWidgetCSS() {
+    if (document.getElementById('whatsapp-widget-styles')) return;
+    const css = `
+      .whatsapp-widget { position: fixed; bottom: 20px; right: 86px !important; z-index: 11000 !important; }
+      .whatsapp-btn { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: #25D366; color: #fff; border-radius: 50%; text-decoration: none; box-shadow: 0 6px 20px rgba(37,211,102,0.28); }
+      .whatsapp-btn:hover { transform: scale(1.06); background: #20ba5a; }
+      .whatsapp-icon { width: 32px; height: 32px; fill: white; }
+      .whatsapp-tooltip { position: absolute; bottom: 80px; right: 0; background: rgba(0,0,0,0.85); color: #fff; padding: 8px 10px; border-radius: 6px; font-size: 0.8rem; opacity: 0; transition: opacity 180ms ease; pointer-events: none; }
+      .whatsapp-btn:hover .whatsapp-tooltip { opacity: 1; }
+      @media (max-width: 768px) { .whatsapp-widget { right: 78px !important; bottom: 16px !important; } .whatsapp-btn{ width:56px; height:56px } .whatsapp-icon{ width:28px; height:28px } }
+    `;
+    const style = document.createElement('style');
+    style.id = 'whatsapp-widget-styles';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+  }
+
   function createWhatsAppWidget() {
+    injectWidgetCSS();
     // Create widget container
     const widget = document.createElement('div');
     widget.className = 'whatsapp-widget';
     widget.setAttribute('aria-label', 'WhatsApp Chat');
-    
+
     widget.innerHTML = `
-      <a href="${WHATSAPP_URL}" 
-         class="whatsapp-btn" 
-         target="_blank" 
+      <a href="${WHATSAPP_URL}"
+         class="whatsapp-btn"
+         target="_blank"
          rel="noopener noreferrer"
          aria-label="Chat with us on WhatsApp">
         <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
