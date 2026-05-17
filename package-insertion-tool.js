@@ -118,52 +118,20 @@ document.getElementById("preview-btn").addEventListener("click", () => {
     const previewArea = document.getElementById("preview-area");
     
     const daysHTML = data.dayByDay.map(day => `
-        <div style="display: flex; margin-bottom: 24px;">
-            <div style="display: flex; flex-direction: column; align-items: center; margin-right: 24px;">
-                <div style="width: 48px; height: 48px; background: #c84b31; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600;">
-                    ${day.dayNumber}
-                </div>
-                ${day.dayNumber < data.dayByDay.length ? '<div style="width: 2px; height: 40px; background: #ddd; margin-top: 8px;"></div>' : ''}
-            </div>
-            <div style="flex: 1;">
-                <h4 style="font-family: 'Playfair Display', serif; font-size: 16px; color: #1d3d2b; margin-bottom: 8px; font-weight: 600;">${day.title}</h4>
-                <p style="color: #777; font-size: 14px; line-height: 1.6;">${day.description}</p>
-            </div>
+        <div class="preview-day-item">
+            <div class="preview-day-badge">Day ${day.dayNumber}</div>
+            <h4>${day.title}</h4>
+            <p>${day.description}</p>
         </div>
     `).join("");
     
     previewArea.innerHTML = `
-        <style>
-            .preview-itinerary {
-                background: #faf8f5;
-                padding: 32px;
-                border-radius: 12px;
-                width: 100%;
-                text-align: left;
-            }
-            
-            .preview-itinerary h3 {
-                font-family: 'Playfair Display', serif;
-                font-size: 24px;
-                color: #1d3d2b;
-                margin-bottom: 8px;
-                font-weight: 600;
-            }
-            
-            .preview-itinerary p {
-                color: #777;
-                font-size: 14px;
-                margin-bottom: 24px;
-            }
-            
-            .days-timeline {
-                position: relative;
-            }
-        </style>
-        <div class="preview-itinerary">
-            <h3>${data.packageName}</h3>
-            <p>${data.nights} Nights / ${data.days} Days · ${data.packageDesc}</p>
-            <div class="days-timeline">
+        <div style="width: 100%; text-align: left;">
+            <div class="preview-itin-header">
+                <h3>${data.packageName}</h3>
+                <p>${data.nights} Nights / ${data.days} Days · ${data.packageDesc}</p>
+            </div>
+            <div class="preview-days-timeline">
                 ${daysHTML}
             </div>
         </div>

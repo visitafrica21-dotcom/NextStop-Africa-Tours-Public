@@ -72,12 +72,17 @@
 
         .form-group {
             margin-bottom: 24px;
+            position: relative;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+        }
+
+        input[type="text"][list]::placeholder {
+            color: #bbb;
         }
 
         .form-row .form-group {
@@ -280,14 +285,115 @@
 
         #preview-area {
             min-height: 500px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            color: #aaa;
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
+        }
+
+        .preview-itin-header {
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .preview-itin-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--deep-green);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .preview-itin-header p {
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        .preview-days-timeline {
+            position: relative;
+            padding-left: 44px;
+            text-align: left;
+        }
+
+        .preview-days-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), rgba(200, 75, 49, 0.15));
+            border-radius: 2px;
+        }
+
+        .preview-day-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 26px 30px;
             background: var(--cream);
             border-radius: 16px;
-            padding: 24px;
-            color: #aaa;
-            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s;
+        }
+
+        .preview-day-item:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            transform: translateX(4px);
+        }
+
+        .preview-day-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 30px;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+
+        .preview-day-badge {
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--rust);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .preview-day-item h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: var(--deep-green);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .preview-day-item p {
+            font-size: 13px;
+            color: #999;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .preview-day-item .other {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        :root {
+            --rust: #c84b31;
         }
 
         .success-message {
@@ -342,15 +448,15 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="country">Country *</label>
-                        <select id="country" name="country" required>
-                            <option value="">Select a country</option>
-                            <option value="Uganda">Uganda, The Pearl of Africa</option>
-                            <option value="Algeria">Algeria, Sahara's Best Kept Secret</option>
-                            <option value="Rwanda">Rwanda</option>
-                            <option value="Tanzania">Tanzania</option>
-                            <option value="Kenya">Kenya</option>
-                            <option value="Morocco">Morocco</option>
-                        </select>
+                        <input type="text" id="country" name="country" list="countries-list" placeholder="e.g., Uganda, Kenya, or new country" required>
+                        <datalist id="countries-list">
+                            <option value="Uganda, The Pearl of Africa"></option>
+                            <option value="Algeria, Sahara's Best Kept Secret"></option>
+                            <option value="Rwanda"></option>
+                            <option value="Tanzania"></option>
+                            <option value="Kenya"></option>
+                            <option value="Morocco"></option>
+                        </datalist>
                     </div>
                     <div class="form-group">
                         <label for="package-name">Package Name *</label>
