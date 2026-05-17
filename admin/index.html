@@ -226,15 +226,17 @@
 
         .button-group {
             display: flex;
-            gap: 12px;
+            align-items: center;
+            gap: 8px;
             margin-top: 32px;
         }
 
         button[type="button"].primary,
         button[type="submit"] {
             flex: 1;
-            padding: 14px 24px;
-            border: none;
+            padding: 0 24px;
+            height: 48px;
+            border: 2px solid transparent;
             border-radius: 8px;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 13px;
@@ -518,9 +520,11 @@
         }
 
         .cancel-edit-btn {
-            flex: 1;
-            padding: 14px 24px;
-            border: 2px solid #d0cbc6;
+            padding: 0 24px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            border: none;
             border-radius: 8px;
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 13px;
@@ -529,14 +533,13 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s;
-            background: #f2efea;
-            color: #444;
+            background: transparent;
+            color: #888;
         }
 
         .cancel-edit-btn:hover {
-            background: var(--forest);
-            border-color: var(--forest);
-            color: #fff;
+            background: #f2efea;
+            color: #444;
         }
 
         .empty-packages-msg {
