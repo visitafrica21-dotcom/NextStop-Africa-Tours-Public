@@ -55,6 +55,7 @@
         body: JSON.stringify(list)
       });
       if (!response.ok) throw new Error('Failed to save to worker');
+      saveAllItineraries(list);
       return await response.json();
     } catch (err) {
       console.warn('Worker save failed, falling back to localStorage:', err);
@@ -193,6 +194,12 @@
       if (!Array.isArray(legacy)) legacy = [];
     } catch {
       legacy = [];
+    }
+
+    const localData = getAllItinerariesSync();
+    if (list.length === 0 && localData.length > 0) {
+      list = localData;
+      await saveItinerariesAsync(list);
     }
 
     if (localStorage.getItem(INIT_FLAG) !== 'true') {
