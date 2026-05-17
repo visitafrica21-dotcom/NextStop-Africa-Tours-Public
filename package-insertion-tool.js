@@ -1,212 +1,206 @@
-// Validate form fields
+// Initialize the form with default days
+document.addEventListener("DOMContentLoaded", () => {
+    initializeForm();
+    addDay();
+    addDay();
+});
+
+// Initialize form
+function initializeForm() {
+    const daysContainer = document.getElementById("days-container");
+    daysContainer.innerHTML = "";
+    
+    document.getElementById("add-day-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        addDay();
+    });
+}
+
+// Add a new day input
+function addDay() {
+    const daysContainer = document.getElementById("days-container");
+    const dayNumber = daysContainer.children.length + 1;
+    
+    const dayItem = document.createElement("div");
+    dayItem.className = "day-item";
+    dayItem.innerHTML = `
+        <div class="day-controls">
+            <input type="text" placeholder="Day ${dayNumber} Title (e.g., Tour of Kampala)" class="day-title" required>
+            <button type="button" class="remove-day">Remove</button>
+        </div>
+        <textarea placeholder="Day ${dayNumber} Description" class="day-description" required></textarea>
+    `;
+    
+    const removeBtn = dayItem.querySelector(".remove-day");
+    removeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        dayItem.remove();
+        updateDayNumbers();
+    });
+    
+    daysContainer.appendChild(dayItem);
+}
+
+// Update day numbers after removal
+function updateDayNumbers() {
+    const dayItems = document.querySelectorAll(".day-item");
+    dayItems.forEach((item, index) => {
+        const title = item.querySelector(".day-title");
+        const desc = item.querySelector(".day-description");
+        const currentTitle = title.placeholder;
+        const currentDesc = desc.placeholder;
+        
+        // Update placeholder numbers
+        title.placeholder = currentTitle.replace(/Day \d+/, `Day ${index + 1}`);
+        desc.placeholder = currentDesc.replace(/Day \d+/, `Day ${index + 1}`);
+    });
+}
+
+// Validate form
 function validateForm() {
     const country = document.getElementById("country").value.trim();
-    const tier = document.getElementById("tier").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const price = document.getElementById("price").value.trim();
-    const features = document.getElementById("features").value.trim();
-
-    if (!country || !tier || !name || !price || !features) {
+    const packageName = document.getElementById("package-name").value.trim();
+    const packageDesc = document.getElementById("package-desc").value.trim();
+    const nights = document.getElementById("nights").value.trim();
+    const days = document.getElementById("days").value.trim();
+    
+    if (!country || !packageName || !packageDesc || !nights || !days) {
         alert("Please fill in all required fields marked with *");
         return false;
     }
+    
+    const dayItems = document.querySelectorAll(".day-item");
+    if (dayItems.length === 0) {
+        alert("Please add at least one day to your itinerary");
+        return false;
+    }
+    
+    for (let item of dayItems) {
+        const title = item.querySelector(".day-title").value.trim();
+        const desc = item.querySelector(".day-description").value.trim();
+        if (!title || !desc) {
+            alert("Please fill in all day titles and descriptions");
+            return false;
+        }
+    }
+    
     return true;
+}
+
+// Collect itinerary data
+function getItineraryData() {
+    const dayItems = document.querySelectorAll(".day-item");
+    const days = [];
+    
+    dayItems.forEach((item, index) => {
+        days.push({
+            dayNumber: index + 1,
+            title: item.querySelector(".day-title").value.trim(),
+            description: item.querySelector(".day-description").value.trim()
+        });
+    });
+    
+    return {
+        country: document.getElementById("country").value.trim(),
+        packageName: document.getElementById("package-name").value.trim(),
+        packageDesc: document.getElementById("package-desc").value.trim(),
+        nights: document.getElementById("nights").value.trim(),
+        days: document.getElementById("days").value.trim(),
+        dayByDay: days
+    };
 }
 
 // Generate preview
 document.getElementById("preview-btn").addEventListener("click", () => {
     if (!validateForm()) return;
-
-    const country = document.getElementById("country").value.trim();
-    const tier = document.getElementById("tier").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const tagline = document.getElementById("tagline").value.trim();
-    const price = document.getElementById("price").value.trim();
-    const priceNote = document.getElementById("price-note").value.trim();
-    const features = document.getElementById("features").value
-        .split(",")
-        .map(f => f.trim())
-        .filter(f => f);
-
+    
+    const data = getItineraryData();
     const previewArea = document.getElementById("preview-area");
-    const isFeatured = tier.toLowerCase() === 'luxury';
-
+    
+    const daysHTML = data.dayByDay.map(day => `
+        <div style="display: flex; margin-bottom: 24px;">
+            <div style="display: flex; flex-direction: column; align-items: center; margin-right: 24px;">
+                <div style="width: 48px; height: 48px; background: #c84b31; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600;">
+                    ${day.dayNumber}
+                </div>
+                ${day.dayNumber < data.dayByDay.length ? '<div style="width: 2px; height: 40px; background: #ddd; margin-top: 8px;"></div>' : ''}
+            </div>
+            <div style="flex: 1;">
+                <h4 style="font-family: 'Playfair Display', serif; font-size: 16px; color: #1d3d2b; margin-bottom: 8px; font-weight: 600;">${day.title}</h4>
+                <p style="color: #777; font-size: 14px; line-height: 1.6;">${day.description}</p>
+            </div>
+        </div>
+    `).join("");
+    
     previewArea.innerHTML = `
         <style>
-            .pkg-card-preview {
-                background: #fff;
-                border-radius: 20px;
-                overflow: hidden;
-                box-shadow: 0 4px 32px rgba(0, 0, 0, 0.04);
-                border: 1px solid rgba(0, 0, 0, 0.04);
+            .preview-itinerary {
+                background: #faf8f5;
+                padding: 32px;
+                border-radius: 12px;
                 width: 100%;
-                transition: all 0.5s cubic-bezier(.25, .46, .45, .94);
+                text-align: left;
             }
-
-            .pkg-card-preview.featured {
-                border: 2px solid #c84b31;
-                box-shadow: 0 8px 40px rgba(200, 75, 49, 0.12);
-            }
-
-            .pkg-header-preview {
-                padding: 32px 32px 24px;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            }
-
-            .pkg-tier-preview {
-                font-size: 9px;
-                letter-spacing: 3px;
-                text-transform: uppercase;
-                color: #c84b31;
-                margin-bottom: 8px;
-                font-weight: 700;
-            }
-
-            .pkg-name-preview {
+            
+            .preview-itinerary h3 {
                 font-family: 'Playfair Display', serif;
-                font-size: 26px;
+                font-size: 24px;
                 color: #1d3d2b;
-                margin-bottom: 6px;
-                font-weight: 500;
-            }
-
-            .pkg-tagline-preview {
-                font-size: 13px;
-                color: #aaa;
-                font-weight: 300;
-            }
-
-            .pkg-price-preview {
-                padding: 20px 32px;
-                background: #1d3d2b;
-            }
-
-            .pkg-card-preview.featured .pkg-price-preview {
-                background: #c84b31;
-            }
-
-            .price-label-preview {
-                font-size: 9px;
-                letter-spacing: 2.5px;
-                text-transform: uppercase;
-                color: rgba(255, 255, 255, 0.5);
-                margin-bottom: 4px;
-            }
-
-            .pkg-card-preview.featured .price-label-preview {
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .price-range-preview {
-                font-family: 'Playfair Display', serif;
-                font-size: 22px;
-                color: #fff;
+                margin-bottom: 8px;
                 font-weight: 600;
             }
-
-            .pkg-card-preview.featured .price-range-preview {
-                color: #fff;
-            }
-
-            .price-note-preview {
-                font-size: 11px;
-                color: rgba(255, 255, 255, 0.4);
-                font-weight: 300;
-                margin-top: 4px;
-            }
-
-            .pkg-card-preview.featured .price-note-preview {
-                color: rgba(255, 255, 255, 0.6);
-            }
-
-            .pkg-body-preview {
-                padding: 28px 32px;
-            }
-
-            .pkg-includes-preview {
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .pkg-includes-preview li {
-                font-size: 13px;
+            
+            .preview-itinerary p {
                 color: #777;
-                display: flex;
-                align-items: flex-start;
-                gap: 10px;
-                line-height: 1.5;
+                font-size: 14px;
+                margin-bottom: 24px;
             }
-
-            .pkg-includes-preview li .check {
-                color: #c84b31;
-                font-weight: 700;
-                flex-shrink: 0;
+            
+            .days-timeline {
+                position: relative;
             }
         </style>
-        <div class="pkg-card-preview ${isFeatured ? 'featured' : ''}">
-            <div class="pkg-header-preview">
-                <div class="pkg-tier-preview">${tier}</div>
-                <h3 class="pkg-name-preview">${name}</h3>
-                <p class="pkg-tagline-preview">${tagline}</p>
-            </div>
-            <div class="pkg-price-preview">
-                <div class="price-label-preview">Price</div>
-                <div class="price-range-preview">${price}</div>
-                ${priceNote ? `<p class="price-note-preview">${priceNote}</p>` : ''}
-            </div>
-            <div class="pkg-body-preview">
-                <ul class="pkg-includes-preview">
-                    ${features.map(feature => `<li><span class="check">✔</span>${feature}</li>`).join("")}
-                </ul>
+        <div class="preview-itinerary">
+            <h3>${data.packageName}</h3>
+            <p>${data.nights} Nights / ${data.days} Days · ${data.packageDesc}</p>
+            <div class="days-timeline">
+                ${daysHTML}
             </div>
         </div>
     `;
 });
 
 // Handle form submission
-document.getElementById("package-form").addEventListener("submit", (e) => {
+document.getElementById("itinerary-form").addEventListener("submit", (e) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
-
-    const country = document.getElementById("country").value.trim();
-    const tier = document.getElementById("tier").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const tagline = document.getElementById("tagline").value.trim();
-    const price = document.getElementById("price").value.trim();
-    const priceNote = document.getElementById("price-note").value.trim();
-    const features = document.getElementById("features").value
-        .split(",")
-        .map(f => f.trim())
-        .filter(f => f);
-
-    const packageData = {
-        country,
-        tier,
-        name,
-        tagline,
-        price,
-        priceNote,
-        features
-    };
-
-    console.log("Package Data:", packageData);
-
+    
+    const data = getItineraryData();
+    console.log("Itinerary Data:", data);
+    
     // Show success message
     const successMsg = document.getElementById("success-message");
     successMsg.classList.add("show");
-
+    
     // Reset form
-    document.getElementById("package-form").reset();
-    document.getElementById("preview-area").innerHTML = `<p>Fill in the form and click Preview to see how your package will look</p>`;
-
+    document.getElementById("itinerary-form").reset();
+    document.getElementById("nights").value = "";
+    document.getElementById("days").value = "";
+    
+    // Reset preview
+    document.getElementById("preview-area").innerHTML = `<p>Fill in the form and click Preview to see how your itinerary will look</p>`;
+    
+    // Reinitialize days
+    initializeForm();
+    addDay();
+    addDay();
+    
     // Hide success message after 3 seconds
     setTimeout(() => {
         successMsg.classList.remove("show");
     }, 3000);
-
+    
     // TODO: Send data to brochure.html or backend
-    console.log("Ready to insert package into brochure.html");
+    console.log("Ready to insert itinerary into brochure.html");
 });

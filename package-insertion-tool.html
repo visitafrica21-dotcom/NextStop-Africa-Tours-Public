@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Package Insertion Tool</title>
+    <title>Itinerary Insertion Tool</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -50,16 +50,9 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 48px 20px;
-        }
-
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
         }
 
         .form-section {
@@ -91,6 +84,16 @@
             margin-bottom: 0;
         }
 
+        .form-row-three {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-three .form-group {
+            margin-bottom: 0;
+        }
+
         label {
             display: block;
             font-size: 13px;
@@ -102,7 +105,7 @@
         }
 
         input[type="text"],
-        input[type="email"],
+        input[type="number"],
         select,
         textarea {
             width: 100%;
@@ -117,7 +120,7 @@
         }
 
         input[type="text"]:focus,
-        input[type="email"]:focus,
+        input[type="number"]:focus,
         select:focus,
         textarea:focus {
             outline: none;
@@ -128,8 +131,92 @@
 
         textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 100px;
             font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .days-section {
+            background: var(--cream);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .days-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--deep-green);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .day-item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid var(--light-border);
+        }
+
+        .day-item h4 {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--forest);
+            margin-bottom: 8px;
+        }
+
+        .day-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .day-controls input {
+            flex: 1;
+        }
+
+        .day-controls button {
+            padding: 8px 16px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .day-controls button:hover {
+            background: #b83f2a;
+        }
+
+        .day-controls .remove-day {
+            background: #999;
+        }
+
+        .day-controls .remove-day:hover {
+            background: #777;
+        }
+
+        .add-day-btn {
+            background: var(--forest);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .add-day-btn:hover {
+            background: var(--deep-green);
         }
 
         .button-group {
@@ -138,7 +225,8 @@
             margin-top: 32px;
         }
 
-        button {
+        button[type="button"].primary,
+        button[type="submit"] {
             flex: 1;
             padding: 14px 24px;
             border: none;
@@ -152,13 +240,13 @@
             transition: all 0.3s;
         }
 
-        #preview-btn {
+        button[type="button"].primary {
             background: var(--forest);
             color: #fff;
             border: 2px solid var(--forest);
         }
 
-        #preview-btn:hover {
+        button[type="button"].primary:hover {
             background: transparent;
             color: var(--forest);
         }
@@ -175,8 +263,11 @@
         }
 
         .preview-section {
-            position: sticky;
-            top: 48px;
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            margin-top: 24px;
         }
 
         .preview-section h2 {
@@ -188,14 +279,13 @@
         }
 
         #preview-area {
-            min-height: 400px;
+            min-height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #fff;
+            background: var(--cream);
             border-radius: 16px;
             padding: 24px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
             color: #aaa;
             text-align: center;
         }
@@ -215,16 +305,6 @@
             display: block;
         }
 
-        @media (max-width: 1024px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
-
-            .preview-section {
-                position: static;
-            }
-        }
-
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 28px;
@@ -234,7 +314,8 @@
                 padding: 24px;
             }
 
-            .form-row {
+            .form-row,
+            .form-row-three {
                 grid-template-columns: 1fr;
             }
 
@@ -250,73 +331,70 @@
 </head>
 <body>
     <div class="header">
-        <h1>Package Insertion Tool</h1>
-        <p>Create and preview new tour packages for the brochure</p>
+        <h1>Itinerary Insertion Tool</h1>
+        <p>Create and preview day-by-day itineraries for the brochure</p>
     </div>
 
     <div class="container">
-        <div class="content">
-            <div class="form-section">
-                <h2>Package Details</h2>
-                <form id="package-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="country">Country *</label>
-                            <input type="text" id="country" name="country" placeholder="e.g., Kenya, Tanzania" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="tier">Tier *</label>
-                            <select id="tier" name="tier" required>
-                                <option value="">Select a tier</option>
-                                <option value="Economy">Economy</option>
-                                <option value="Standard">Standard</option>
-                                <option value="Luxury">Luxury</option>
-                            </select>
-                        </div>
-                    </div>
-
+        <div class="form-section">
+            <h2>Itinerary Details</h2>
+            <form id="itinerary-form">
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="name">Package Name *</label>
-                        <input type="text" id="name" name="name" placeholder="e.g., Safari Adventure" required>
+                        <label for="country">Country *</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select a country</option>
+                            <option value="Uganda">Uganda, The Pearl of Africa</option>
+                            <option value="Algeria">Algeria, Sahara's Best Kept Secret</option>
+                            <option value="Rwanda">Rwanda</option>
+                            <option value="Tanzania">Tanzania</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Morocco">Morocco</option>
+                        </select>
                     </div>
-
                     <div class="form-group">
-                        <label for="tagline">Tagline</label>
-                        <input type="text" id="tagline" name="tagline" placeholder="e.g., Experience the wild like never before">
+                        <label for="package-name">Package Name *</label>
+                        <input type="text" id="package-name" name="package-name" placeholder="e.g., Hiking + Safari" required>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="price">Price Range *</label>
-                            <input type="text" id="price" name="price" placeholder="e.g., $3,500 - $5,000" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="price-note">Price Note</label>
-                            <input type="text" id="price-note" name="price-note" placeholder="e.g., Per person, all-inclusive">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="features">Features (comma-separated) *</label>
-                        <textarea id="features" name="features" placeholder="e.g., 5-star accommodations, Guided safari tours, All meals included" required></textarea>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" id="preview-btn">Preview</button>
-                        <button type="submit">Submit</button>
-                    </div>
-
-                    <div class="success-message" id="success-message">
-                        ✔ Package submitted successfully!
-                    </div>
-                </form>
-            </div>
-
-            <div class="preview-section">
-                <h2>Live Preview</h2>
-                <div id="preview-area">
-                    <p>Fill in the form and click Preview to see how your package will look</p>
                 </div>
+
+                <div class="form-group">
+                    <label for="package-desc">Package Description *</label>
+                    <input type="text" id="package-desc" name="package-desc" placeholder="e.g., Mix of wildlife safari and mountain hiking" required>
+                </div>
+
+                <div class="form-row-three">
+                    <div class="form-group">
+                        <label for="nights">Nights *</label>
+                        <input type="number" id="nights" name="nights" min="1" max="30" placeholder="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="days">Days *</label>
+                        <input type="number" id="days" name="days" min="1" max="31" placeholder="6" required>
+                    </div>
+                </div>
+
+                <div class="days-section">
+                    <h3>Day-by-Day Activities</h3>
+                    <div id="days-container"></div>
+                    <button type="button" class="add-day-btn" id="add-day-btn">+ Add Day</button>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="primary" id="preview-btn">Preview</button>
+                    <button type="submit">Submit</button>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    ✔ Itinerary submitted successfully!
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-section">
+            <h2>Live Preview</h2>
+            <div id="preview-area">
+                <p>Fill in the form and click Preview to see how your itinerary will look</p>
             </div>
         </div>
     </div>
