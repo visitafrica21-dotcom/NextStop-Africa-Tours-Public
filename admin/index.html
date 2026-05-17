@@ -549,17 +549,61 @@
         }
 
         @media (max-width: 768px) {
+            .header {
+                padding: 32px 16px;
+            }
+
             .header h1 {
-                font-size: 28px;
+                font-size: 26px;
+            }
+
+            .header p {
+                font-size: 12px;
+                padding: 0 8px;
+            }
+
+            .container {
+                padding: 24px 12px;
             }
 
             .form-section {
-                padding: 24px;
+                padding: 20px;
+            }
+
+            .form-section h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
             }
 
             .form-row,
             .form-row-three {
                 grid-template-columns: 1fr;
+            }
+
+            .days-section {
+                padding: 16px;
+            }
+
+            .days-section h3 {
+                font-size: 16px;
+            }
+
+            .day-item {
+                padding: 14px;
+            }
+
+            .day-controls {
+                flex-direction: column;
+            }
+
+            .day-controls button {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .add-day-btn {
+                width: 100%;
+                text-align: center;
             }
 
             .button-group {
@@ -570,9 +614,45 @@
                 width: 100%;
             }
 
+            .preview-section {
+                padding: 20px;
+            }
+
+            .preview-section h2 {
+                font-size: 20px;
+            }
+
+            #preview-area {
+                min-height: 300px;
+                padding: 20px;
+            }
+
+            .preview-itin-header h3 {
+                font-size: 20px;
+            }
+
+            .preview-days-timeline {
+                padding-left: 36px;
+            }
+
+            .preview-day-item {
+                padding: 18px 20px;
+            }
+
+            .preview-day-item::before {
+                left: -28px;
+                width: 8px;
+                height: 8px;
+            }
+
+            .manage-section p {
+                font-size: 13px !important;
+            }
+
             .saved-package-item {
                 flex-direction: column;
                 align-items: stretch;
+                padding: 14px;
             }
 
             .package-actions {
@@ -582,6 +662,13 @@
             .edit-package-btn,
             .delete-package-btn {
                 flex: 1;
+                padding: 12px 14px;
+                text-align: center;
+            }
+
+            .success-message {
+                font-size: 13px;
+                padding: 12px;
             }
         }
     </style>
