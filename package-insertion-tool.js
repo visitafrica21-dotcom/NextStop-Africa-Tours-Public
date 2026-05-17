@@ -147,9 +147,30 @@ document.getElementById("itinerary-form").addEventListener("submit", (e) => {
     const data = getItineraryData();
     console.log("Itinerary Data:", data);
     
+    // Save to localStorage
+    let savedItineraries = JSON.parse(localStorage.getItem("newItineraries")) || [];
+    
+    // Generate a unique ID for this itinerary
+    const itineraryId = `itin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    const itineraryEntry = {
+        id: itineraryId,
+        country: data.country,
+        packageName: data.packageName,
+        packageDesc: data.packageDesc,
+        nights: data.nights,
+        days: data.days,
+        dayByDay: data.dayByDay,
+        timestamp: new Date().toISOString()
+    };
+    
+    savedItineraries.push(itineraryEntry);
+    localStorage.setItem("newItineraries", JSON.stringify(savedItineraries));
+    
     // Show success message
     const successMsg = document.getElementById("success-message");
     successMsg.classList.add("show");
+    successMsg.innerHTML = `✔ Itinerary submitted successfully! The package has been added to the brochure page. <a href="brochure.html" target="_blank" style="color: #155724; text-decoration: underline; font-weight: 600;">View it on the brochure</a>`;
     
     // Reset form
     document.getElementById("itinerary-form").reset();
@@ -164,11 +185,8 @@ document.getElementById("itinerary-form").addEventListener("submit", (e) => {
     addDay();
     addDay();
     
-    // Hide success message after 3 seconds
+    // Hide success message after 5 seconds
     setTimeout(() => {
         successMsg.classList.remove("show");
-    }, 3000);
-    
-    // TODO: Send data to brochure.html or backend
-    console.log("Ready to insert itinerary into brochure.html");
+    }, 5000);
 });

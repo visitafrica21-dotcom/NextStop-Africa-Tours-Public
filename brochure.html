@@ -2795,6 +2795,83 @@
       document.getElementById(id).classList.add('active');
       btn.classList.add('active');
     }
+
+    // Load and insert new itineraries from localStorage
+    function loadNewItineraries() {
+      const savedItineraries = JSON.parse(localStorage.getItem("newItineraries")) || [];
+      
+      if (savedItineraries.length === 0) return;
+      
+      const itinerarySection = document.querySelector(".itinerary-inner");
+      
+      savedItineraries.forEach(itinerary => {
+        const country = itinerary.country;
+        
+        // Find existing country group or create new one
+        let countryGroup = document.getElementById(`itin-${country.toLowerCase().replace(/[,\s]/g, '')}`);
+        
+        if (!countryGroup) {
+          // Create new country group
+          countryGroup = document.createElement("div");
+          countryGroup.className = "itin-country-group";
+          countryGroup.id = `itin-${country.toLowerCase().replace(/[,\s]/g, '')}`;
+          countryGroup.innerHTML = `
+            <div class="itin-country-label">${country}</div>
+            <div class="itin-tabs"></div>
+          `;
+          itinerarySection.appendChild(countryGroup);
+        }
+        
+        // Find or create tabs container
+        let tabsContainer = countryGroup.querySelector(".itin-tabs");
+        if (!tabsContainer) {
+          tabsContainer = document.createElement("div");
+          tabsContainer.className = "itin-tabs";
+          countryGroup.appendChild(tabsContainer);
+        }
+        
+        // Create button for this itinerary
+        const buttonId = itinerary.id;
+        const groupId = countryGroup.id.replace('itin-', '') + '-group';
+        
+        const button = document.createElement("button");
+        button.className = "itin-btn";
+        button.textContent = `Package: ${itinerary.packageName}`;
+        button.onclick = function(e) {
+          e.preventDefault();
+          showItin(buttonId, this, groupId);
+        };
+        tabsContainer.appendChild(button);
+        
+        // Create panel for this itinerary
+        const panel = document.createElement("div");
+        panel.id = buttonId;
+        panel.className = "itin-panel";
+        
+        const daysHTML = itinerary.dayByDay.map(day => `
+          <div class="day-item">
+            <div class="day-badge">Day ${day.dayNumber}</div>
+            <h4>${day.title}</h4>
+            <p>${day.description}</p>
+          </div>
+        `).join("");
+        
+        panel.innerHTML = `
+          <div class="itin-header">
+            <h3>${itinerary.packageName}</h3>
+            <p>${itinerary.nights} Nights / ${itinerary.days} Days · ${itinerary.packageDesc}</p>
+          </div>
+          <div class="days-timeline">
+            ${daysHTML}
+          </div>
+        `;
+        
+        countryGroup.appendChild(panel);
+      });
+    }
+    
+    // Load itineraries on page load
+    loadNewItineraries();
   </script>
 </body>
 
