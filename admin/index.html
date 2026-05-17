@@ -518,13 +518,25 @@
         }
 
         .cancel-edit-btn {
-            background: #fff;
-            border: 1px solid var(--light-border);
+            flex: 1;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+            border: 2px solid var(--light-border);
             color: #666;
         }
 
         .cancel-edit-btn:hover {
-            background: #f5f5f5;
+            background: var(--forest);
+            border-color: var(--forest);
+            color: #fff;
         }
 
         .empty-packages-msg {
