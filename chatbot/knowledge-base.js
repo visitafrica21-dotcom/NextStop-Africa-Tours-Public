@@ -51,7 +51,7 @@ export const kb = {
       description:
         'Guided game drives across Africa\'s most iconic national parks and reserves.',
       duration: '3–14 days depending on destination',
-      price: 'From $800 per person',  // ← UPDATE with real pricing
+      price: 'From €800 per person',  // ← UPDATE with real pricing
       highlights: [
         'Big Five game drives',
         'Gorilla and chimpanzee trekking',
@@ -64,7 +64,7 @@ export const kb = {
       description:
         'Immersive experiences with local communities, ancient kingdoms, and UNESCO sites.',
       duration: '3–10 days',
-      price: 'From $600 per person',  // ← UPDATE
+      price: 'From €600 per person',  // ← UPDATE
       highlights: [
         'Traditional village visits',
         'Historical monuments and museums',
@@ -77,7 +77,7 @@ export const kb = {
       description:
         'For thrill-seekers: mountain climbing, desert expeditions, and more.',
       duration: '2–12 days',
-      price: 'From $500 per person',  // ← UPDATE
+      price: 'From €500 per person',  // ← UPDATE
       highlights: [
         'Mount Kilimanjaro climbing (Tanzania)',
         'Sahara camel trekking (Morocco/Algeria)',
