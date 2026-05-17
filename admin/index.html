@@ -1,0 +1,655 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itinerary Management Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --forest: #2a2421;
+            --deep-green: #1d3d2b;
+            --gold: #c84b31;
+            --cream: #faf8f5;
+            --light-border: rgba(42, 36, 33, 0.1);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--cream);
+            color: var(--forest);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--deep-green), var(--forest));
+            color: #fff;
+            padding: 48px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1.5px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 48px 20px;
+        }
+
+        .form-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--deep-green);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        input[type="text"][list]::placeholder {
+            color: #bbb;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-row-three {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-three .form-group {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--forest);
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--light-border);
+            border-radius: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            color: var(--forest);
+            background: #fafafa;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            background: #fff;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200, 75, 49, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .days-section {
+            background: var(--cream);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .days-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            color: var(--deep-green);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .day-item {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid var(--light-border);
+        }
+
+        .day-item h4 {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--forest);
+            margin-bottom: 8px;
+        }
+
+        .day-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .day-controls input {
+            flex: 1;
+        }
+
+        .day-controls button {
+            padding: 8px 16px;
+            background: var(--gold);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .day-controls button:hover {
+            background: #b83f2a;
+        }
+
+        .day-controls .remove-day {
+            background: #999;
+        }
+
+        .day-controls .remove-day:hover {
+            background: #777;
+        }
+
+        .add-day-btn {
+            background: var(--forest);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .add-day-btn:hover {
+            background: var(--deep-green);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        button[type="button"].primary,
+        button[type="submit"] {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button[type="button"].primary {
+            background: var(--forest);
+            color: #fff;
+            border: 2px solid var(--forest);
+        }
+
+        button[type="button"].primary:hover {
+            background: transparent;
+            color: var(--forest);
+        }
+
+        button[type="submit"] {
+            background: var(--gold);
+            color: #fff;
+            border: 2px solid var(--gold);
+        }
+
+        button[type="submit"]:hover {
+            background: #b83f2a;
+            border-color: #b83f2a;
+        }
+
+        .preview-section {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+            margin-top: 24px;
+        }
+
+        .preview-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--deep-green);
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        #preview-area {
+            min-height: 500px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            color: #aaa;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .preview-itin-header {
+            margin-bottom: 28px;
+            text-align: left;
+        }
+
+        .preview-itin-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--deep-green);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .preview-itin-header p {
+            color: #aaa;
+            font-size: 13px;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        .preview-days-timeline {
+            position: relative;
+            padding-left: 44px;
+            text-align: left;
+        }
+
+        .preview-days-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--gold), rgba(200, 75, 49, 0.15));
+            border-radius: 2px;
+        }
+
+        .preview-day-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 26px 30px;
+            background: var(--cream);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s;
+        }
+
+        .preview-day-item:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            transform: translateX(4px);
+        }
+
+        .preview-day-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 30px;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+
+        .preview-day-badge {
+            font-size: 9px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--rust);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .preview-day-item h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            color: var(--deep-green);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .preview-day-item p {
+            font-size: 13px;
+            color: #999;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .preview-day-item .other {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        :root {
+            --rust: #c84b31;
+        }
+
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 24px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .manage-section {
+            margin-top: 32px;
+        }
+
+        .saved-packages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .saved-package-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 20px;
+            border: 1px solid var(--light-border);
+            border-radius: 10px;
+            background: var(--cream);
+        }
+
+        .saved-package-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .saved-package-info strong {
+            display: block;
+            font-size: 15px;
+            color: var(--deep-green);
+            margin-bottom: 4px;
+        }
+
+        .saved-package-info .package-title-line {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--forest);
+            margin-top: 6px;
+        }
+
+        .delete-package-btn {
+            flex-shrink: 0;
+            padding: 10px 18px;
+            background: #fff;
+            border: 1px solid #e0b4b4;
+            color: #a33;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .delete-package-btn:hover {
+            background: #a33;
+            color: #fff;
+            border-color: #a33;
+        }
+
+        .package-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .edit-package-btn {
+            padding: 10px 18px;
+            background: #fff;
+            border: 1px solid var(--light-border);
+            color: var(--deep-green);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .edit-package-btn:hover {
+            background: var(--deep-green);
+            color: #fff;
+            border-color: var(--deep-green);
+        }
+
+        .package-source-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .package-source-badge.builtin {
+            background: #e8f0eb;
+            color: var(--deep-green);
+        }
+
+        .package-source-badge.custom {
+            background: #f5efe8;
+            color: #8a5a2a;
+        }
+
+        .cancel-edit-btn {
+            background: #fff;
+            border: 1px solid var(--light-border);
+            color: #666;
+        }
+
+        .cancel-edit-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .empty-packages-msg {
+            color: #888;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .form-section {
+                padding: 24px;
+            }
+
+            .form-row,
+            .form-row-three {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .saved-package-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .package-actions {
+                width: 100%;
+            }
+
+            .edit-package-btn,
+            .delete-package-btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Itinerary Management Portal</h1>
+        <p>Create, edit, and manage day-by-day itineraries for the brochure</p>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Itinerary Details</h2>
+            <form id="itinerary-form">
+                <input type="hidden" id="editing-id" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <input type="text" id="country" name="country" list="countries-list" autocomplete="off" placeholder="e.g., Uganda, Kenya, or new country" required>
+                        <datalist id="countries-list"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="package-name">Package Name *</label>
+                        <input type="text" id="package-name" name="package-name" placeholder="e.g., Hiking + Safari" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="display-title">Full Package Title <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional — shown as heading on brochure)</span></label>
+                    <input type="text" id="display-title" name="display-title" placeholder="e.g., Hiking (Mount Muhabura) + Safari Experience">
+                </div>
+
+                <div class="form-group">
+                    <label for="package-desc">Package Description *</label>
+                    <input type="text" id="package-desc" name="package-desc" placeholder="e.g., Mix of wildlife safari and mountain hiking" required>
+                </div>
+
+                <div class="form-row-three">
+                    <div class="form-group">
+                        <label for="nights">Nights *</label>
+                        <input type="number" id="nights" name="nights" min="1" max="30" placeholder="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="days">Days *</label>
+                        <input type="number" id="days" name="days" min="1" max="31" placeholder="6" required>
+                    </div>
+                </div>
+
+                <div class="days-section">
+                    <h3>Day-by-Day Activities</h3>
+                    <div id="days-container"></div>
+                    <button type="button" class="add-day-btn" id="add-day-btn">+ Add Day</button>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="primary" id="preview-btn">Preview</button>
+                    <button type="button" class="cancel-edit-btn" id="cancel-edit-btn" style="display:none;">Cancel Edit</button>
+                    <button type="submit" id="submit-btn">Add Package</button>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    ✔ Itinerary submitted successfully!
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-section">
+            <h2>Live Preview</h2>
+            <div id="preview-area">
+                <p>Fill in the form and click Preview to see how your itinerary will look</p>
+            </div>
+        </div>
+
+        <div class="form-section manage-section">
+            <h2>Manage All Packages</h2>
+            <p style="color:#777;font-size:14px;margin-bottom:20px;">View, edit, or delete any package on the brochure — including the original portfolio packages and any you have added.</p>
+            <div id="saved-packages-list" class="saved-packages-list">
+                <p class="empty-packages-msg">No saved packages yet.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../itinerary-utils.js"></script>
+    <script src="../package-insertion-tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "ug1",
+    "country": "Uganda, The Pearl of Africa",
+    "packageName": "Hiking + Safari",
+    "displayTitle": "Hiking (Mount Muhabura) + Safari Experience",
+    "packageDesc": "Mix of wildlife safari and mountain hiking",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 1,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Tour of Kampala", "description": "Visit cultural sites and experience the local way of life in Uganda's vibrant capital." },
+      { "dayNumber": 2, "title": "Travel to Lake Mburo National Park", "description": "Journey south with a stop at the Equator for photos and exploration." },
+      { "dayNumber": 3, "title": "Morning Game Drive – Lake Mburo NP", "description": "Early morning game drive spotting zebras, impalas and buffalos, then travel to Kisoro in the south-west." },
+      { "dayNumber": 4, "title": "Hiking Mount Muhabura", "description": "Hike this iconic volcano (3,645m) with interaction with local communities along the trail.", "footnote": "Note: Mountain may be swapped for Rwenzori or Elgon depending on preference." },
+      { "dayNumber": 5, "title": "Return to Kampala", "description": "Scenic countryside views along the journey back with time for final shopping and reflection." }
+    ]
+  },
+  {
+    "id": "ug2",
+    "country": "Uganda, The Pearl of Africa",
+    "packageName": "Source of the Nile",
+    "displayTitle": "Quest for the Source of the Nile",
+    "packageDesc": "Lake Victoria + Nile River Adventure",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 2,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Discover Islands on Lake Victoria", "description": "Boat out to the tranquil islands of Lake Victoria and interact with local fishing communities." },
+      { "dayNumber": 2, "title": "Shoebill Stork Birding Experience", "description": "Rare birdwatching in the papyrus swamps to spot the iconic Shoebill Stork, plus kayaking on the lake." },
+      { "dayNumber": 3, "title": "Visit the Source of the Nile", "description": "Visit the legendary source of the world's longest river in Jinja, with a boat cruise and sunset viewing." },
+      { "dayNumber": 4, "title": "Visit the Busoga Kingdom", "description": "Cultural visit to the ancient Busoga Kingdom with bicycle riding and community interaction." },
+      { "dayNumber": 5, "title": "White Water Rafting on the Nile", "description": "Thrilling grade 5 white water rafting on the Nile, the ultimate adrenaline finale before returning to Kampala." }
+    ]
+  },
+  {
+    "id": "ug3",
+    "country": "Uganda, The Pearl of Africa",
+    "packageName": "Coffee Trails and Longhorn Encounters",
+    "displayTitle": "Coffee Trails and Longhorn Encounters",
+    "packageDesc": "Scenic Villages & Coffee Heritage",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 3,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Journey from Kampala to Ntungamo", "description": "Enjoy a scenic drive with stops at the Kayabwe Equator Line for photo opportunities and the vibrant Lukaya Roadside Market to experience local flavors and culture." },
+      { "dayNumber": 2, "title": "Visit Inspire Africa Coffee Park", "description": "Immerse yourself in Uganda's coffee heritage with a guided tour, followed by a unique canoe experience on Lake Nyabihoko." },
+      { "dayNumber": 3, "title": "Explore Nshenyi Cultural Village", "description": "Discover the richness of Ankole culture through authentic interactions, traditional practices, and the beauty of the surrounding landscape." },
+      { "dayNumber": 4, "title": "Hike to Karegyeya Rock", "description": "Take part in a refreshing hike with stunning views, and engage in meaningful conversations with local community members." },
+      { "dayNumber": 5, "title": "Discover the Sources of Kyafoora Hot Springs", "description": "Experience the natural wonder of the hot springs while connecting with the local community and learning about their traditions." }
+    ]
+  },
+  {
+    "id": "dz1",
+    "country": "Algeria, Sahara's Best Kept Secret",
+    "packageName": "Desert Quest Ghardaïa",
+    "displayTitle": "Desert Quest: Ghardaïa",
+    "packageDesc": "Algiers to the Heart of the Sahara",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 1,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Arrival in Algiers", "description": "Arrival and hotel check-in. City tour including the iconic Casbah, Martyrs' Memorial, and the waterfront." },
+      { "dayNumber": 2, "title": "Algiers Cultural Day", "description": "Visit museums, historic neighbourhoods, and local markets. Experience Algerian culture and cuisine." },
+      { "dayNumber": 3, "title": "Algiers → Ghardaïa", "description": "Travel deep into the Sahara to Ghardaïa. Arrive, settle in, and enjoy an evening walk through the old town." },
+      { "dayNumber": 4, "title": "M'zab Valley Exploration", "description": "Discover the UNESCO-listed M'zab Valley, its remarkable traditional architecture, markets, and cultural heritage sites." },
+      { "dayNumber": 5, "title": "Return to Algiers", "description": "Free morning in Ghardaïa before returning to Algiers for departure." }
+    ]
+  },
+  {
+    "id": "dz2",
+    "country": "Algeria, Sahara's Best Kept Secret",
+    "packageName": "Paths of Empires",
+    "displayTitle": "Paths of Empires: Annaba to Constantine",
+    "packageDesc": "Roman Heritage & Historic Cities",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 2,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Arrival in Annaba", "description": "Airport transfer and hotel check-in. Guided city tour of the region. Evening walk along the Corniche and waterfront." },
+      { "dayNumber": 2, "title": "Roman Heritage of Hippo Regius", "description": "Discover the Roman ruins of Hippo Regius, the Basilica of Saint Augustine, and Cap de Garde for panoramic Mediterranean views." },
+      { "dayNumber": 3, "title": "Annaba → Constantine", "description": "Travel to Constantine. City orientation tour and discovery of the historic old town and its cultural heritage." },
+      { "dayNumber": 4, "title": "The Bridges of Constantine", "description": "Explore the famous bridges including Sidi M'Cid and Mellah Slimane. Visit the Emir Abdelkader Mosque, old medina, and traditional markets." },
+      { "dayNumber": 5, "title": "Roman Sites & Panoramic Views", "description": "Cultural visit of Roman and historical sites, museums, and viewpoints overlooking Constantine's dramatic gorges. Free time for cafés and handicrafts." },
+      { "dayNumber": 6, "title": "Constantine → Annaba & Departure", "description": "Return to Annaba. Free time before airport transfer and departure." }
+    ]
+  },
+  {
+    "id": "bj1",
+    "country": "Benin, Cradle of African Spirituality",
+    "packageName": "Sacred Benin – The Vodun Experience",
+    "displayTitle": "Sacred Benin: The Vodun Experience",
+    "packageDesc": "Ancient Kingdoms + Spiritual Heritage",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 1,
+    "builtin": true,
+    "note": "📅 Best to travel between December and March, flights from Cadjehoun Airport (Cotonou) are generally more affordable during this period.",
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Kingdom of Dahomey – Ancient Women Warriors", "description": "Visit the Amazons' historical sites, tour Africa's largest market, and receive a cultural orientation to this remarkable land." },
+      { "dayNumber": 2, "title": "Temple of Pythons – Ouidah", "description": "Visit the ancient slave market, the Queen of Ouidah's palace, Sacred Forest, Sacred Garden, and the Fondation Zinsou." },
+      { "dayNumber": 3, "title": "Vodun Dance Amphitheatre – Porte Nouvelle", "description": "International Museum of Vodoo, visit the Black River, learn about Spirit of Death traditions, and attend artisanal handicraft workshops." },
+      { "dayNumber": 4, "title": "Floating Livelihood – Ganvié / Abomey-Calavi", "description": "Canoe ride through the extraordinary floating stilt village of Ganvié, then explore the new city and enjoy a picnic with locals." },
+      { "dayNumber": 5, "title": "Day-to-Day Life of the Beninese People", "description": "Relaxing cultural activities and informal interactions with the warm and welcoming Beninese people." }
+    ]
+  },
+  {
+    "id": "rw1",
+    "country": "Rwanda, Land of a Thousand Hills",
+    "packageName": "Rwanda Discovery",
+    "displayTitle": "Rwanda Discovery: 5 Nights / 6 Days of Culture, Nature & Adventure",
+    "packageDesc": "Kigali, Musanze, Bigogwe, Lake Kivu and Nyanza heritage highlights",
+    "nights": "5",
+    "days": "6",
+    "packageNumber": 1,
+    "builtin": true,
+    "dayByDay": [
+      { "dayNumber": 1, "title": "Kigali City Tour", "description": "Explore Kigali's highlights, including the Kigali Genocide Memorial, Nyandungu Eco Park in the afternoon, Inema Arts Center, and the vibrant car-free zones by night." },
+      { "dayNumber": 2, "title": "Mount Bisoke Adventure, Musanze", "description": "Hike Mount Bisoke (3,711m) and discover its stunning crater lake, with the option to visit the Dian Fossey Tomb and enjoy overnight camping at Red Rocks Rwanda." },
+      { "dayNumber": 3, "title": "Bigogwe Cultural Experience", "description": "Spend the day in Bigogwe with local herders, enjoying traditional cow milking, cultural dances, and authentic community interaction." },
+      { "dayNumber": 4, "title": "Lake Kivu Escape, Gisenyi", "description": "Relax by Lake Kivu with activities like boat rides and kayaking, then choose from evening shopping or lakeside nightlife." },
+      { "dayNumber": 5, "title": "Nyanza Heritage Tour", "description": "Visit the King's Palace Museum and see the iconic Inyambo cattle for a memorable close to Rwanda's royal heritage experience." }
+    ]
+  }
+]
