@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.preventDefault();
         cancelEdit();
     });
-    renderSavedPackagesList();
+    await renderSavedPackagesList();
 });
 
 function initializeForm() {
@@ -103,14 +103,14 @@ function loadPackageIntoForm(itinerary) {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function renderSavedPackagesList() {
+async function renderSavedPackagesList() {
     const listEl = document.getElementById("saved-packages-list");
     if (!listEl) return;
 
     let itineraries = utils.sortItineraries(
-        utils.ensurePackageNumbers(utils.getBrochurePackages(utils.getAllItineraries()))
+        utils.ensurePackageNumbers(utils.getBrochurePackages(await utils.getAllItinerariesAsync()))
     );
-    utils.saveAllItineraries(itineraries);
+    await utils.saveItinerariesAsync(itineraries);
 
     if (itineraries.length === 0) {
         listEl.innerHTML = '<p class="empty-packages-msg">No packages found.</p>';
@@ -147,14 +147,15 @@ function renderSavedPackagesList() {
     utils.refreshCountryDatalist();
 }
 
-function editPackage(id) {
-    const itinerary = utils.getAllItineraries().find((it) => it.id === id);
+async function editPackage(id) {
+    const itineraries = await utils.getAllItinerariesAsync();
+    const itinerary = itineraries.find((it) => it.id === id);
     if (!itinerary) return;
     loadPackageIntoForm(itinerary);
 }
 
-function deletePackage(id) {
-    let itineraries = utils.getAllItineraries();
+async function deletePackage(id) {
+    let itineraries = await utils.getAllItinerariesAsync();
     const target = itineraries.find((it) => it.id === id);
     if (!target) return;
 
@@ -163,10 +164,10 @@ function deletePackage(id) {
 
     itineraries = itineraries.filter((it) => it.id !== id);
     itineraries = utils.ensurePackageNumbers(itineraries);
-    utils.saveAllItineraries(itineraries);
+    await utils.saveItinerariesAsync(itineraries);
 
     if (editingId === id) cancelEdit();
-    renderSavedPackagesList();
+    await renderSavedPackagesList();
 
     const successMsg = document.getElementById("success-message");
     successMsg.classList.add("show");
@@ -229,12 +230,12 @@ function getItineraryData() {
     };
 }
 
-document.getElementById("preview-btn").addEventListener("click", () => {
+document.getElementById("preview-btn").addEventListener("click", async () => {
     if (!validateForm()) return;
 
     const data = getItineraryData();
     const previewArea = document.getElementById("preview-area");
-    let itineraries = utils.ensurePackageNumbers(utils.getAllItineraries());
+    let itineraries = utils.ensurePackageNumbers(await utils.getAllItinerariesAsync());
     const packageNumber = editingId
         ? itineraries.find((i) => i.id === editingId)?.packageNumber
         : utils.nextPackageNumber(data.country, itineraries);
@@ -262,12 +263,12 @@ document.getElementById("preview-btn").addEventListener("click", () => {
         </div>`;
 });
 
-document.getElementById("itinerary-form").addEventListener("submit", (e) => {
+document.getElementById("itinerary-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     const data = getItineraryData();
-    let itineraries = utils.ensurePackageNumbers(utils.getAllItineraries());
+    let itineraries = utils.ensurePackageNumbers(await utils.getAllItinerariesAsync());
 
     if (editingId) {
         const index = itineraries.findIndex((it) => it.id === editingId);
@@ -306,8 +307,8 @@ document.getElementById("itinerary-form").addEventListener("submit", (e) => {
     }
 
     itineraries = utils.ensurePackageNumbers(itineraries);
-    utils.saveAllItineraries(itineraries);
-    renderSavedPackagesList();
+    await utils.saveItinerariesAsync(itineraries);
+    await renderSavedPackagesList();
 
     const saved = editingId
         ? itineraries.find((i) => i.id === editingId)

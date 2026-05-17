@@ -4,5 +4,12 @@
   "compatibility_date": "2025-01-01",
   "ai": {
     "binding": "chatbot_llm_binding"
-  }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "itineraries_kv",
+      "id": "2129531eaf954777972b789c9577f901",
+      "preview_id": "2129531eaf954777972b789c9577f901"
+    }
+  ]
 }

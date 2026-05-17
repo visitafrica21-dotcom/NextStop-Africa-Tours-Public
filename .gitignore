@@ -7,3 +7,5 @@ vite.config.ts.*
 .github/*
 tourism work.xlsx
 .codex/
+cloudflare_setup.md
+.wrangler/

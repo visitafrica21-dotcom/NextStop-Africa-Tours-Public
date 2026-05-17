@@ -26,6 +26,43 @@
     return BUILTIN_COUNTRIES[key]?.groupId || `itin-${key}`;
   }
 
+  async function getWorkerUrl() {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'http://localhost:8787';
+    }
+    return 'https://nextstop-africa-tours-public.visitafrica21.workers.dev';
+  }
+
+  async function fetchItinerariesFromWorker() {
+    try {
+      const url = await getWorkerUrl();
+      const response = await fetch(`${url}/api/itineraries`);
+      if (!response.ok) throw new Error('Failed to fetch from worker');
+      return await response.json();
+    } catch (err) {
+      console.warn('Worker fetch failed, falling back to localStorage:', err);
+      return getAllItinerariesSync();
+    }
+  }
+
+  async function saveItinerariesToWorker(list) {
+    try {
+      const url = await getWorkerUrl();
+      const response = await fetch(`${url}/api/itineraries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(list)
+      });
+      if (!response.ok) throw new Error('Failed to save to worker');
+      return await response.json();
+    } catch (err) {
+      console.warn('Worker save failed, falling back to localStorage:', err);
+      saveAllItineraries(list);
+      return list;
+    }
+  }
+
   function getSavedItineraries() {
     return getAllItinerariesSync();
   }
@@ -41,12 +78,20 @@
     }
   }
 
+  async function getAllItineraries() {
+    return await fetchItinerariesFromWorker();
+  }
+
   function saveItineraries(list) {
     saveAllItineraries(list);
   }
 
   function saveAllItineraries(list) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+
+  async function saveItinerariesAsync(list) {
+    return await saveItinerariesToWorker(list);
   }
 
   function ensurePackageNumbers(itineraries) {
@@ -140,7 +185,7 @@
   }
 
   async function initItineraries() {
-    let list = getAllItinerariesSync();
+    let list = await getAllItineraries();
     let legacy = [];
 
     try {
@@ -171,6 +216,7 @@
       }
 
       localStorage.setItem(INIT_FLAG, 'true');
+      await saveItinerariesAsync(list);
     }
 
     if (legacy.length > 0) {
@@ -178,10 +224,11 @@
         if (!list.find((x) => x.id === item.id)) list.push(item);
       });
       localStorage.removeItem(LEGACY_KEY);
+      await saveItinerariesAsync(list);
     }
 
     list = ensurePackageNumbers(list.filter(isBrochurePackage));
-    saveAllItineraries(list);
+    await saveItinerariesAsync(list);
     return list;
   }
 
@@ -358,8 +405,10 @@
     getCountryGroupId,
     getSavedItineraries,
     getAllItineraries: getAllItinerariesSync,
+    getAllItinerariesAsync: getAllItineraries,
     saveItineraries,
     saveAllItineraries,
+    saveItinerariesAsync,
     ensurePackageNumbers,
     nextPackageNumber,
     formatPackageLabel,
