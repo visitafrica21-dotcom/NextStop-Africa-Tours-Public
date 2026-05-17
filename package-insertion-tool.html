@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Insertion Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Package Insertion Tool</h1>
+    <form id="package-form">
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country" required>
+
+        <label for="tier">Package Tier:</label>
+        <select id="tier" name="tier">
+            <option value="Economy">Economy</option>
+            <option value="Standard">Standard</option>
+            <option value="Luxury">Luxury</option>
+        </select>
+
+        <label for="name">Package Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="tagline">Tagline:</label>
+        <input type="text" id="tagline" name="tagline">
+
+        <label for="price">Price Range:</label>
+        <input type="text" id="price" name="price" required>
+
+        <label for="price-note">Price Note:</label>
+        <input type="text" id="price-note" name="price-note">
+
+        <label for="features">Features (comma-separated):</label>
+        <textarea id="features" name="features"></textarea>
+
+        <button type="button" id="preview-btn">Preview</button>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Preview</h2>
+    <div id="preview-area"></div>
+
+    <script src="package-insertion-tool.js"></script>
+</body>
+</html>
