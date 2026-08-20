@@ -1461,6 +1461,348 @@
       font-style: italic;
     }
 
+    /* ITINERARY CARDS (package cards: "See trip" / "Book") */
+    .itin-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .itin-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      transition: all 0.4s cubic-bezier(.25, .46, .45, .94);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .itin-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.1);
+    }
+
+    .itin-card-cover {
+      height: 170px;
+      background: linear-gradient(135deg, var(--deep-green), var(--forest));
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+
+    .itin-card-cover.has-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%);
+    }
+
+    .itin-card-badge {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--deep-green);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 50px;
+    }
+
+    .itin-card-body {
+      padding: 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .itin-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--deep-green);
+      font-weight: 500;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .itin-card-meta {
+      font-size: 12px;
+      color: #999;
+      font-weight: 400;
+      margin-bottom: 14px;
+    }
+
+    .itin-card-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--rust);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .itin-card-price .from-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #bbb;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .itin-card-price .pp-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      color: #999;
+      font-weight: 400;
+    }
+
+    .itin-card-price-quote {
+      font-size: 15px;
+      color: #999;
+      font-style: italic;
+    }
+
+    .itin-card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn-see-trip,
+    .btn-book {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid var(--forest);
+      transition: all 0.3s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .btn-see-trip {
+      background: transparent;
+      color: var(--forest);
+    }
+
+    .btn-see-trip:hover {
+      background: var(--forest);
+      color: #fff;
+    }
+
+    .btn-book {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+    }
+
+    .btn-book:hover {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .btn-book.full-width {
+      flex: none;
+      width: 100%;
+      padding: 15px;
+      margin-top: 28px;
+      font-size: 12px;
+    }
+
+    /* MODALS (trip detail + booking) */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 17, 16, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 40px;
+      animation: modalPop 0.35s cubic-bezier(.25, .46, .45, .94);
+    }
+
+    @keyframes modalPop {
+      from {
+        transform: scale(0.94) translateY(12px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: var(--cream);
+      color: var(--dark);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .booking-trip-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--deep-green);
+      margin-bottom: 4px;
+      padding-right: 30px;
+    }
+
+    .booking-trip-meta {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 28px;
+    }
+
+    .booking-field {
+      margin-bottom: 20px;
+    }
+
+    .booking-field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--forest);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .booking-field input {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      font-size: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--dark);
+      transition: border-color 0.3s;
+    }
+
+    .booking-field input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .booking-price-box {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin: 24px 0;
+    }
+
+    .booking-price-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .booking-price-row.discount {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .booking-price-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--deep-green);
+      font-family: 'Playfair Display', serif;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 12px;
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+
+    .booking-discount-note {
+      font-size: 12px;
+      color: var(--gold);
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .btn-whatsapp-book {
+      width: 100%;
+      padding: 16px;
+      border-radius: 50px;
+      border: none;
+      background: var(--gold);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-whatsapp-book:hover {
+      background: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 640px) {
+      .itin-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-box {
+        padding: 28px 22px;
+        max-height: 90vh;
+      }
+
+      .booking-trip-name {
+        font-size: 19px;
+      }
+    }
+
     /* Mobile Responsive - Itinerary Section */
     @media (max-width: 768px) {
       .itinerary-inner {
@@ -2362,22 +2704,22 @@
       <!-- Country packages below are rendered from itinerary data -->
       <div class="itin-country-group" id="itin-uganda">
         <div class="itin-country-label">Uganda, The Pearl of Africa</div>
-        <div class="itin-tabs"></div>
+        <div class="itin-card-grid"></div>
       </div>
 
       <div class="itin-country-group" id="itin-algeria">
         <div class="itin-country-label">Algeria, Sahara's Best Kept Secret</div>
-        <div class="itin-tabs"></div>
+        <div class="itin-card-grid"></div>
       </div>
 
       <div class="itin-country-group" id="itin-benin">
         <div class="itin-country-label">Benin, Cradle of African Spirituality</div>
-        <div class="itin-tabs"></div>
+        <div class="itin-card-grid"></div>
       </div>
 
       <div class="itin-country-group" id="itin-rwanda">
         <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
-        <div class="itin-tabs"></div>
+        <div class="itin-card-grid"></div>
       </div>
       <!-- KENYA, TANZANIA, MOROCCO -->
       <div class="itin-country-group" id="itin-kenya-tanzania-morocco">
@@ -2490,6 +2832,26 @@
   <footer>
     <p>© 2026 <span>NextStop Africa Tours Agency</span> — Explore Africa's Beauty, Culture & Adventure</p>
   </footer>
+
+  <!-- Trip detail modal ("See trip") -->
+  <div class="modal-overlay" id="trip-modal-overlay"
+    onclick="if(event.target===this) window.ItineraryUtils.closeModal('trip-modal-overlay')">
+    <div class="modal-box" id="trip-modal-box">
+      <button type="button" class="modal-close" aria-label="Close"
+        onclick="window.ItineraryUtils.closeModal('trip-modal-overlay')">&times;</button>
+      <div id="trip-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Booking modal ("Book") -->
+  <div class="modal-overlay" id="booking-modal-overlay"
+    onclick="if(event.target===this) window.ItineraryUtils.closeModal('booking-modal-overlay')">
+    <div class="modal-box" id="booking-modal-box">
+      <button type="button" class="modal-close" aria-label="Close"
+        onclick="window.ItineraryUtils.closeModal('booking-modal-overlay')">&times;</button>
+      <div id="booking-modal-content"></div>
+    </div>
+  </div>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script src="itinerary-utils.js"></script>

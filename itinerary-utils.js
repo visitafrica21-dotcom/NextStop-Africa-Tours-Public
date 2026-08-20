@@ -320,9 +320,8 @@
   }
 
   function clearCountryGroup(countryGroup) {
-    const tabs = countryGroup.querySelector('.itin-tabs');
-    if (tabs) tabs.innerHTML = '';
-    countryGroup.querySelectorAll('.itin-panel, .itin-note').forEach((el) => el.remove());
+    const grid = countryGroup.querySelector('.itin-card-grid');
+    if (grid) grid.innerHTML = '';
   }
 
   function getOrCreateCountryGroup(itinerarySection, country, insertBefore) {
@@ -335,7 +334,7 @@
       countryGroup.id = groupId;
       countryGroup.innerHTML = `
         <div class="itin-country-label">${escapeHtml(country)}</div>
-        <div class="itin-tabs"></div>`;
+        <div class="itin-card-grid"></div>`;
       if (insertBefore) {
         itinerarySection.insertBefore(countryGroup, insertBefore);
       } else {
@@ -346,12 +345,66 @@
     return countryGroup;
   }
 
+  /* ---------- Pricing helpers ---------- */
+
+  function parseFirstPrice(text) {
+    if (!text) return null;
+    const cleaned = String(text).replace(/,/g, '');
+    const match = cleaned.match(/(\d+(?:\.\d+)?)/);
+    return match ? Math.round(parseFloat(match[1])) : null;
+  }
+
+  /** Per-person "from" price for a package: always the country's published
+   *  budget-tier starting price from the pricing summary table on the page. */
+  function getFromPrice(itinerary) {
+    const key = getCountryKey(itinerary.country);
+    const row = document.getElementById('pricing-' + key);
+    if (!row) return null;
+    const cell = row.querySelector('.budget-price');
+    if (!cell) return null;
+    return parseFirstPrice(cell.textContent);
+  }
+
+  function formatEUR(n) {
+    return '€' + n.toLocaleString('en-US');
+  }
+
+  /* ---------- Card rendering ---------- */
+
+  function buildCardHtml(itinerary) {
+    const price = getFromPrice(itinerary);
+    const priceHtml = price
+      ? `<div class="itin-card-price"><span class="from-label">From</span>${formatEUR(price)}<span class="pp-label"> / person</span></div>`
+      : `<div class="itin-card-price itin-card-price-quote">Custom Quote</div>`;
+    const hasImage = Boolean(itinerary.image);
+    const coverStyle = hasImage ? ` style="background-image:url('${escapeHtml(itinerary.image)}')"` : '';
+    const coverClass = 'itin-card-cover' + (hasImage ? ' has-image' : '');
+    return `
+      <div class="itin-card">
+        <div class="${coverClass}"${coverStyle}>
+          <span class="itin-card-badge">Package ${escapeHtml(itinerary.packageNumber || '?')}</span>
+        </div>
+        <div class="itin-card-body">
+          <h4 class="itin-card-title">${escapeHtml(getDisplayTitle(itinerary))}</h4>
+          <div class="itin-card-meta">${escapeHtml(itinerary.nights)} Nights · ${escapeHtml(itinerary.days)} Days</div>
+          ${priceHtml}
+          <div class="itin-card-actions">
+            <button type="button" class="btn-see-trip" onclick="window.ItineraryUtils.openTripModal('${itinerary.id}')">See trip</button>
+            <button type="button" class="btn-book" onclick="window.ItineraryUtils.openBookingModal('${itinerary.id}')">Book</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function renderBrochureItineraries() {
     const itineraries = sortItineraries(
       ensurePackageNumbers(getBrochurePackages(getAllItinerariesSync()))
     );
     const itinerarySection = document.querySelector('.itinerary-inner');
     if (!itinerarySection) return;
+
+    itineraryIndex = {};
+    itineraries.forEach((it) => { itineraryIndex[it.id] = it; });
 
     const insertBefore = document.getElementById('itin-kenya-tanzania-morocco');
     const grouped = groupByCountry(itineraries);
@@ -370,41 +423,174 @@
       const countryGroup = getOrCreateCountryGroup(itinerarySection, country, insertBefore);
       clearCountryGroup(countryGroup);
 
-      let tabsContainer = countryGroup.querySelector('.itin-tabs');
-      if (!tabsContainer) {
-        tabsContainer = document.createElement('div');
-        tabsContainer.className = 'itin-tabs';
-        countryGroup.appendChild(tabsContainer);
+      let gridContainer = countryGroup.querySelector('.itin-card-grid');
+      if (!gridContainer) {
+        gridContainer = document.createElement('div');
+        gridContainer.className = 'itin-card-grid';
+        countryGroup.appendChild(gridContainer);
       }
 
-      const groupSlug = countryGroup.id.replace('itin-', '') + '-group';
-
-      items.forEach((itinerary, index) => {
-        const isActive = index === 0;
-        const button = document.createElement('button');
-        button.className = 'itin-btn' + (isActive ? ' active' : '');
-        button.textContent = formatPackageLabel(itinerary);
-        button.addEventListener('click', function (e) {
-          e.preventDefault();
-          if (typeof window.showItin === 'function') {
-            window.showItin(itinerary.id, this, groupSlug);
-          }
-        });
-        tabsContainer.appendChild(button);
-
-        const panel = document.createElement('div');
-        panel.id = itinerary.id;
-        panel.className = 'itin-panel' + (isActive ? ' active' : '');
-        panel.innerHTML = buildPanelHtml(itinerary);
-        countryGroup.appendChild(panel);
-      });
+      gridContainer.innerHTML = items.map((itinerary) => buildCardHtml(itinerary)).join('');
     });
 
     itinerarySection.querySelectorAll('.itin-country-group').forEach((group) => {
       if (group.id === 'itin-kenya-tanzania-morocco' || group.id === 'itin-other') return;
-      group.style.display = group.querySelector('.itin-btn') ? '' : 'none';
+      group.style.display = group.querySelector('.itin-card') ? '' : 'none';
     });
   }
+
+  /* ---------- Trip detail modal ("See trip") ---------- */
+
+  let itineraryIndex = {};
+  let currentBookingId = null;
+
+  function lockScroll() { document.body.style.overflow = 'hidden'; }
+  function unlockScroll() { document.body.style.overflow = ''; }
+
+  function openModalEl(overlayId) {
+    const overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+    overlay.classList.add('active');
+    lockScroll();
+  }
+
+  function closeModal(overlayId) {
+    const overlay = document.getElementById(overlayId);
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    unlockScroll();
+  }
+
+  function buildTripDetailHtml(itinerary) {
+    const note = itinerary.note
+      ? `<div class="itin-note">${escapeHtml(itinerary.note)}</div>`
+      : '';
+    const price = getFromPrice(itinerary);
+    const priceLine = price
+      ? `From ${formatEUR(price)} per person`
+      : 'Custom Quote — contact us for pricing';
+    return `
+      <div class="itin-header">
+        <h3>${escapeHtml(getDisplayTitle(itinerary))}</h3>
+        <p>${escapeHtml(itinerary.nights)} Nights / ${escapeHtml(itinerary.days)} Days · ${escapeHtml(itinerary.packageDesc || '')}</p>
+        <p style="color:var(--rust);font-weight:600;margin-top:8px;">${priceLine}</p>
+      </div>
+      <div class="days-timeline">
+        ${buildDaysHtml(itinerary)}
+      </div>
+      ${note}
+      <button type="button" class="btn-book full-width" onclick="window.ItineraryUtils.closeModal('trip-modal-overlay');window.ItineraryUtils.openBookingModal('${itinerary.id}')">Book this trip</button>`;
+  }
+
+  function openTripModal(id) {
+    const itinerary = itineraryIndex[id];
+    if (!itinerary) return;
+    const content = document.getElementById('trip-modal-content');
+    if (content) content.innerHTML = buildTripDetailHtml(itinerary);
+    openModalEl('trip-modal-overlay');
+  }
+
+  /* ---------- Booking modal ("Book") ---------- */
+
+  function buildBookingFormHtml(itinerary) {
+    const today = new Date().toISOString().split('T')[0];
+    return `
+      <div class="booking-trip-name">${escapeHtml(getDisplayTitle(itinerary))}</div>
+      <div class="booking-trip-meta">${escapeHtml(itinerary.country)} · ${escapeHtml(itinerary.nights)} Nights / ${escapeHtml(itinerary.days)} Days</div>
+      <div class="booking-field">
+        <label for="booking-date">Preferred start date</label>
+        <input type="date" id="booking-date" min="${today}" onchange="window.ItineraryUtils.updateBookingPrice()">
+      </div>
+      <div class="booking-field">
+        <label for="booking-people">Number of people</label>
+        <input type="number" id="booking-people" min="1" step="1" value="1" oninput="window.ItineraryUtils.updateBookingPrice()">
+      </div>
+      <div class="booking-price-box" id="booking-price-box"></div>
+      <button type="button" class="btn-whatsapp-book" onclick="window.ItineraryUtils.sendBookingWhatsApp()">Send Booking Request via WhatsApp</button>`;
+  }
+
+  function openBookingModal(id) {
+    const itinerary = itineraryIndex[id];
+    if (!itinerary) return;
+    currentBookingId = id;
+    const content = document.getElementById('booking-modal-content');
+    if (content) content.innerHTML = buildBookingFormHtml(itinerary);
+    openModalEl('booking-modal-overlay');
+    updateBookingPrice();
+  }
+
+  /** Group discount: more than 2 people (i.e. 3+) automatically gets 11% off. */
+  function computeBookingPrice(itinerary, people) {
+    const pricePerPerson = getFromPrice(itinerary);
+    const safePeople = Math.max(1, parseInt(people, 10) || 1);
+    if (!pricePerPerson) {
+      return { pricePerPerson: null, people: safePeople, subtotal: null, discounted: safePeople > 2, savings: null, total: null };
+    }
+    const subtotal = pricePerPerson * safePeople;
+    const discounted = safePeople > 2;
+    const total = discounted ? Math.round(subtotal * 0.89) : subtotal;
+    const savings = discounted ? subtotal - total : 0;
+    return { pricePerPerson, people: safePeople, subtotal, discounted, savings, total };
+  }
+
+  function updateBookingPrice() {
+    const itinerary = itineraryIndex[currentBookingId];
+    const box = document.getElementById('booking-price-box');
+    if (!itinerary || !box) return;
+    const peopleInput = document.getElementById('booking-people');
+    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1);
+
+    if (!calc.pricePerPerson) {
+      box.innerHTML = `
+        <div class="booking-price-row"><span>Pricing</span><span>Custom Quote</span></div>
+        <div class="booking-discount-note">Groups of 3 or more automatically receive an 11% discount once we confirm your price.</div>`;
+      return;
+    }
+
+    let html = `<div class="booking-price-row"><span>${formatEUR(calc.pricePerPerson)} × ${calc.people} ${calc.people === 1 ? 'person' : 'people'}</span><span>${formatEUR(calc.subtotal)}</span></div>`;
+    if (calc.discounted) {
+      html += `<div class="booking-price-row discount"><span>Group discount (11%)</span><span>-${formatEUR(calc.savings)}</span></div>`;
+    }
+    html += `<div class="booking-price-row total"><span>Total</span><span>${formatEUR(calc.total)}</span></div>`;
+    if (!calc.discounted) {
+      html += `<div class="booking-discount-note">Book for more than 2 people and save 11% automatically.</div>`;
+    }
+    box.innerHTML = html;
+  }
+
+  function sendBookingWhatsApp() {
+    const itinerary = itineraryIndex[currentBookingId];
+    if (!itinerary) return;
+    const dateInput = document.getElementById('booking-date');
+    const peopleInput = document.getElementById('booking-people');
+    const date = dateInput ? dateInput.value : '';
+    if (!date) {
+      alert('Please select a preferred start date.');
+      if (dateInput) dateInput.focus();
+      return;
+    }
+    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1);
+    let msg = `Hello! I'd like to book a trip:\n\n`;
+    msg += `Package: ${getDisplayTitle(itinerary)}\n`;
+    msg += `Country: ${itinerary.country}\n`;
+    msg += `Preferred start date: ${date}\n`;
+    msg += `Number of people: ${calc.people}\n`;
+    if (calc.pricePerPerson) {
+      msg += `Price per person: ${formatEUR(calc.pricePerPerson)}\n`;
+      if (calc.discounted) msg += `Group discount (11%) applied: -${formatEUR(calc.savings)}\n`;
+      msg += `Estimated total: ${formatEUR(calc.total)}\n`;
+    }
+    msg += `\nPlease confirm availability. Thank you!`;
+    const url = `https://wa.me/256770307890?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal('trip-modal-overlay');
+      closeModal('booking-modal-overlay');
+    }
+  });
 
   window.ItineraryUtils = {
     STORAGE_KEY,
@@ -423,6 +609,12 @@
     sortItineraries,
     initItineraries,
     renderBrochureItineraries,
+    getFromPrice,
+    openTripModal,
+    closeModal,
+    openBookingModal,
+    updateBookingPrice,
+    sendBookingWhatsApp,
     isBrochurePackage,
     getBrochurePackages,
     getBrochureCountries,
