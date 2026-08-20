@@ -357,12 +357,23 @@
   /** Per-person "from" price for a package: always the country's published
    *  budget-tier starting price from the pricing summary table on the page. */
   function getFromPrice(itinerary) {
+    return getTierPrices(itinerary).budget;
+  }
+
+  /** All three tier prices (budget/standard/luxury) for a package's country,
+   *  read straight from the pricing summary table already on the page. */
+  function getTierPrices(itinerary) {
     const key = getCountryKey(itinerary.country);
     const row = document.getElementById('pricing-' + key);
-    if (!row) return null;
-    const cell = row.querySelector('.budget-price');
-    if (!cell) return null;
-    return parseFirstPrice(cell.textContent);
+    if (!row) return { budget: null, standard: null, luxury: null };
+    const budgetCell = row.querySelector('.budget-price');
+    const standardCell = row.querySelector('.standard-price');
+    const luxuryCell = row.querySelector('.luxury-price');
+    return {
+      budget: budgetCell ? parseFirstPrice(budgetCell.textContent) : null,
+      standard: standardCell ? parseFirstPrice(standardCell.textContent) : null,
+      luxury: luxuryCell ? parseFirstPrice(luxuryCell.textContent) : null,
+    };
   }
 
   function formatEUR(n) {
@@ -492,11 +503,43 @@
 
   /* ---------- Booking modal ("Book") ---------- */
 
+  const USD_RATE = 1.17;
+  let currentBookingCurrency = 'EUR';
+
+  function currencySymbol(cur) {
+    return cur === 'USD' ? '$' : '€';
+  }
+
+  /** Converts a EUR amount (the internal source of truth) to the given
+   *  display currency and formats it, e.g. formatCurrency(830, 'USD') -> "$971". */
+  function formatCurrency(eurAmount, cur) {
+    if (eurAmount == null) return null;
+    const amount = cur === 'USD' ? Math.round(eurAmount * USD_RATE) : Math.round(eurAmount);
+    return currencySymbol(cur) + amount.toLocaleString('en-US');
+  }
+
   function buildBookingFormHtml(itinerary) {
     const today = new Date().toISOString().split('T')[0];
     return `
       <div class="booking-trip-name">${escapeHtml(getDisplayTitle(itinerary))}</div>
       <div class="booking-trip-meta">${escapeHtml(itinerary.country)} · ${escapeHtml(itinerary.nights)} Nights / ${escapeHtml(itinerary.days)} Days</div>
+      <div class="booking-field">
+        <label for="booking-tier">Package tier</label>
+        <select id="booking-tier" onchange="window.ItineraryUtils.updateBookingPrice()">
+          <option value="budget">Budget</option>
+          <option value="standard">Standard</option>
+          <option value="luxury">Luxury</option>
+        </select>
+      </div>
+      <div class="booking-field">
+        <label>Currency</label>
+        <div class="currency-toggle">
+          <button type="button" class="currency-btn active" data-currency="EUR"
+            onclick="window.ItineraryUtils.setBookingCurrency('EUR', this)">EUR €</button>
+          <button type="button" class="currency-btn" data-currency="USD"
+            onclick="window.ItineraryUtils.setBookingCurrency('USD', this)">USD $</button>
+        </div>
+      </div>
       <div class="booking-field">
         <label for="booking-date">Preferred start date</label>
         <input type="date" id="booking-date" min="${today}" onchange="window.ItineraryUtils.updateBookingPrice()">
@@ -505,32 +548,54 @@
         <label for="booking-people">Number of people</label>
         <input type="number" id="booking-people" min="1" step="1" value="1" oninput="window.ItineraryUtils.updateBookingPrice()">
       </div>
+      <div class="booking-field">
+        <label for="booking-email">Your email</label>
+        <input type="email" id="booking-email" placeholder="you@example.com">
+      </div>
       <div class="booking-price-box" id="booking-price-box"></div>
-      <button type="button" class="btn-whatsapp-book" onclick="window.ItineraryUtils.sendBookingWhatsApp()">Send Booking Request via WhatsApp</button>`;
+      <button type="button" class="btn-send-booking" onclick="window.ItineraryUtils.sendBookingRequest()">Send Booking Request</button>
+      <p class="booking-fine-print">We'll email your request to our team and reply to your address within 24 hours.</p>`;
   }
 
   function openBookingModal(id) {
     const itinerary = itineraryIndex[id];
     if (!itinerary) return;
     currentBookingId = id;
+    currentBookingCurrency = 'EUR';
     const content = document.getElementById('booking-modal-content');
     if (content) content.innerHTML = buildBookingFormHtml(itinerary);
     openModalEl('booking-modal-overlay');
     updateBookingPrice();
   }
 
-  /** Group discount: more than 2 people (i.e. 3+) automatically gets 11% off. */
-  function computeBookingPrice(itinerary, people) {
-    const pricePerPerson = getFromPrice(itinerary);
+  function setBookingCurrency(cur, btn) {
+    currentBookingCurrency = cur === 'USD' ? 'USD' : 'EUR';
+    const toggle = btn ? btn.closest('.currency-toggle') : document.querySelector('.currency-toggle');
+    if (toggle) {
+      toggle.querySelectorAll('.currency-btn').forEach((b) => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+    updateBookingPrice();
+  }
+
+  const TIER_LABELS = { budget: 'Budget', standard: 'Standard', luxury: 'Luxury' };
+
+  /** Group discount: more than 2 people (3+) gets 11% off — except Luxury,
+   *  which never receives the discount regardless of group size. All figures
+   *  here are always computed in EUR (source of truth); currency conversion
+   *  only happens when formatting for display or for the outgoing email. */
+  function computeBookingPrice(itinerary, people, tier) {
+    const safeTier = TIER_LABELS[tier] ? tier : 'budget';
+    const pricePerPerson = getTierPrices(itinerary)[safeTier];
     const safePeople = Math.max(1, parseInt(people, 10) || 1);
     if (!pricePerPerson) {
-      return { pricePerPerson: null, people: safePeople, subtotal: null, discounted: safePeople > 2, savings: null, total: null };
+      return { pricePerPerson: null, people: safePeople, tier: safeTier, subtotal: null, discounted: false, savings: null, total: null };
     }
     const subtotal = pricePerPerson * safePeople;
-    const discounted = safePeople > 2;
+    const discounted = safeTier !== 'luxury' && safePeople > 2;
     const total = discounted ? Math.round(subtotal * 0.89) : subtotal;
     const savings = discounted ? subtotal - total : 0;
-    return { pricePerPerson, people: safePeople, subtotal, discounted, savings, total };
+    return { pricePerPerson, people: safePeople, tier: safeTier, subtotal, discounted, savings, total };
   }
 
   function updateBookingPrice() {
@@ -538,51 +603,120 @@
     const box = document.getElementById('booking-price-box');
     if (!itinerary || !box) return;
     const peopleInput = document.getElementById('booking-people');
-    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1);
+    const tierSelect = document.getElementById('booking-tier');
+    const tier = tierSelect ? tierSelect.value : 'budget';
+    const cur = currentBookingCurrency;
+    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1, tier);
 
     if (!calc.pricePerPerson) {
       box.innerHTML = `
-        <div class="booking-price-row"><span>Pricing</span><span>Custom Quote</span></div>
-        <div class="booking-discount-note">Groups of 3 or more automatically receive an 11% discount once we confirm your price.</div>`;
+        <div class="booking-price-row"><span>${TIER_LABELS[calc.tier]} pricing</span><span>Custom Quote</span></div>
+        <div class="booking-discount-note">${calc.tier === 'luxury' ? 'Luxury packages are not eligible for the group discount.' : 'Groups of 3 or more automatically receive an 11% discount once we confirm your price.'}</div>`;
       return;
     }
 
-    let html = `<div class="booking-price-row"><span>${formatEUR(calc.pricePerPerson)} × ${calc.people} ${calc.people === 1 ? 'person' : 'people'}</span><span>${formatEUR(calc.subtotal)}</span></div>`;
+    let html = `<div class="booking-price-row"><span>${TIER_LABELS[calc.tier]} · ${formatCurrency(calc.pricePerPerson, cur)} × ${calc.people} ${calc.people === 1 ? 'person' : 'people'}</span><span>${formatCurrency(calc.subtotal, cur)}</span></div>`;
     if (calc.discounted) {
-      html += `<div class="booking-price-row discount"><span>Group discount (11%)</span><span>-${formatEUR(calc.savings)}</span></div>`;
+      html += `<div class="booking-price-row discount"><span>Group discount (11%)</span><span>-${formatCurrency(calc.savings, cur)}</span></div>`;
     }
-    html += `<div class="booking-price-row total"><span>Total</span><span>${formatEUR(calc.total)}</span></div>`;
-    if (!calc.discounted) {
+    html += `<div class="booking-price-row total"><span>Total</span><span>${formatCurrency(calc.total, cur)}</span></div>`;
+    if (cur === 'USD') {
+      html += `<div class="booking-discount-note">Converted at 1 EUR = ${USD_RATE} USD.</div>`;
+    }
+    if (calc.tier === 'luxury') {
+      html += `<div class="booking-discount-note">Luxury packages are not eligible for the group discount.</div>`;
+    } else if (!calc.discounted) {
       html += `<div class="booking-discount-note">Book for more than 2 people and save 11% automatically.</div>`;
     }
     box.innerHTML = html;
   }
 
-  function sendBookingWhatsApp() {
+  const BOOKING_INBOX = 'Inquire@nextstopafricatours.com';
+  const BOOKING_FORM_ENDPOINT = 'https://formspree.io/f/meepakev';
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  /** Sends the booking request by email (to the business inbox) instead of
+   *  WhatsApp. Never opens the client's own mail app — this is a background
+   *  form submission; the client only ever sees the confirmation in-modal. */
+  async function sendBookingRequest() {
     const itinerary = itineraryIndex[currentBookingId];
     if (!itinerary) return;
+
     const dateInput = document.getElementById('booking-date');
     const peopleInput = document.getElementById('booking-people');
+    const tierSelect = document.getElementById('booking-tier');
+    const emailInput = document.getElementById('booking-email');
+    const submitBtn = document.querySelector('.btn-send-booking');
+
     const date = dateInput ? dateInput.value : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const tier = tierSelect ? tierSelect.value : 'budget';
+    const cur = currentBookingCurrency;
+
     if (!date) {
       alert('Please select a preferred start date.');
       if (dateInput) dateInput.focus();
       return;
     }
-    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1);
-    let msg = `Hello! I'd like to book a trip:\n\n`;
+    if (!email || !EMAIL_PATTERN.test(email)) {
+      alert('Please enter a valid email address so we can confirm your booking.');
+      if (emailInput) emailInput.focus();
+      return;
+    }
+
+    const calc = computeBookingPrice(itinerary, peopleInput ? peopleInput.value : 1, tier);
+
+    let msg = `New booking request from the website:\n\n`;
     msg += `Package: ${getDisplayTitle(itinerary)}\n`;
     msg += `Country: ${itinerary.country}\n`;
+    msg += `Package tier: ${TIER_LABELS[calc.tier]}\n`;
     msg += `Preferred start date: ${date}\n`;
     msg += `Number of people: ${calc.people}\n`;
+    msg += `Client email: ${email}\n`;
     if (calc.pricePerPerson) {
-      msg += `Price per person: ${formatEUR(calc.pricePerPerson)}\n`;
-      if (calc.discounted) msg += `Group discount (11%) applied: -${formatEUR(calc.savings)}\n`;
-      msg += `Estimated total: ${formatEUR(calc.total)}\n`;
+      msg += `Currency: ${cur}${cur === 'USD' ? ` (1 EUR = ${USD_RATE} USD)` : ''}\n`;
+      msg += `Price per person: ${formatCurrency(calc.pricePerPerson, cur)}\n`;
+      if (calc.discounted) msg += `Group discount (11%) applied: -${formatCurrency(calc.savings, cur)}\n`;
+      msg += `Estimated total: ${formatCurrency(calc.total, cur)}\n`;
     }
-    msg += `\nPlease confirm availability. Thank you!`;
-    const url = `https://wa.me/256770307890?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+    msg += `\nPlease confirm availability and follow up with the client to finalize.`;
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+    }
+
+    try {
+      const res = await fetch(BOOKING_FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          _replyto: email,
+          _subject: `New Booking Request — ${getDisplayTitle(itinerary)}`,
+          message: msg
+        })
+      });
+
+      if (!res.ok) throw new Error('Request failed with status ' + res.status);
+
+      const content = document.getElementById('booking-modal-content');
+      if (content) {
+        content.innerHTML = `
+          <div class="booking-success">
+            <h3>Request sent</h3>
+            <p>Thanks! Your booking request has been sent to <strong>${escapeHtml(BOOKING_INBOX)}</strong>.
+              Our team will reply to <strong>${escapeHtml(email)}</strong> within 24 hours to confirm availability.</p>
+            <button type="button" class="btn-see-trip full-width" onclick="window.ItineraryUtils.closeModal('booking-modal-overlay')">Close</button>
+          </div>`;
+      }
+    } catch (err) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Booking Request';
+      }
+      alert('Something went wrong sending your request. Please try again, or email us directly at ' + BOOKING_INBOX + '.');
+    }
   }
 
   document.addEventListener('keydown', (e) => {
@@ -610,11 +744,13 @@
     initItineraries,
     renderBrochureItineraries,
     getFromPrice,
+    getTierPrices,
     openTripModal,
     closeModal,
     openBookingModal,
     updateBookingPrice,
-    sendBookingWhatsApp,
+    setBookingCurrency,
+    sendBookingRequest,
     isBrochurePackage,
     getBrochurePackages,
     getBrochureCountries,

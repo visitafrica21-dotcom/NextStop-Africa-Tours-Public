@@ -1714,7 +1714,8 @@
       margin-bottom: 8px;
     }
 
-    .booking-field input {
+    .booking-field input,
+    .booking-field select {
       width: 100%;
       padding: 13px 16px;
       border-radius: 10px;
@@ -1722,10 +1723,22 @@
       font-size: 14px;
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: var(--dark);
+      background: #fff;
       transition: border-color 0.3s;
     }
 
-    .booking-field input:focus {
+    .booking-field select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232a2421' d='M1 1l5 5 5-5' stroke='%232a2421' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .booking-field input:focus,
+    .booking-field select:focus {
       outline: none;
       border-color: var(--gold);
     }
@@ -1768,7 +1781,36 @@
       margin-top: 10px;
     }
 
-    .btn-whatsapp-book {
+    .currency-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .currency-btn {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #fff;
+      color: var(--dark);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .currency-btn:hover {
+      border-color: var(--gold);
+    }
+
+    .currency-btn.active {
+      background: var(--forest);
+      color: #fff;
+      border-color: var(--forest);
+    }
+
+    .btn-send-booking {
       width: 100%;
       padding: 16px;
       border-radius: 50px;
@@ -1783,9 +1825,48 @@
       transition: all 0.3s;
     }
 
-    .btn-whatsapp-book:hover {
+    .btn-send-booking:hover {
       background: var(--orange);
       transform: translateY(-2px);
+    }
+
+    .btn-send-booking:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .booking-fine-print {
+      font-size: 11px;
+      color: #aaa;
+      text-align: center;
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    .booking-success {
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+
+    .booking-success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--deep-green);
+      margin-bottom: 14px;
+    }
+
+    .booking-success p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 26px;
+    }
+
+    .booking-success .btn-see-trip.full-width {
+      flex: none;
+      width: 100%;
+      padding: 14px;
     }
 
     @media (max-width: 640px) {
@@ -2368,6 +2449,8 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       text-decoration: none;
       display: inline-block;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     .country-link:hover {
@@ -2375,6 +2458,18 @@
       border-color: rgba(255, 255, 255, 0.5);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .country-link.active {
+      background-color: #fff;
+      color: var(--rust);
+      border-color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    }
+
+    .country-link.active:hover {
+      background-color: #fff;
+      color: var(--rust);
     }
 
     @media (max-width: 768px) {
@@ -2466,7 +2561,7 @@
         <a href="index.html#destinations">Tourism Activities</a>
         <a href="index.html#destinations">Destinations</a>
         <a href="index.html#about">About</a>
-        <a href="#contact-form" class="btn-inquire">Inquire Now</a>
+        <a href="#contact" class="btn-inquire">Inquire Now</a>
       </div>
 
       <button id="mobile-menu-btn" class="mobile-menu-btn">
@@ -2484,71 +2579,104 @@
       <a href="index.html#destinations" class="mobile-link">Tourism Activities</a>
       <a href="index.html#destinations" class="mobile-link">Destinations</a>
       <a href="index.html#about" class="mobile-link">About</a>
-      <a href="#contact-form" class="btn-inquire mobile-inquire">Inquire Now</a>
+      <a href="#contact" class="btn-inquire mobile-inquire">Inquire Now</a>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-pattern"></div>
-    <div class="logo-container">
-      <img src="images/logo.jpg" alt="NextStop Africa Tours Agency Logo">
-    </div>
-    <div class="hero-tagline">✦ Where Every Journey Tells a Story ✦</div>
-    <h1>Explore Africa's <span>Beauty,<br>Culture & Adventure</span></h1>
-    <div class="hero-divider">
-      <div class="line"></div>
-      <div class="diamond"></div>
-      <div class="line"></div>
-    </div>
-    <p class="hero-sub">We are a people-centred tourism company creating authentic African experiences, connecting you
-      to nature, culture, and adventure with professionally guided tours and tailor-made packages.</p>
-    <div class="hero-actions">
-      <a href="#explore-destinations" class="hero-cta hero-cta-primary">View Destinations</a>
-      <a href="#contact-form" class="hero-cta hero-cta-secondary">Plan My Trip</a>
-    </div>
-    <a href="#explore-destinations" class="scroll-hint" aria-label="Scroll to explore our destinations"><span>Discover</span>
-      <div class="arrow"></div>
-    </a>
-  </div>
-
-  <!-- Countries Banner -->
+  <!-- Countries Banner / Filter -->
   <div class="countries-banner" id="explore-destinations">
     <div class="countries-container">
-      <div class="banner-label">Explore Our Destinations</div>
+      <div class="banner-label">Filter by Destination</div>
       <div class="countries-list">
-        <a href="#itin-uganda" class="country-link">Uganda</a>
-        <a href="#itin-kenya-tanzania-morocco" class="country-link">Tanzania</a>
-        <a href="#itin-kenya-tanzania-morocco" class="country-link">Kenya</a>
-        <a href="#itin-rwanda" class="country-link">Rwanda</a>
-        <a href="#itin-benin" class="country-link">Benin</a>
-        <a href="#itin-kenya-tanzania-morocco" class="country-link">Morocco</a>
-        <a href="#itin-algeria" class="country-link">Algeria</a>
+        <button type="button" class="country-link active" data-filter="all"
+          onclick="window.filterByCountry('all', this)">All</button>
+        <button type="button" class="country-link" data-filter="uganda"
+          onclick="window.filterByCountry('uganda', this)">Uganda</button>
+        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
+          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Tanzania</button>
+        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
+          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Kenya</button>
+        <button type="button" class="country-link" data-filter="rwanda"
+          onclick="window.filterByCountry('rwanda', this)">Rwanda</button>
+        <button type="button" class="country-link" data-filter="benin"
+          onclick="window.filterByCountry('benin', this)">Benin</button>
+        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
+          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Morocco</button>
+        <button type="button" class="country-link" data-filter="algeria"
+          onclick="window.filterByCountry('algeria', this)">Algeria</button>
       </div>
     </div>
   </div>
 
-  <!-- STORY -->
-  <div class="story-section">
-    <div class="story-inner">
-      <div class="story-text">
-        <div class="section-label">Our Story</div>
-        <h2 class="section-title" style="color:#fff;">The Real Africa<br><span>Awaits You</span></h2>
-        <p>We connect travellers with the real Africa. its people, cultures, and stories, so that every journey leaves
-          a deeper understanding of who we are and what we aspire to become as a continent.</p>
-        <p>From lush rainforests to golden deserts, from mountain gorillas to ancient kingdoms, Africa offers the
-          world's most diverse and authentic travel experiences.</p>
+
+
+  <!-- ITINERARIES -->
+  <div class="itinerary-section">
+    <div class="itinerary-inner">
+      <div class="section-label">Sample Itineraries</div>
+      <h2 class="section-title">Day-by-Day <span>Journey Plans</span></h2>
+      <p style="color:#777;font-size:15px;font-weight:300;margin-top:8px;margin-bottom:56px;">All itineraries are fully
+        customisable. Below are the packages currently available from our portfolio. More destinations coming soon.</p>
+
+      <!-- Country packages below are rendered from itinerary data -->
+      <div class="itin-country-group" id="itin-uganda">
+        <div class="itin-country-label">Uganda, The Pearl of Africa</div>
+        <div class="itin-card-grid"></div>
       </div>
-      <div class="story-stats">
-        <div class="stat-card"><span class="num">7+</span><span class="lbl">Countries</span></div>
-        <div class="stat-card"><span class="num">50+</span><span class="lbl">Activities</span></div>
-        <div class="stat-card"><span class="num">3</span><span class="lbl">Package Tiers</span></div>
-        <div class="stat-card"><span class="num">∞</span><span class="lbl">Memories</span></div>
+
+      <div class="itin-country-group" id="itin-algeria">
+        <div class="itin-country-label">Algeria, Sahara's Best Kept Secret</div>
+        <div class="itin-card-grid"></div>
       </div>
+
+      <div class="itin-country-group" id="itin-benin">
+        <div class="itin-country-label">Benin, Cradle of African Spirituality</div>
+        <div class="itin-card-grid"></div>
+      </div>
+
+      <div class="itin-country-group" id="itin-rwanda">
+        <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
+        <div class="itin-card-grid"></div>
+      </div>
+      <!-- KENYA, TANZANIA, MOROCCO -->
+      <div class="itin-country-group" id="itin-kenya-tanzania-morocco">
+        <div class="itin-country-label">Kenya · Tanzania · Morocco</div>
+        <div class="coming-soon-box">
+          ✦ Detailed itineraries for Kenya, Tanzania & Morocco are coming soon ✦<br>
+          <span style="font-size:12px;font-style:normal;color:#bbb;display:block;margin-top:12px;">Contact us directly
+            and we will craft a bespoke package tailored to your preferences.</span>
+        </div>
+      </div>
+
+      <!-- OTHER AFRICAN COUNTRIES -->
+      <div class="itin-country-group" id="itin-other">
+        <div class="itin-country-label">Other African Countries</div>
+        <div class="country-hero">
+          <div class="country-info">
+            <h2 style="font-size:26px;">Your Dream Destination</h2>
+            <div class="subtitle">All of Africa is Within Reach</div>
+            <p>Don't see your dream destination listed? We cover the entire African continent. Simply tell us where you
+              want to go, or what you want to experience, and we will guide you to the perfect country and craft a
+              fully tailored itinerary.</p>
+            <div class="best-time">All Year Round. We advise on the best timing</div>
+          </div>
+          <div class="country-activities">
+            <h3>How It Works</h3>
+            <ul class="activities-list">
+              <li>Choose any African country you wish to visit</li>
+              <li>Or tell us the activities you dream of doing</li>
+              <li>We guide you on which country is best suited</li>
+              <li>We design a fully bespoke itinerary for you</li>
+              <li>Budget, Standard or Luxury. Your choice</li>
+              <li>Contact us for a personalised custom quote</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- EXPERIENCES -->
   <!-- PACKAGES --><!-- PACKAGES -->
   <div class="packages-section" id="packages">
     <div class="packages-inner">
@@ -2626,7 +2754,8 @@
           </div>
         </div>
       </div>
-      <div class="table-responsive">
+      <!-- Kept in the page (hidden) as the pricing source of truth for cards/booking; not shown to visitors. -->
+      <div class="table-responsive" style="display:none;">
         <table class="price-table">
           <thead>
             <tr>
@@ -2688,75 +2817,9 @@
           </tbody>
         </table>
       </div>
-      <p style="text-align:center;font-size:12px;color:#999;margin-top:16px;font-style:italic;">* Prices represent
+      <p style="text-align:center;font-size:12px;color:#999;margin-top:16px;font-style:italic;display:none;">*
+        Prices represent
         minimum costs based on 5-day itinerary with core activities. Custom quotes available for all destinations.</p>
-    </div>
-  </div>
-
-  <!-- ITINERARIES -->
-  <div class="itinerary-section">
-    <div class="itinerary-inner">
-      <div class="section-label">Sample Itineraries</div>
-      <h2 class="section-title">Day-by-Day <span>Journey Plans</span></h2>
-      <p style="color:#777;font-size:15px;font-weight:300;margin-top:8px;margin-bottom:56px;">All itineraries are fully
-        customisable. Below are the packages currently available from our portfolio. More destinations coming soon.</p>
-
-      <!-- Country packages below are rendered from itinerary data -->
-      <div class="itin-country-group" id="itin-uganda">
-        <div class="itin-country-label">Uganda, The Pearl of Africa</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-algeria">
-        <div class="itin-country-label">Algeria, Sahara's Best Kept Secret</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-benin">
-        <div class="itin-country-label">Benin, Cradle of African Spirituality</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-rwanda">
-        <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
-        <div class="itin-card-grid"></div>
-      </div>
-      <!-- KENYA, TANZANIA, MOROCCO -->
-      <div class="itin-country-group" id="itin-kenya-tanzania-morocco">
-        <div class="itin-country-label">Kenya · Tanzania · Morocco</div>
-        <div class="coming-soon-box">
-          ✦ Detailed itineraries for Kenya, Tanzania & Morocco are coming soon ✦<br>
-          <span style="font-size:12px;font-style:normal;color:#bbb;display:block;margin-top:12px;">Contact us directly
-            and we will craft a bespoke package tailored to your preferences.</span>
-        </div>
-      </div>
-
-      <!-- OTHER AFRICAN COUNTRIES -->
-      <div class="itin-country-group" id="itin-other">
-        <div class="itin-country-label">Other African Countries</div>
-        <div class="country-hero">
-          <div class="country-info">
-            <h2 style="font-size:26px;">Your Dream Destination</h2>
-            <div class="subtitle">All of Africa is Within Reach</div>
-            <p>Don't see your dream destination listed? We cover the entire African continent. Simply tell us where you
-              want to go, or what you want to experience, and we will guide you to the perfect country and craft a
-              fully tailored itinerary.</p>
-            <div class="best-time">All Year Round. We advise on the best timing</div>
-          </div>
-          <div class="country-activities">
-            <h3>How It Works</h3>
-            <ul class="activities-list">
-              <li>Choose any African country you wish to visit</li>
-              <li>Or tell us the activities you dream of doing</li>
-              <li>We guide you on which country is best suited</li>
-              <li>We design a fully bespoke itinerary for you</li>
-              <li>Budget, Standard or Luxury. Your choice</li>
-              <li>Contact us for a personalised custom quote</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -2781,53 +2844,6 @@
     </div>
   </div>
 
-  <!-- Contact Section -->
-  <section class="contact-section" id="contact-form">
-    <div class="container">
-      <div class="contact-wrapper">
-        <div class="contact-header text-center">
-        <h2 class="section-title" style="max-width: 600px; margin: 0 auto; text-align: center">Get in Touch</h2>
-        <div class="section-desc" style="text-align: center"> <span>Ready to explore Africa? Tell us what
-              you have in mind and we'll come back
-              with thoughtful, no-obligation guidance within 24 hours.</span></div>
-          <div class="contact-reassurance">
-            <div class="pill">Reply within 24 hours</div>
-            <div class="pill">No-obligation planning</div>
-            <div class="pill">Tailor-made guidance</div>
-          </div>
-        </div>
-
-        <form class="contact-form" action="https://formspree.io/f/meepakev" method="POST">
-          <div class="form-group">
-            <label for="contact-name" class="form-label">Your Name *</label>
-            <input type="text" id="contact-name" name="name" class="form-input" placeholder="Enter your full name"
-              required>
-          </div>
-
-          <div class="form-group">
-            <label for="contact-email" class="form-label">Your Email *</label>
-            <input type="email" id="contact-email" name="email" class="form-input"
-              placeholder="Enter your email address" required>
-          </div>
-
-          <div class="form-group">
-            <label for="contact-phone" class="form-label">Phone Number</label>
-            <input type="tel" id="contact-phone" name="phone" class="form-input"
-              placeholder="Optional: Your phone number">
-          </div>
-
-          <div class="form-group">
-            <label for="contact-message" class="form-label">Tell Us About Your Dream Trip *</label>
-            <textarea id="contact-message" name="message" class="form-textarea"
-              placeholder="Destination, dates, group size, activities, and any special requests..." rows="6"
-              required></textarea>
-          </div>
-
-          <button type="submit" class="btn-submit">Start Planning My Trip</button>
-        </form>
-      </div>
-    </div>
-  </section>
 
   <footer>
     <p>© 2026 <span>NextStop Africa Tours Agency</span> — Explore Africa's Beauty, Culture & Adventure</p>
@@ -2875,6 +2891,30 @@
       document.getElementById(id).classList.add('active');
       btn.classList.add('active');
     }
+
+    /** Filters the Day-by-Day Journey Plans section by country. 'all' resets it.
+     *  Only ever reveals a group that actually has packages to show. */
+    window.filterByCountry = function filterByCountry(filterKey, btn) {
+      document.querySelectorAll('.country-link').forEach((b) => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const groups = document.querySelectorAll('.itinerary-inner > .itin-country-group');
+      groups.forEach((group) => {
+        const isSpecial = group.id === 'itin-kenya-tanzania-morocco' || group.id === 'itin-other';
+        const hasCards = Boolean(group.querySelector('.itin-card'));
+        const matchesFilter = filterKey === 'all' || group.id === 'itin-' + filterKey;
+
+        if (!matchesFilter) {
+          group.style.display = 'none';
+          return;
+        }
+        // Only show a group if it actually has content (packages, or a "coming soon" panel).
+        group.style.display = (hasCards || isSpecial) ? '' : 'none';
+      });
+
+      const itinerarySection = document.querySelector('.itinerary-section');
+      if (itinerarySection) itinerarySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
 
     document.addEventListener('DOMContentLoaded', async () => {
       await window.ItineraryUtils.initItineraries();
