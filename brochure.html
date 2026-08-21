@@ -1045,7 +1045,7 @@
     /* PACKAGES */
     .packages-section {
       background: var(--cream);
-      padding: 100px 0;
+      padding: 72px 0;
     }
 
     .packages-inner {
@@ -1275,7 +1275,7 @@
     /* ITINERARY */
     .itinerary-section {
       background: #fff;
-      padding: 100px 0;
+      padding: 72px 0;
     }
 
     .itinerary-inner {
@@ -1285,7 +1285,7 @@
     }
 
     .itin-country-group {
-      margin-bottom: 80px;
+      margin-bottom: 48px;
       padding: 48px;
       background: var(--cream);
       border-radius: 20px;
@@ -1293,7 +1293,7 @@
     }
 
     .itin-country-group+.itin-country-group {
-      margin-top: 40px;
+      margin-top: 0;
     }
 
     .itin-country-label {
@@ -1915,12 +1915,21 @@
 
     /* Mobile Responsive - Itinerary Section */
     @media (max-width: 768px) {
+      .itinerary-section,
+      .packages-section {
+        padding: 56px 0;
+      }
+
+      #contact {
+        padding: 64px 24px;
+      }
+
       .itinerary-inner {
         padding: 0 20px;
       }
 
       .itin-country-group {
-        margin-bottom: 60px;
+        margin-bottom: 40px;
         padding: 24px;
         border-radius: 16px;
       }
@@ -2173,7 +2182,7 @@
     /* CONTACT */
     #contact {
       background: #000;
-      padding: 100px 40px;
+      padding: 72px 40px;
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -2661,18 +2670,9 @@
       <p style="color:#777;font-size:15px;font-weight:300;margin-top:8px;margin-bottom:56px;">All itineraries are fully
         customisable. Below are the packages currently available from our portfolio. More destinations coming soon.</p>
 
-      <!-- All packages render here together, unsorted by country section — each card carries its own country label -->
+      <!-- All packages render here together, unsorted by country section — each card carries its own country label.
+           Morocco's "coming soon" tile is appended dynamically as a matching card, not a separate section. -->
       <div class="itin-card-grid" id="itin-all-packages"></div>
-
-      <!-- MOROCCO -->
-      <div class="itin-country-group" id="itin-morocco">
-        <div class="itin-country-label">Morocco</div>
-        <div class="coming-soon-box">
-          ✦ A detailed itinerary for Morocco is coming soon ✦<br>
-          <span style="font-size:12px;font-style:normal;color:#bbb;display:block;margin-top:12px;">Contact us directly
-            and we will craft a bespoke package tailored to your preferences.</span>
-        </div>
-      </div>
 
       <!-- OTHER AFRICAN COUNTRIES -->
       <div class="itin-country-group" id="itin-other">
@@ -2928,8 +2928,8 @@
     }
 
     /** Filters the Day-by-Day Journey Plans grid by country. 'all' resets it.
-     *  Filters individual cards (each carries its own data-country), plus the
-     *  Morocco "coming soon" and "Other Countries" informational panels. */
+     *  Every tile (real packages and the Morocco "coming soon" tile alike)
+     *  carries its own data-country, so one rule filters them all consistently. */
     window.filterByCountry = function filterByCountry(filterKey, btn) {
       document.querySelectorAll('.country-link').forEach((b) => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -2938,9 +2938,6 @@
         const matches = filterKey === 'all' || card.dataset.country === filterKey;
         card.style.display = matches ? '' : 'none';
       });
-
-      const morocco = document.getElementById('itin-morocco');
-      if (morocco) morocco.style.display = (filterKey === 'all' || filterKey === 'morocco') ? '' : 'none';
 
       const other = document.getElementById('itin-other');
       if (other) other.style.display = (filterKey === 'all') ? '' : 'none';

@@ -441,6 +441,28 @@
   /** Renders every package into one unified grid — no per-country sectioning.
    *  Each card carries its own country name (badge) and a data-country
    *  attribute the destination filter uses to show/hide individual cards. */
+  /** A non-package "coming soon" tile for Morocco, styled and sized exactly
+   *  like a real package card so it sits naturally in the grid instead of
+   *  interrupting the page as its own section. Carries data-country="morocco"
+   *  so the destination filter treats it the same as any real package. */
+  function buildMoroccoCardHtml() {
+    const waMsg = encodeURIComponent("Hi! I'm interested in a custom Morocco itinerary. Could you help me plan one?");
+    return `
+      <div class="itin-card" data-country="morocco">
+        <div class="itin-card-cover">
+          <span class="itin-card-badge">Morocco</span>
+        </div>
+        <div class="itin-card-body">
+          <h4 class="itin-card-title">Custom Itinerary — Coming Soon</h4>
+          <div class="itin-card-meta">Tailored to your dates & interests</div>
+          <div class="itin-card-price itin-card-price-quote">Custom Quote</div>
+          <div class="itin-card-actions">
+            <a href="https://wa.me/256770307890?text=${waMsg}" target="_blank" rel="noopener" class="btn-book" style="flex:1;text-decoration:none;text-align:center;">Contact Us</a>
+          </div>
+        </div>
+      </div>`;
+  }
+
   function renderBrochureItineraries() {
     const itineraries = sortItineraries(
       ensurePackageNumbers(getBrochurePackages(getAllItinerariesSync()))
@@ -456,7 +478,7 @@
       gridContainer = document.createElement('div');
       gridContainer.className = 'itin-card-grid';
       gridContainer.id = 'itin-all-packages';
-      const insertBefore = document.getElementById('itin-morocco');
+      const insertBefore = document.getElementById('itin-other');
       if (insertBefore) {
         itinerarySection.insertBefore(gridContainer, insertBefore);
       } else {
@@ -464,7 +486,7 @@
       }
     }
 
-    gridContainer.innerHTML = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('');
+    gridContainer.innerHTML = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('') + buildMoroccoCardHtml();
   }
 
   /* ---------- Trip detail modal ("See trip") ---------- */
