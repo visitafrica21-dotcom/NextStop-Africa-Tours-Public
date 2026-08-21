@@ -122,8 +122,17 @@
   <script>
     const utils = window.ItineraryUtils;
 
+    function normalizeName(name) {
+      return String(name || '')
+        .toLowerCase()
+        .replace(/[:\-–—]/g, ' ')
+        .replace(/[^\w\s]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     function keyOf(country, packageName) {
-      return (country + '::' + packageName).toLowerCase();
+      return country + '::' + normalizeName(packageName);
     }
 
     function setStatus(kind, html) {
@@ -148,25 +157,31 @@
         return;
       }
 
-      // Count how many share the same country + package name
+      // Count how many share the same NORMALIZED country + package name.
+      // (Two entries can say "Uganda" and "Uganda, The Pearl of Africa" and
+      // still be the exact same country — comparing raw text misses that.)
       const counts = {};
       items.forEach((it) => {
-        const k = keyOf(it.country, it.packageName);
+        const k = keyOf(utils.getCountryKey(it.country), it.packageName);
         counts[k] = (counts[k] || 0) + 1;
       });
 
-      // Group by country for display
+      // Group by NORMALIZED country so every variant of "Uganda" lands under one heading
       const byCountry = {};
       items.forEach((it) => {
-        if (!byCountry[it.country]) byCountry[it.country] = [];
-        byCountry[it.country].push(it);
+        const ck = utils.getCountryKey(it.country);
+        if (!byCountry[ck]) byCountry[ck] = { label: it.country, items: [] };
+        byCountry[ck].items.push(it);
+        // Prefer the shortest/cleanest country label as the group heading
+        if (it.country.length < byCountry[ck].label.length) byCountry[ck].label = it.country;
       });
 
       let html = '';
-      Object.keys(byCountry).forEach((country) => {
-        html += '<div class="group-label">' + utils.escapeHtml(country) + '</div>';
-        byCountry[country].forEach((it) => {
-          const isDup = counts[keyOf(it.country, it.packageName)] > 1;
+      Object.keys(byCountry).forEach((ck) => {
+        const group = byCountry[ck];
+        html += '<div class="group-label">' + utils.escapeHtml(group.label) + '</div>';
+        group.items.forEach((it) => {
+          const isDup = counts[keyOf(utils.getCountryKey(it.country), it.packageName)] > 1;
           const imgHtml = it.image
             ? '<img src="' + it.image + '" alt="">'
             : '<div class="noimg"></div>';

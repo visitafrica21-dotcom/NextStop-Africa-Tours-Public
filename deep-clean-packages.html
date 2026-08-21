@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deep Clean Packages — NextStop Africa</title>
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: #FAFAF7;
+    color: #2a2421;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .stat-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat {
+    flex: 1;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat .num { font-size: 22px; font-weight: 700; color: #C84B31; }
+  .stat .label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+  .group {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .group h3 { font-size: 14px; margin: 0 0 10px; }
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+  .item:first-of-type { border-top: none; }
+  .item img, .item .noimg {
+    width: 40px; height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #2a2421;
+    flex-shrink: 0;
+  }
+  .item .country-line { font-size: 11px; color: #999; }
+  .item .tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  .tag.keep { background: #e9f7ef; color: #1a7a3f; }
+  .tag.remove { background: #fdecea; color: #b3261e; }
+  #status {
+    margin: 20px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: none;
+  }
+  #status.success { display: block; background: #e9f7ef; color: #1a7a3f; }
+  #status.error { display: block; background: #fdecea; color: #b3261e; }
+  #status.info { display: block; background: #eef3ff; color: #2952a3; }
+  button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    background: #C84B31;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+  .note {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 14px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Deep Clean Packages</h1>
+  <p class="sub">Fixes the real cause of recurring duplicates: some packages had their country stored as
+    "Uganda" and others as "Uganda, The Pearl of Africa" — same country, different text, so they were never
+    recognized as duplicates before. This normalizes every country name and merges true duplicates, always
+    keeping the richer version (the one with a photo).</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num" id="stat-total">–</div><div class="label">Total Found</div></div>
+    <div class="stat"><div class="num" id="stat-dupes">–</div><div class="label">Duplicate Groups</div></div>
+    <div class="stat"><div class="num" id="stat-remove">–</div><div class="label">Will Remove</div></div>
+  </div>
+
+  <div id="preview">Loading current data…</div>
+  <div id="status"></div>
+  <button id="apply-btn" disabled>Checking current data…</button>
+  <p class="note">This writes directly to your live itinerary data. After a successful clean, you can delete this file from your site.</p>
+
+  <script src="itinerary-utils.js"></script>
+  <script>
+    const utils = window.ItineraryUtils;
+
+    const CANONICAL_NAMES = {
+      uganda: 'Uganda', algeria: 'Algeria', benin: 'Benin', rwanda: 'Rwanda',
+      kenya: 'Kenya', tanzania: 'Tanzania', zanzibar: 'Zanzibar', morocco: 'Morocco'
+    };
+
+    function normalizeName(name) {
+      return String(name || '')
+        .toLowerCase()
+        .replace(/[:\-–—]/g, ' ')
+        .replace(/[^\w\s]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function qualityScore(it) {
+      let s = 0;
+      if (it.image) s += 1000;
+      if (it.tagline) s += 100;
+      if (it.timestamp) s += 50;
+      s += (Array.isArray(it.dayByDay) ? it.dayByDay.length : 0);
+      return s;
+    }
+
+    let plan = { keep: [], remove: [], groups: [] };
+
+    async function analyze() {
+      await utils.initItineraries();
+      const items = await utils.getAllItinerariesAsync();
+
+      // Normalize country field on every item first
+      const normalized = items.map((it) => {
+        const key = utils.getCountryKey(it.country);
+        const clean = Object.assign({}, it);
+        if (CANONICAL_NAMES[key]) clean.country = CANONICAL_NAMES[key];
+        return clean;
+      });
+
+      // Group by normalized country + normalized package name
+      const groups = {};
+      normalized.forEach((it) => {
+        const gk = utils.getCountryKey(it.country) + '::' + normalizeName(it.packageName);
+        if (!groups[gk]) groups[gk] = [];
+        groups[gk].push(it);
+      });
+
+      const keep = [];
+      const remove = [];
+      const dupGroups = [];
+
+      Object.values(groups).forEach((group) => {
+        if (group.length === 1) {
+          keep.push(group[0]);
+          return;
+        }
+        const sorted = [...group].sort((a, b) => qualityScore(b) - qualityScore(a));
+        keep.push(sorted[0]);
+        remove.push(...sorted.slice(1));
+        dupGroups.push(sorted);
+      });
+
+      plan = { keep, remove, groups: dupGroups, normalizedCount: normalized.filter((it, i) => it.country !== items[i].country).length };
+      renderPreview();
+    }
+
+    function renderPreview() {
+      document.getElementById('stat-total').textContent = plan.keep.length + plan.remove.length;
+      document.getElementById('stat-dupes').textContent = plan.groups.length;
+      document.getElementById('stat-remove').textContent = plan.remove.length;
+
+      const el = document.getElementById('preview');
+      if (plan.groups.length === 0) {
+        el.innerHTML = '<div class="group"><h3>No duplicates found. Your data is clean!</h3></div>';
+      } else {
+        el.innerHTML = plan.groups.map((group) => {
+          const itemsHtml = group.map((it, idx) => {
+            const isKeep = idx === 0;
+            const imgHtml = it.image ? '<img src="' + it.image + '" alt="">' : '<div class="noimg"></div>';
+            return '<div class="item">' + imgHtml +
+              '<div><div>' + utils.escapeHtml(it.packageName) + '</div>' +
+              '<div class="country-line">country: "' + utils.escapeHtml(it.country) + '"' + (it.image ? '' : ' · no photo') + '</div></div>' +
+              '<span class="tag ' + (isKeep ? 'keep' : 'remove') + '">' + (isKeep ? 'Keep' : 'Remove') + '</span>' +
+            '</div>';
+          }).join('');
+          return '<div class="group"><h3>' + utils.escapeHtml(group[0].country) + ' — ' + utils.escapeHtml(group[0].packageName) + '</h3>' + itemsHtml + '</div>';
+        }).join('');
+      }
+
+      const btn = document.getElementById('apply-btn');
+      if (plan.remove.length === 0 && plan.normalizedCount === 0) {
+        btn.textContent = 'Nothing to Clean';
+        btn.disabled = true;
+      } else {
+        const parts = [];
+        if (plan.remove.length) parts.push('Remove ' + plan.remove.length + ' Duplicate' + (plan.remove.length === 1 ? '' : 's'));
+        if (plan.normalizedCount) parts.push('Fix ' + plan.normalizedCount + ' Country Name' + (plan.normalizedCount === 1 ? '' : 's'));
+        btn.textContent = parts.join(' & ');
+        btn.disabled = false;
+      }
+    }
+
+    function setStatus(kind, html) {
+      const el = document.getElementById('status');
+      el.className = kind;
+      el.innerHTML = html;
+    }
+
+    document.getElementById('apply-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('apply-btn');
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Cleaning…';
+      setStatus('info', 'Working…');
+
+      try {
+        const finalList = utils.ensurePackageNumbers(plan.keep);
+        await utils.saveItinerariesAsync(finalList);
+        setStatus('success', '&#10004; Cleaned. Removed ' + plan.remove.length + ' duplicate(s) and normalized ' + plan.normalizedCount + ' country name(s). <a href="' + utils.resolveSitePath('brochure.html') + '" target="_blank">View on the brochure</a>');
+        btn.textContent = 'Done';
+      } catch (err) {
+        console.error(err);
+        setStatus('error', 'Something went wrong: ' + (err && err.message ? err.message : err) + '. Nothing was changed — safe to try again.');
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+
+    analyze().catch((err) => {
+      console.error(err);
+      setStatus('error', 'Could not load current data: ' + (err && err.message ? err.message : err));
+    });
+  </script>
+</body>
+</html>
