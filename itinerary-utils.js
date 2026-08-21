@@ -202,12 +202,9 @@
       legacy = [];
     }
 
-    const localData = getAllItinerariesSync();
-    if (list.length === 0 && localData.length > 0) {
-      list = localData;
-      await saveItinerariesAsync(list);
-    }
-
+    // One-time (per-browser) seed merge: only ever ADDS genuinely missing items
+    // (from a built-in seed file or old legacy storage) — never overwrites the
+    // shared worker with this browser's possibly-stale local cache.
     if (localStorage.getItem(INIT_FLAG) !== 'true') {
       let seed = [];
       try {
@@ -216,32 +213,26 @@
         console.warn('Could not load built-in itineraries:', err);
       }
 
-      if (list.length === 0 && legacy.length === 0 && seed.length > 0) {
-        list = seed;
-      } else if (seed.length > 0) {
-        const merged = [...seed];
-        [...list, ...legacy].forEach((item) => {
-          if (!merged.find((x) => x.id === item.id)) merged.push(item);
-        });
-        list = merged;
-      } else {
-        list = [...list, ...legacy.filter((item) => !list.find((x) => x.id === item.id))];
+      const additions = [...seed, ...legacy].filter(
+        (item) => !list.find((x) => x.id === item.id)
+      );
+      if (additions.length > 0) {
+        list = [...list, ...additions];
+        await saveItinerariesAsync(list);
       }
 
       localStorage.setItem(INIT_FLAG, 'true');
-      await saveItinerariesAsync(list);
     }
 
     if (legacy.length > 0) {
-      legacy.forEach((item) => {
-        if (!list.find((x) => x.id === item.id)) list.push(item);
-      });
       localStorage.removeItem(LEGACY_KEY);
-      await saveItinerariesAsync(list);
     }
 
     list = ensurePackageNumbers(list.filter(isBrochurePackage));
-    await saveItinerariesAsync(list);
+    // Refresh this browser's local cache so future fallbacks are as fresh as
+    // possible — but never write back to the shared worker just from viewing
+    // a page. Only deliberate actions (admin edits, deletes, sync tools) save.
+    saveAllItineraries(list);
     return list;
   }
 
