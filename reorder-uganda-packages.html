@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reorder Uganda Packages — NextStop Africa</title>
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: #FAFAF7;
+    color: #2a2421;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card .num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #C84B31;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .card .title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .card .meta {
+    font-size: 11px;
+    color: #999;
+  }
+  #status {
+    margin: 20px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    display: none;
+  }
+  #status.success { display: block; background: #e9f7ef; color: #1a7a3f; }
+  #status.error { display: block; background: #fdecea; color: #b3261e; }
+  #status.info { display: block; background: #eef3ff; color: #2952a3; }
+  button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    background: #C84B31;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+  <h1>Reorder Uganda Packages</h1>
+  <p class="sub">Sets the display order for Uganda's 4 packages: Gorilla Trekking first, Coffee Trails &amp; Longhorn
+    Encounters last. Safe to run more than once.</p>
+
+  <div id="preview">Loading current order…</div>
+  <div id="status"></div>
+  <button id="apply-btn" disabled>Checking current data…</button>
+
+  <script src="itinerary-utils.js"></script>
+  <script>
+    const DESIRED_ORDER = [
+      "Uganda's Wild Heart: Gorilla Trekking & Cultural Escape",
+      "Hiking (Mount Muhabura) + Safari Experience",
+      "Quest for the Source of the Nile",
+      "Coffee Trails and Longhorn Encounters"
+    ];
+
+    function setStatus(kind, html) {
+      const el = document.getElementById('status');
+      el.className = kind;
+      el.innerHTML = html;
+    }
+
+    let ugandaItems = [];
+
+    function renderPreview() {
+      const el = document.getElementById('preview');
+      el.innerHTML = DESIRED_ORDER.map((name, idx) => {
+        const found = ugandaItems.find((it) => it.packageName.toLowerCase() === name.toLowerCase());
+        return '<div class="card">' +
+          '<div class="num">' + (idx + 1) + '</div>' +
+          '<div>' +
+            '<div class="title">' + (found ? found.displayTitle || found.packageName : name) + '</div>' +
+            '<div class="meta">' + (found ? 'Currently position ' + (found.packageNumber || '?') : 'NOT FOUND on your site') + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    async function load() {
+      const utils = window.ItineraryUtils;
+      await utils.initItineraries();
+      const items = await utils.getAllItinerariesAsync();
+      ugandaItems = items.filter((it) => it.country === 'Uganda');
+
+      renderPreview();
+
+      const btn = document.getElementById('apply-btn');
+      const missing = DESIRED_ORDER.filter((name) => !ugandaItems.find((it) => it.packageName.toLowerCase() === name.toLowerCase()));
+      if (missing.length) {
+        setStatus('error', 'Could not find: ' + missing.join(', ') + '. Make sure all Uganda packages are already on your site.');
+        btn.textContent = 'Missing Packages';
+        btn.disabled = true;
+        return;
+      }
+
+      const alreadyCorrect = DESIRED_ORDER.every((name, idx) => {
+        const found = ugandaItems.find((it) => it.packageName.toLowerCase() === name.toLowerCase());
+        return found && found.packageNumber === idx + 1;
+      });
+
+      if (alreadyCorrect) {
+        btn.textContent = 'Already in This Order';
+        btn.disabled = true;
+      } else {
+        btn.textContent = 'Apply This Order';
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('apply-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('apply-btn');
+      btn.disabled = true;
+      btn.textContent = 'Applying…';
+      setStatus('info', 'Working…');
+
+      try {
+        const utils = window.ItineraryUtils;
+        let items = await utils.getAllItinerariesAsync();
+
+        DESIRED_ORDER.forEach((name, idx) => {
+          const item = items.find((it) => it.country === 'Uganda' && it.packageName.toLowerCase() === name.toLowerCase());
+          if (item) item.packageNumber = idx + 1;
+        });
+
+        await utils.saveItinerariesAsync(items);
+
+        setStatus('success', '&#10004; Order updated. Gorilla Trekking now shows first, Coffee Trails &amp; Longhorn Encounters last. <a href="' + utils.resolveSitePath('brochure.html') + '" target="_blank">View on the brochure</a>');
+        btn.textContent = 'Done';
+      } catch (err) {
+        console.error(err);
+        setStatus('error', 'Something went wrong: ' + (err && err.message ? err.message : err));
+        btn.disabled = false;
+        btn.textContent = 'Apply This Order';
+      }
+    });
+
+    load().catch((err) => {
+      console.error(err);
+      setStatus('error', 'Could not load current data: ' + (err && err.message ? err.message : err));
+    });
+  </script>
+</body>
+</html>
