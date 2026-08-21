@@ -8,9 +8,12 @@
     algeria: { groupId: 'itin-algeria', label: 'Algeria, Sahara\'s Best Kept Secret', order: 2 },
     benin: { groupId: 'itin-benin', label: 'Benin, Cradle of African Spirituality', order: 3 },
     rwanda: { groupId: 'itin-rwanda', label: 'Rwanda, Land of a Thousand Hills', order: 4 },
+    kenya: { groupId: 'itin-kenya', label: 'Kenya, The Heart of the Safari', order: 5 },
+    tanzania: { groupId: 'itin-tanzania', label: 'Tanzania, The Crater Highlands', order: 6 },
+    zanzibar: { groupId: 'itin-zanzibar', label: 'Zanzibar, The Spice Island', order: 7 },
   };
 
-  const COUNTRY_ORDER = ['uganda', 'algeria', 'benin', 'rwanda'];
+  const COUNTRY_ORDER = ['uganda', 'algeria', 'benin', 'rwanda', 'kenya', 'tanzania', 'zanzibar'];
 
   function getCountryKey(country) {
     const c = (country || '').toLowerCase();
@@ -18,6 +21,9 @@
     if (c.includes('algeria')) return 'algeria';
     if (c.includes('benin')) return 'benin';
     if (c.includes('rwanda')) return 'rwanda';
+    if (c.includes('zanzibar')) return 'zanzibar';
+    if (c.includes('kenya')) return 'kenya';
+    if (c.includes('tanzania')) return 'tanzania';
     return c.replace(/[,\s]/g, '');
   }
 
@@ -294,11 +300,16 @@
       const footnote = day.footnote
         ? `<div class="other">${escapeHtml(day.footnote)}</div>`
         : '';
+      const desc = day.description ? `<p>${escapeHtml(day.description)}</p>` : '';
+      const bullets = Array.isArray(day.bullets) && day.bullets.length
+        ? `<ul class="day-bullets">${day.bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join('')}</ul>`
+        : '';
       return `
         <div class="day-item">
           <div class="day-badge">Day ${day.dayNumber}</div>
           <h4>${escapeHtml(day.title)}</h4>
-          <p>${escapeHtml(day.description)}</p>
+          ${desc}
+          ${bullets}
           ${footnote}
         </div>`;
     }).join('');
@@ -380,12 +391,22 @@
     return '€' + n.toLocaleString('en-US');
   }
 
+  const USD_RATE = 1.17;
+
+  /** Small "also bookable in USD" hint shown under a EUR price, so the
+   *  currency choice is visible before the client ever opens the booking modal. */
+  function usdHint(eurAmount) {
+    if (!eurAmount) return '';
+    const usd = Math.round(eurAmount * USD_RATE);
+    return `<div class="price-usd-hint">or $${usd.toLocaleString('en-US')} USD · pay in either currency</div>`;
+  }
+
   /* ---------- Card rendering ---------- */
 
   function buildCardHtml(itinerary) {
     const price = getFromPrice(itinerary);
     const priceHtml = price
-      ? `<div class="itin-card-price"><span class="from-label">From</span>${formatEUR(price)}<span class="pp-label"> / person</span></div>`
+      ? `<div class="itin-card-price"><span class="from-label">From</span>${formatEUR(price)}<span class="pp-label"> / person</span></div>${usdHint(price)}`
       : `<div class="itin-card-price itin-card-price-quote">Custom Quote</div>`;
     const hasImage = Boolean(itinerary.image);
     const coverStyle = hasImage ? ` style="background-image:url('${escapeHtml(itinerary.image)}')"` : '';
@@ -417,7 +438,7 @@
     itineraryIndex = {};
     itineraries.forEach((it) => { itineraryIndex[it.id] = it; });
 
-    const insertBefore = document.getElementById('itin-kenya-tanzania-morocco');
+    const insertBefore = document.getElementById('itin-morocco');
     const grouped = groupByCountry(itineraries);
 
     const sortedKeys = [...grouped.keys()].sort((a, b) => {
@@ -445,7 +466,7 @@
     });
 
     itinerarySection.querySelectorAll('.itin-country-group').forEach((group) => {
-      if (group.id === 'itin-kenya-tanzania-morocco' || group.id === 'itin-other') return;
+      if (group.id === 'itin-morocco' || group.id === 'itin-other') return;
       group.style.display = group.querySelector('.itin-card') ? '' : 'none';
     });
   }
@@ -476,6 +497,9 @@
     const note = itinerary.note
       ? `<div class="itin-note">${escapeHtml(itinerary.note)}</div>`
       : '';
+    const tagline = itinerary.tagline
+      ? `<p class="itin-tagline">${escapeHtml(itinerary.tagline)}</p>`
+      : '';
     const price = getFromPrice(itinerary);
     const priceLine = price
       ? `From ${formatEUR(price)} per person`
@@ -484,7 +508,9 @@
       <div class="itin-header">
         <h3>${escapeHtml(getDisplayTitle(itinerary))}</h3>
         <p>${escapeHtml(itinerary.nights)} Nights / ${escapeHtml(itinerary.days)} Days · ${escapeHtml(itinerary.packageDesc || '')}</p>
+        ${tagline}
         <p style="color:var(--rust);font-weight:600;margin-top:8px;">${priceLine}</p>
+        ${usdHint(price)}
       </div>
       <div class="days-timeline">
         ${buildDaysHtml(itinerary)}
@@ -503,7 +529,6 @@
 
   /* ---------- Booking modal ("Book") ---------- */
 
-  const USD_RATE = 1.17;
   let currentBookingCurrency = 'EUR';
 
   function currencySymbol(cur) {

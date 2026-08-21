@@ -1362,6 +1362,15 @@
       font-weight: 300;
     }
 
+    .itin-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: #888;
+      font-size: 14px;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
     .coming-soon-box {
       background: var(--cream);
       border: 1px dashed rgba(42, 36, 33, 0.12);
@@ -1437,6 +1446,19 @@
     }
 
     .day-item p {
+      font-size: 13px;
+      color: #999;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .day-bullets {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      list-style: disc;
+    }
+
+    .day-bullets li {
       font-size: 13px;
       color: #999;
       font-weight: 300;
@@ -1543,7 +1565,7 @@
       font-size: 20px;
       color: var(--rust);
       font-weight: 600;
-      margin-bottom: 18px;
+      margin-bottom: 4px;
     }
 
     .itin-card-price .from-label {
@@ -1561,6 +1583,13 @@
       font-size: 12px;
       color: #999;
       font-weight: 400;
+    }
+
+    .price-usd-hint {
+      font-size: 11px;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 16px;
     }
 
     .itin-card-price-quote {
@@ -2483,10 +2512,25 @@
       }
 
       .countries-list {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
         gap: 0.5rem;
+        padding-bottom: 0.4rem;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .countries-list::-webkit-scrollbar {
+        display: none;
       }
 
       .country-link {
+        flex-shrink: 0;
+        white-space: nowrap;
+        scroll-snap-align: start;
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
       }
@@ -2533,10 +2577,6 @@
 
       .packages-header {
         margin-bottom: 2rem;
-      }
-
-      .country-link {
-        width: 100%;
       }
 
       .contact-form {
@@ -2592,16 +2632,18 @@
           onclick="window.filterByCountry('all', this)">All</button>
         <button type="button" class="country-link" data-filter="uganda"
           onclick="window.filterByCountry('uganda', this)">Uganda</button>
-        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
-          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Tanzania</button>
-        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
-          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Kenya</button>
+        <button type="button" class="country-link" data-filter="tanzania"
+          onclick="window.filterByCountry('tanzania', this)">Tanzania</button>
+        <button type="button" class="country-link" data-filter="kenya"
+          onclick="window.filterByCountry('kenya', this)">Kenya</button>
         <button type="button" class="country-link" data-filter="rwanda"
           onclick="window.filterByCountry('rwanda', this)">Rwanda</button>
         <button type="button" class="country-link" data-filter="benin"
           onclick="window.filterByCountry('benin', this)">Benin</button>
-        <button type="button" class="country-link" data-filter="kenya-tanzania-morocco"
-          onclick="window.filterByCountry('kenya-tanzania-morocco', this)">Morocco</button>
+        <button type="button" class="country-link" data-filter="zanzibar"
+          onclick="window.filterByCountry('zanzibar', this)">Zanzibar</button>
+        <button type="button" class="country-link" data-filter="morocco"
+          onclick="window.filterByCountry('morocco', this)">Morocco</button>
         <button type="button" class="country-link" data-filter="algeria"
           onclick="window.filterByCountry('algeria', this)">Algeria</button>
       </div>
@@ -2638,11 +2680,27 @@
         <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
         <div class="itin-card-grid"></div>
       </div>
-      <!-- KENYA, TANZANIA, MOROCCO -->
-      <div class="itin-country-group" id="itin-kenya-tanzania-morocco">
-        <div class="itin-country-label">Kenya · Tanzania · Morocco</div>
+
+      <div class="itin-country-group" id="itin-kenya">
+        <div class="itin-country-label">Kenya, The Heart of the Safari</div>
+        <div class="itin-card-grid"></div>
+      </div>
+
+      <div class="itin-country-group" id="itin-tanzania">
+        <div class="itin-country-label">Tanzania, The Crater Highlands</div>
+        <div class="itin-card-grid"></div>
+      </div>
+
+      <div class="itin-country-group" id="itin-zanzibar">
+        <div class="itin-country-label">Zanzibar, The Spice Island</div>
+        <div class="itin-card-grid"></div>
+      </div>
+
+      <!-- MOROCCO -->
+      <div class="itin-country-group" id="itin-morocco">
+        <div class="itin-country-label">Morocco</div>
         <div class="coming-soon-box">
-          ✦ Detailed itineraries for Kenya, Tanzania & Morocco are coming soon ✦<br>
+          ✦ A detailed itinerary for Morocco is coming soon ✦<br>
           <span style="font-size:12px;font-style:normal;color:#bbb;display:block;margin-top:12px;">Contact us directly
             and we will craft a bespoke package tailored to your preferences.</span>
         </div>
@@ -2700,12 +2758,13 @@
           </div>
           <div class="pkg-body">
             <ul class="pkg-includes">
-              <li><span class="check">✓</span> 5 nights / 6 days itinerary</li>
-              <li><span class="check">✓</span> Professionally guided tours</li>
-              <li><span class="check">✓</span> Selected core activities</li>
-              <li><span class="check">✓</span> Budget-friendly accommodation</li>
-              <li><span class="check">✓</span> Ground transportation</li>
-              <li><span class="check">✓</span> Flexible add-ons available</li>
+              <li><span class="check">✓</span> <strong>Accommodation:</strong> Comfortable local stays, guesthouses, simple lodges, or basic camps with essential facilities.</li>
+              <li><span class="check">✓</span> <strong>Transport:</strong> Shared transfers and practical local transport.</li>
+              <li><span class="check">✓</span> <strong>Meals:</strong> Simple local meals and essential dining options.</li>
+              <li><span class="check">✓</span> <strong>Activities:</strong> Main attractions and essential experiences in groups.</li>
+              <li><span class="check">✓</span> <strong>Service:</strong> Basic travel support.</li>
+              <li><span class="check">✓</span> <strong>Business &amp; Networking:</strong> Not included.</li>
+              <li><span class="check">✓</span> <strong>Experience:</strong> Affordable and authentic exploration.</li>
             </ul>
           </div>
         </div>
@@ -2722,12 +2781,13 @@
           </div>
           <div class="pkg-body">
             <ul class="pkg-includes">
-              <li><span class="check">✓</span> Everything in Budget +</li>
-              <li><span class="check">✓</span> More activities & experiences</li>
-              <li><span class="check">✓</span> Superior accommodation</li>
-              <li><span class="check">✓</span> Cultural immersion sessions</li>
-              <li><span class="check">✓</span> More flexibility & comfort</li>
-              <li><span class="check">✓</span> Priority support</li>
+              <li><span class="check">✓</span> <strong>Accommodation:</strong> Quality hotels, lodges, and resorts with good amenities and pet-friendly options where available.</li>
+              <li><span class="check">✓</span> <strong>Transport:</strong> Comfortable private or small-group transfers with pets allowed onboard where permitted.</li>
+              <li><span class="check">✓</span> <strong>Meals:</strong> Quality meals with selected restaurants and flexible dining options.</li>
+              <li><span class="check">✓</span> <strong>Activities:</strong> A mix of key attractions, cultural experiences, and flexible activities.</li>
+              <li><span class="check">✓</span> <strong>Service:</strong> Dedicated assistance and personalized service.</li>
+              <li><span class="check">✓</span> <strong>Business &amp; Networking:</strong> Optional cultural or professional visits upon request.</li>
+              <li><span class="check">✓</span> <strong>Experience:</strong> Comfortable travel with great value and flexibility.</li>
             </ul>
           </div>
         </div>
@@ -2744,12 +2804,13 @@
           </div>
           <div class="pkg-body">
             <ul class="pkg-includes">
-              <li><span class="check">✓</span> Everything in Standard +</li>
-              <li><span class="check">✓</span> Luxury lodge & resort stays</li>
-              <li><span class="check">✓</span> Private guided experiences</li>
-              <li><span class="check">✓</span> Exclusive access & VIP services</li>
-              <li><span class="check">✓</span> Gourmet dining experiences</li>
-              <li><span class="check">✓</span> Fully bespoke itinerary</li>
+              <li><span class="check">✓</span> <strong>Accommodation:</strong> Exclusive lodges, private villas, luxury camps, and premium resorts offering privacy, exceptional service, and pet-friendly options where possible.</li>
+              <li><span class="check">✓</span> <strong>Transport:</strong> Private luxury vehicles, VIP transfers, local air transfers between destinations, and premium transport experiences.</li>
+              <li><span class="check">✓</span> <strong>Meals:</strong> Fine dining, private meals, and personalized culinary experiences.</li>
+              <li><span class="check">✓</span> <strong>Activities:</strong> Private excursions, exclusive experiences, VIP access, and tailor-made activities.</li>
+              <li><span class="check">✓</span> <strong>Service:</strong> 24/7 concierge support, fully customised service, and lifestyle-based experiences.</li>
+              <li><span class="check">✓</span> <strong>Business &amp; Networking:</strong> Exclusive opportunities to connect travellers with local business leaders, investors, entrepreneurs, and companies for networking and partnerships.</li>
+              <li><span class="check">✓</span> <strong>Experience:</strong> Exclusive journeys combining luxury travel, private services, local air transfers, unique experiences, and meaningful business connections.</li>
             </ul>
           </div>
         </div>
@@ -2807,6 +2868,12 @@
               <td class="budget-price">€740 – €1,100</td>
               <td class="standard-price">€1,200 – €1,840</td>
               <td class="luxury-price">€7,300 – €13,680</td>
+            </tr>
+            <tr id="pricing-zanzibar">
+              <td>Zanzibar</td>
+              <td class="budget-price">€1,400</td>
+              <td class="standard-price">€1,800</td>
+              <td class="luxury-price">On Request</td>
             </tr>
             <tr id="pricing-other" style="background:rgba(200,75,49,0.06)">
               <td>Other African Countries</td>
@@ -2900,7 +2967,7 @@
 
       const groups = document.querySelectorAll('.itinerary-inner > .itin-country-group');
       groups.forEach((group) => {
-        const isSpecial = group.id === 'itin-kenya-tanzania-morocco' || group.id === 'itin-other';
+        const isSpecial = group.id === 'itin-morocco' || group.id === 'itin-other';
         const hasCards = Boolean(group.querySelector('.itin-card'));
         const matchesFilter = filterKey === 'all' || group.id === 'itin-' + filterKey;
 
