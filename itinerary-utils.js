@@ -656,7 +656,7 @@
     box.innerHTML = html;
   }
 
-  const BOOKING_INBOX = 'Inquire@nextstopafricatours.com';
+  const BOOKING_INBOX = 'visitafrica21@gmail.com';
   const BOOKING_FORM_ENDPOINT = 'https://formspree.io/f/meepakev';
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
