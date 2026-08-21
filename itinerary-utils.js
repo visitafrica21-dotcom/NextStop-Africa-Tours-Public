@@ -407,7 +407,7 @@
   function usdHint(eurAmount) {
     if (!eurAmount) return '';
     const usd = Math.round(eurAmount * USD_RATE);
-    return `<div class="price-usd-hint">or $${usd.toLocaleString('en-US')} USD · pay in either currency</div>`;
+    return `<div class="price-usd-hint">or <span class="usd-amount">$${usd.toLocaleString('en-US')} USD</span> · pay in either currency</div>`;
   }
 
   /* ---------- Card rendering ---------- */
@@ -463,18 +463,28 @@
       </div>`;
   }
 
-  function renderBrochureItineraries() {
+  /** Renders every package into one unified grid — no per-country sectioning.
+   *  Each card carries its own country name (badge) and a data-country
+   *  attribute the destination filter uses to show/hide individual cards.
+   *  Works on any page: uses #itin-all-packages if it's already in the HTML
+   *  (e.g. a homepage section), otherwise creates it inside .itinerary-inner
+   *  (brochure.html's own section). Pass { includeMorocco: false } to omit
+   *  the "coming soon" tile — e.g. for a homepage preview of ready packages. */
+  function renderBrochureItineraries(options) {
+    const opts = options || {};
+    const includeMorocco = opts.includeMorocco !== false;
+
     const itineraries = sortItineraries(
       ensurePackageNumbers(getBrochurePackages(getAllItinerariesSync()))
     );
-    const itinerarySection = document.querySelector('.itinerary-inner');
-    if (!itinerarySection) return;
 
     itineraryIndex = {};
     itineraries.forEach((it) => { itineraryIndex[it.id] = it; });
 
     let gridContainer = document.getElementById('itin-all-packages');
     if (!gridContainer) {
+      const itinerarySection = document.querySelector('.itinerary-inner');
+      if (!itinerarySection) return;
       gridContainer = document.createElement('div');
       gridContainer.className = 'itin-card-grid';
       gridContainer.id = 'itin-all-packages';
@@ -486,7 +496,8 @@
       }
     }
 
-    gridContainer.innerHTML = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('') + buildMoroccoCardHtml();
+    const cardsHtml = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('');
+    gridContainer.innerHTML = includeMorocco ? cardsHtml + buildMoroccoCardHtml() : cardsHtml;
   }
 
   /* ---------- Trip detail modal ("See trip") ---------- */

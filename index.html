@@ -26,6 +26,583 @@
     rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root {
+      --gold: #C84B31;
+      --deep-green: #1a1714;
+      --forest: #2e2723;
+      --rust: #C84B31;
+      --sand: #EAD8C0;
+      --dark: #141110;
+      --cream: #FAFAF7;
+      --orange: #b33e24;
+    }
+
+    .itin-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 24px;
+    }
+
+    .itin-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      transition: all 0.4s cubic-bezier(.25, .46, .45, .94);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .itin-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.1);
+    }
+
+    .itin-card-cover {
+      height: 170px;
+      background: linear-gradient(135deg, var(--deep-green), var(--forest));
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 16px;
+    }
+
+    .itin-card-cover.has-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%);
+    }
+
+    .itin-card-badge {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--deep-green);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 50px;
+    }
+
+    .itin-card-body {
+      padding: 22px 22px 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .itin-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--deep-green);
+      font-weight: 500;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .itin-card-meta {
+      font-size: 12px;
+      color: #999;
+      font-weight: 400;
+      margin-bottom: 14px;
+    }
+
+    .itin-card-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--rust);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .itin-card-price .from-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #bbb;
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    .itin-card-price .pp-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px;
+      color: #999;
+      font-weight: 400;
+    }
+
+    .price-usd-hint {
+      font-size: 11px;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .price-usd-hint .usd-amount {
+      color: var(--gold);
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: 0.2px;
+    }
+
+    .itin-card-price-quote {
+      font-size: 15px;
+      color: #999;
+      font-style: italic;
+    }
+
+    .itin-card-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn-see-trip,
+    .btn-book {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 50px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid var(--forest);
+      transition: all 0.3s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .btn-see-trip {
+      background: transparent;
+      color: var(--forest);
+    }
+
+    .btn-see-trip:hover {
+      background: var(--forest);
+      color: #fff;
+    }
+
+    .btn-book {
+      background: var(--gold);
+      color: #fff;
+      border-color: var(--gold);
+    }
+
+    .btn-book:hover {
+      background: var(--orange);
+      border-color: var(--orange);
+    }
+
+    .btn-book.full-width {
+      flex: none;
+      width: 100%;
+      padding: 15px;
+      margin-top: 28px;
+      font-size: 12px;
+    }
+
+
+    .itin-header {
+      margin-bottom: 28px;
+    }
+
+    .itin-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--deep-green);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .itin-header p {
+      color: #aaa;
+      font-size: 13px;
+      font-weight: 300;
+    }
+
+    .itin-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      color: #888;
+      font-size: 14px;
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .coming-soon-box {
+      background: var(--cream);
+      border: 1px dashed rgba(42, 36, 33, 0.12);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      color: #bbb;
+      font-size: 14px;
+      font-weight: 300;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+
+    .days-timeline {
+      position: relative;
+      padding-left: 44px;
+    }
+
+    .days-timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), rgba(200, 75, 49, 0.15));
+      border-radius: 2px;
+    }
+
+    .day-item {
+      position: relative;
+      margin-bottom: 20px;
+      padding: 26px 30px;
+      background: var(--cream);
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: all 0.3s;
+    }
+
+    .day-item:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: translateX(4px);
+    }
+
+    .day-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 30px;
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 2px var(--gold);
+    }
+
+    .day-badge {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--rust);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .day-item h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--deep-green);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .day-item p {
+      font-size: 13px;
+      color: #999;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .day-bullets {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      list-style: disc;
+    }
+
+    .day-bullets li {
+      font-size: 13px;
+      color: #999;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .day-item .other {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    .itin-note {
+      background: rgba(200, 75, 49, 0.06);
+      border: 1px solid rgba(200, 75, 49, 0.15);
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: var(--gold);
+      margin-top: 16px;
+      font-style: italic;
+    }
+
+    /* ITINERARY CARDS (package cards: "See trip" / "Book") */
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 17, 16, 0.72);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 640px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 40px;
+      animation: modalPop 0.35s cubic-bezier(.25, .46, .45, .94);
+    }
+
+    @keyframes modalPop {
+      from {
+        transform: scale(0.94) translateY(12px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: var(--cream);
+      color: var(--dark);
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      line-height: 1;
+    }
+
+    .modal-close:hover {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    .booking-trip-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--deep-green);
+      margin-bottom: 4px;
+      padding-right: 30px;
+    }
+
+    .booking-trip-meta {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 28px;
+    }
+
+    .booking-field {
+      margin-bottom: 20px;
+    }
+
+    .booking-field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--forest);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .booking-field input,
+    .booking-field select {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      font-size: 14px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--dark);
+      background: #fff;
+      transition: border-color 0.3s;
+    }
+
+    .booking-field select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%232a2421' d='M1 1l5 5 5-5' stroke='%232a2421' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .booking-field input:focus,
+    .booking-field select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .booking-price-box {
+      background: var(--cream);
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin: 24px 0;
+    }
+
+    .booking-price-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .booking-price-row.discount {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .booking-price-row.total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--deep-green);
+      font-family: 'Playfair Display', serif;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      padding-top: 12px;
+      margin-top: 4px;
+      margin-bottom: 0;
+    }
+
+    .booking-discount-note {
+      font-size: 12px;
+      color: var(--gold);
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .currency-toggle {
+      display: flex;
+      gap: 8px;
+    }
+
+    .currency-btn {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #fff;
+      color: var(--dark);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .currency-btn:hover {
+      border-color: var(--gold);
+    }
+
+    .currency-btn.active {
+      background: var(--forest);
+      color: #fff;
+      border-color: var(--forest);
+    }
+
+    .btn-send-booking {
+      width: 100%;
+      padding: 16px;
+      border-radius: 50px;
+      border: none;
+      background: var(--gold);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-send-booking:hover {
+      background: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .btn-send-booking:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .booking-fine-print {
+      font-size: 11px;
+      color: #aaa;
+      text-align: center;
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    .booking-success {
+      text-align: center;
+      padding: 20px 0 8px;
+    }
+
+    .booking-success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      color: var(--deep-green);
+      margin-bottom: 14px;
+    }
+
+    .booking-success p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 26px;
+    }
+
+    .booking-success .btn-see-trip.full-width {
+      flex: none;
+      width: 100%;
+      padding: 14px;
+    }
+
+
+  </style>
   <link rel="stylesheet" href="chatbot/chat-ui.css">
   <script type="module" src="chatbot/chat-ui.js"></script>
   <script src="whatsapp-widget.js"></script>
@@ -48,7 +625,7 @@
         <a href="#what-to-do">Tourism Activities</a>
         <a href="#destinations">Destinations</a>
         <a href="#about">About</a>
-        <a href="#contact-form" class="btn-inquire">Inquire Now</a>
+        <a href="#contact-form" class="btn-inquire">Book Now</a>
       </div>
 
       <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open navigation menu">
@@ -66,7 +643,7 @@
       <a href="#what-to-do" class="mobile-link">Tourism Activities</a>
       <a href="#destinations" class="mobile-link">Destinations</a>
       <a href="#about" class="mobile-link">About</a>
-      <a href="#contact-form" class="btn-inquire mobile-inquire">Inquire Now</a>
+      <a href="#contact-form" class="btn-inquire mobile-inquire">Book Now</a>
     </div>
   </nav>
 
@@ -94,111 +671,27 @@
     </div>
   </header>
 
-  <!-- What Can I Do Section -->
-  <section id="what-to-do" class="experiences-section">
+  <!-- Featured Packages Section -->
+  <section id="what-to-do" class="itinerary-section">
     <div class="container">
       <div class="section-header text-center slide-up section-header--compact">
-        <p class="section-kicker">Experiences</p>
-        <h2 class="section-title section-title--narrow">What Can I Do In Africa?</h2>
-        <p class="section-caption">From thrilling safaris to ancient cultural encounters, Africa offers experiences
-          found nowhere else on Earth.</p>
+        <p class="section-kicker">Packages</p>
+        <h2 class="section-title section-title--narrow">Ready-to-Book Itineraries</h2>
+        <p class="section-caption">Hand-built day-by-day journeys across Africa, ready to book today. More
+          destinations are added regularly.</p>
       </div>
 
-      <div class="accordion-container slide-up" id="experience-accordion">
-        <div class="accordion-panel is-active" data-accordion-panel>
-          <img src="images/africa-wildlife.jpg" alt="African wildlife safari experience" class="accordion-panel__img">
-          <div class="accordion-panel__gradient"></div>
-          <div class="accordion-panel__collapsed">
-            <span class="accordion-panel__eyebrow">Wildlife &amp; Nature</span>
-            <h3>Wildlife</h3>
-          </div>
-          <div class="accordion-panel__expanded">
-            <span class="accordion-panel__tag">Wildlife &amp; Nature</span>
-            <h3 class="accordion-panel__title">Into the Wild</h3>
-            <p class="accordion-panel__desc">Safari game drives, gorilla trekking, birdwatching, and night safaris
-              across Africa's most iconic national parks and reserves.</p>
-            <a href="#destinations" class="accordion-panel__btn">
-              Explore Safaris
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </a>
-          </div>
-        </div>
+      <div class="itin-card-grid" id="itin-all-packages" style="margin-top: 48px;"></div>
 
-        <div class="accordion-panel" data-accordion-panel>
-          <img src="images/africa-outdoor-activities.jpg" alt="Outdoor adventure activities in Africa"
-            class="accordion-panel__img">
-          <div class="accordion-panel__gradient"></div>
-          <div class="accordion-panel__collapsed">
-            <span class="accordion-panel__eyebrow">Adventure &amp; Outdoor</span>
-            <h3>Adventure</h3>
-          </div>
-          <div class="accordion-panel__expanded">
-            <span class="accordion-panel__tag">Adventure &amp; Outdoor</span>
-            <h3 class="accordion-panel__title">Seek the Thrill</h3>
-            <p class="accordion-panel__desc">Mountain climbing, dune bashing, hot-air balloon rides, bungee jumping, and
-              horseback safaris across breathtaking terrain.</p>
-            <a href="#destinations" class="accordion-panel__btn">
-              Find Adventures
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="accordion-panel" data-accordion-panel>
-          <img src="images/africa-historical-sites.jpg" alt="African cultural and historical sites"
-            class="accordion-panel__img">
-          <div class="accordion-panel__gradient"></div>
-          <div class="accordion-panel__collapsed">
-            <span class="accordion-panel__eyebrow">Heritage &amp; History</span>
-            <h3>Culture</h3>
-          </div>
-          <div class="accordion-panel__expanded">
-            <span class="accordion-panel__tag">Heritage &amp; History</span>
-            <h3 class="accordion-panel__title">Living History</h3>
-            <p class="accordion-panel__desc">Ancient ruins, UNESCO heritage sites, traditional village visits, cultural
-              festivals, and storytelling nights under the stars.</p>
-            <a href="#destinations" class="accordion-panel__btn">
-              Discover Heritage
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="accordion-panel" data-accordion-panel>
-          <img src="images/african-jungle.jpg" alt="Lush African forest and scenic landscapes"
-            class="accordion-panel__img">
-          <div class="accordion-panel__gradient"></div>
-          <div class="accordion-panel__collapsed">
-            <span class="accordion-panel__eyebrow">Scenic Wonders</span>
-            <h3>Landscapes</h3>
-          </div>
-          <div class="accordion-panel__expanded">
-            <span class="accordion-panel__tag">Scenic Wonders</span>
-            <h3 class="accordion-panel__title">Nature's Canvas</h3>
-            <p class="accordion-panel__desc">Volcanic craters, lush rainforests, desert dunes, waterfalls, and island
-              paradises that redefine the meaning of beauty.</p>
-            <a href="#destinations" class="accordion-panel__btn">
-              View Landscapes
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M5 12h14" />
-                <path d="m12 5 7 7-7 7" />
-              </svg>
-            </a>
-          </div>
-        </div>
+      <div style="text-align: center; margin-top: 48px;">
+        <a href="brochure.html" class="brochure-cta" style="display: inline-flex;">
+          View Full Brochure
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
       </div>
     </div>
   </section>
@@ -548,9 +1041,9 @@
             </svg>
           </div>
           <div class="divider" style="margin: 1.5rem 0; width: 60px;"></div>
-          <p class="section-desc" style="max-width: 100%; margin-bottom: 1rem;">We are a people-centred tourism company
-            creating authentic African experiences. Our mission is to connect travelers with the real Africa, its
-            people, and cultures.</p>
+          <p class="section-desc" style="max-width: 100%; margin-bottom: 1rem;">We are a people-centred family owned
+            tourism company creating authentic African experiences. Our mission is to connect travelers with the real
+            Africa, its people, and cultures.</p>
           <p class="section-desc" style="max-width: 100%; margin-bottom: 1rem;">From lush rainforests to golden deserts,
             from gorillas to ancient kingdoms, Africa offers the world's most diverse and authentic travel experiences.
           </p>
@@ -558,7 +1051,7 @@
             with professionally guided tours and tailor-made packages.</p>
 
           <p class="section-desc" style="max-width: 100%;"><br>Our headquarters are located at:</p>
-          <p class="section-desc" style="max-width: 100%;">Kampala Central Division 206541 <br>Buganda Road</p>
+          <p class="section-desc" style="max-width: 100%;">Kampala Central Division 206541 <br>Lumumba Avenue</p>
         </div>
         <div class="slide-up" id="our-impact" style="flex: 1 1 400px; transition-delay: 0.2s;">
           <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
@@ -573,6 +1066,24 @@
           <div class="divider" style="margin: 1.5rem 0; width: 60px;"></div>
           <p class="section-desc" style="max-width: 100%;">Every journey leaves a deeper understanding of who we are and
             what we aspire to become as a continent.</p>
+        </div>
+        <div class="slide-up" id="our-contacts" style="flex: 1 1 400px; transition-delay: 0.4s;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <h2 class="section-title" style="margin: 0; display: inline-flex; align-items: center;">Contacts</h2>
+            <svg class="intro-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              style="margin: 0; flex-shrink: 0;">
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+          </div>
+          <div class="divider" style="margin: 1.5rem 0; width: 60px;"></div>
+          <p class="section-desc" style="max-width: 100%; margin-bottom: 0.5rem;">Tel: <a
+              href="tel:+256770307890">+256 770 307890</a></p>
+          <p class="section-desc" style="max-width: 100%; margin-bottom: 0.5rem;">Email: <a
+              href="mailto:inquire@nextstopafricatours.com">inquire@nextstopafricatours.com</a></p>
+          <p class="section-desc" style="max-width: 100%;">International Helplines: <a
+              href="tel:+393516474543">+39 351 647 4543</a> · <a href="tel:+32476821973">+32 476 821973</a></p>
         </div>
       </div>
     </div>
@@ -696,6 +1207,96 @@
     </div>
   </footer>
 
+  <!-- Hidden pricing source of truth — same data as brochure.html, read by itinerary-utils.js
+       for every package's price. Keep in sync with brochure.html's pricing table when prices change. -->
+  <div class="table-responsive" style="display:none;">
+    <table class="price-table">
+      <tbody>
+        <tr id="pricing-uganda">
+          <td>Uganda</td>
+          <td class="budget-price">€993</td>
+          <td class="standard-price">€1,840</td>
+          <td class="luxury-price">€15,000</td>
+        </tr>
+        <tr id="pricing-tanzania">
+          <td>Tanzania</td>
+          <td class="budget-price">€1,660</td>
+          <td class="standard-price">€2,760</td>
+          <td class="luxury-price">€15,060</td>
+        </tr>
+        <tr id="pricing-kenya">
+          <td>Kenya</td>
+          <td class="budget-price">€1,560</td>
+          <td class="standard-price">€2,580</td>
+          <td class="luxury-price">€15,420</td>
+        </tr>
+        <tr id="pricing-rwanda">
+          <td>Rwanda</td>
+          <td class="budget-price">€2,120</td>
+          <td class="standard-price">€3,220</td>
+          <td class="luxury-price">€15,520</td>
+        </tr>
+        <tr id="pricing-benin">
+          <td>Benin</td>
+          <td class="budget-price">€1,010</td>
+          <td class="standard-price">€1,660</td>
+          <td class="luxury-price">€10,220</td>
+        </tr>
+        <tr id="pricing-morocco">
+          <td>Morocco</td>
+          <td class="budget-price">€550 – €920</td>
+          <td class="standard-price">€1,100 – €1,750</td>
+          <td class="luxury-price">€6,300 – €13,680</td>
+        </tr>
+        <tr id="pricing-algeria">
+          <td>Algeria</td>
+          <td class="budget-price">€1,100</td>
+          <td class="standard-price">€1,840</td>
+          <td class="luxury-price">€13,680</td>
+        </tr>
+        <tr id="pricing-zanzibar">
+          <td>Zanzibar</td>
+          <td class="budget-price">€1,400</td>
+          <td class="standard-price">€1,800</td>
+          <td class="luxury-price">On Request</td>
+        </tr>
+        <tr id="pricing-other">
+          <td>Other African Countries</td>
+          <td class="budget-price">Custom Quote</td>
+          <td class="standard-price">Custom Quote</td>
+          <td class="luxury-price">Custom Quote</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Trip detail modal ("See trip") -->
+  <div class="modal-overlay" id="trip-modal-overlay"
+    onclick="if(event.target===this) window.ItineraryUtils.closeModal('trip-modal-overlay')">
+    <div class="modal-box" id="trip-modal-box">
+      <button type="button" class="modal-close" aria-label="Close"
+        onclick="window.ItineraryUtils.closeModal('trip-modal-overlay')">&times;</button>
+      <div id="trip-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Booking modal ("Book") -->
+  <div class="modal-overlay" id="booking-modal-overlay"
+    onclick="if(event.target===this) window.ItineraryUtils.closeModal('booking-modal-overlay')">
+    <div class="modal-box" id="booking-modal-box">
+      <button type="button" class="modal-close" aria-label="Close"
+        onclick="window.ItineraryUtils.closeModal('booking-modal-overlay')">&times;</button>
+      <div id="booking-modal-content"></div>
+    </div>
+  </div>
+
+  <script src="itinerary-utils.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await window.ItineraryUtils.initItineraries();
+      window.ItineraryUtils.renderBrochureItineraries({ includeMorocco: false });
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 

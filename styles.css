@@ -396,7 +396,7 @@ a {
 
 /* Intro Section */
 .intro-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: var(--bg);
   border-bottom: 1px solid rgba(217, 210, 199, 0.5);
 }
@@ -425,7 +425,7 @@ a {
 
 /* Destinations Section */
 .destinations-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: rgba(234, 216, 192, 0.1);
 }
 
@@ -611,14 +611,14 @@ a {
 
 /* Pricing Section */
 .pricing-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: var(--card-bg);
   border-top: 1px solid rgba(217, 210, 199, 0.4);
 }
 
 /* Why Choose Us */
 .why-choose-us-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: var(--bg);
 }
 
@@ -1144,7 +1144,7 @@ a {
 
 /* Contact Section */
 .contact-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
   background-color: var(--bg);
   border-top: 1px solid rgba(217, 210, 199, 0.5);
   border-bottom: 1px solid rgba(217, 210, 199, 0.5);
@@ -1344,7 +1344,7 @@ a {
 }
 
 .experiences-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background: linear-gradient(180deg, rgba(249, 246, 240, 0.98) 0%, rgba(255, 255, 255, 0.84) 100%);
   overflow: hidden;
 }
@@ -1776,12 +1776,15 @@ a {
     padding: 1rem 1.4rem;
   }
 
+  .intro-section,
   .experiences-section,
   .destinations-section,
   .pricing-section,
   .why-choose-us-section,
+  .itinerary-section,
+  .packages-section,
   .contact-section {
-    padding: 4.5rem 0;
+    padding: 4rem 0;
   }
 
   .section-header {
@@ -1878,7 +1881,7 @@ a {
 
 /* ===== BROCHURE PACKAGES ===== */
 .packages-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: var(--bg);
 }
 .packages-header {
@@ -1997,7 +2000,7 @@ a {
 
 /* ===== BROCHURE ITINERARIES ===== */
 .itinerary-section {
-  padding: 8rem 0;
+  padding: 6rem 0;
   background-color: var(--card-bg);
 }
 .itinerary-inner {
@@ -2006,14 +2009,14 @@ a {
   padding: 0 2rem;
 }
 .itin-country-group {
-  margin-bottom: 5rem;
+  margin-bottom: 3rem;
   padding: 3rem;
   background: var(--bg);
   border-radius: 20px;
   border: 1px solid rgba(217, 210, 199, 0.4);
 }
 .itin-country-group + .itin-country-group {
-  margin-top: 3rem;
+  margin-top: 0;
 }
 .itin-country-label {
   font-family: var(--font-serif);
