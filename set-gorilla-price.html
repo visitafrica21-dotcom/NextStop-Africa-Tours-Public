@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set Gorilla Package Price — NextStop Africa</title>
+<style>
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: #FAFAF7;
+    color: #2a2421;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+    line-height: 1.6;
+  }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: #888; font-size: 13px; margin-bottom: 24px; }
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 16px; }
+  .card .meta { color: #999; font-size: 12px; margin-bottom: 10px; }
+  .card .price-row { font-size: 14px; }
+  .card .price-row b { color: #C84B31; }
+  #status {
+    margin: 20px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: none;
+  }
+  #status.success { display: block; background: #e9f7ef; color: #1a7a3f; }
+  #status.error { display: block; background: #fdecea; color: #b3261e; }
+  #status.info { display: block; background: #eef3ff; color: #2952a3; }
+  button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    background: #C84B31;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+  <h1>Set Gorilla Package Price</h1>
+  <p class="sub">Uganda's Budget price is now €993 for most packages. This applies a €1,200 Budget-tier price override specifically to "Uganda's Wild Heart: Gorilla Trekking & Cultural Escape," so it keeps its own price instead of following the new default. Safe to run more than once.</p>
+
+  <div id="found"></div>
+  <div id="status"></div>
+  <button id="apply-btn" disabled>Checking current data…</button>
+
+  <script src="itinerary-utils.js"></script>
+  <script>
+    const TARGET_COUNTRY = 'Uganda';
+    const TARGET_NAME = "Uganda's Wild Heart: Gorilla Trekking & Cultural Escape";
+    const OVERRIDE_BUDGET_PRICE = 1200;
+
+    function setStatus(kind, html) {
+      const el = document.getElementById('status');
+      el.className = kind;
+      el.innerHTML = html;
+    }
+
+    let targetItem = null;
+
+    async function load() {
+      const utils = window.ItineraryUtils;
+      await utils.initItineraries();
+      const items = await utils.getAllItinerariesAsync();
+      targetItem = items.find((it) =>
+        it.country === TARGET_COUNTRY &&
+        it.packageName.toLowerCase() === TARGET_NAME.toLowerCase()
+      );
+
+      const foundEl = document.getElementById('found');
+      const btn = document.getElementById('apply-btn');
+
+      if (!targetItem) {
+        foundEl.innerHTML = '<div class="card">Package not found yet — make sure you\'ve run the package sync tool first, then reload this page.</div>';
+        btn.textContent = 'Package Not Found';
+        btn.disabled = true;
+        return;
+      }
+
+      const currentOverride = targetItem.priceOverrides && targetItem.priceOverrides.budget;
+      foundEl.innerHTML = '<div class="card">' +
+        '<h3>' + utils.escapeHtml(targetItem.displayTitle || targetItem.packageName) + '</h3>' +
+        '<div class="meta">' + utils.escapeHtml(targetItem.country) + '</div>' +
+        '<div class="price-row">Current Budget override: <b>' + (currentOverride ? '€' + currentOverride.toLocaleString('en-US') : 'None (follows country default)') + '</b></div>' +
+      '</div>';
+
+      if (currentOverride === OVERRIDE_BUDGET_PRICE) {
+        btn.textContent = 'Already Set to €1,200';
+        btn.disabled = true;
+      } else {
+        btn.textContent = 'Set Budget Price to €1,200';
+        btn.disabled = false;
+      }
+    }
+
+    document.getElementById('apply-btn').addEventListener('click', async () => {
+      const btn = document.getElementById('apply-btn');
+      btn.disabled = true;
+      btn.textContent = 'Applying…';
+      setStatus('info', 'Working…');
+
+      try {
+        const utils = window.ItineraryUtils;
+        let items = await utils.getAllItinerariesAsync();
+        const idx = items.findIndex((it) => it.id === targetItem.id);
+        if (idx === -1) throw new Error('Package no longer found — it may have been deleted or renamed.');
+
+        items[idx].priceOverrides = Object.assign({}, items[idx].priceOverrides, { budget: OVERRIDE_BUDGET_PRICE });
+        await utils.saveItinerariesAsync(items);
+
+        setStatus('success', '&#10004; Done. "' + utils.escapeHtml(TARGET_NAME) + '" now shows €1,200 for the Budget tier, regardless of Uganda\'s country default. <a href="' + utils.resolveSitePath('brochure.html') + '" target="_blank">View on the brochure</a>');
+        btn.textContent = 'Done';
+      } catch (err) {
+        console.error(err);
+        setStatus('error', 'Something went wrong: ' + (err && err.message ? err.message : err));
+        btn.disabled = false;
+        btn.textContent = 'Set Budget Price to €1,200';
+      }
+    });
+
+    load().catch((err) => {
+      console.error(err);
+      setStatus('error', 'Could not load current data: ' + (err && err.message ? err.message : err));
+    });
+  </script>
+</body>
+</html>

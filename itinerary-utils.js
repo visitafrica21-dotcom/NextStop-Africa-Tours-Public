@@ -373,17 +373,26 @@
 
   /** All three tier prices (budget/standard/luxury) for a package's country,
    *  read straight from the pricing summary table already on the page. */
+  /** All three tier prices (budget/standard/luxury) for a package's country,
+   *  read from the pricing summary table — unless the specific package
+   *  carries its own priceOverrides (e.g. a gorilla-trekking package priced
+   *  above the country default), in which case the override wins per-tier. */
   function getTierPrices(itinerary) {
     const key = getCountryKey(itinerary.country);
     const row = document.getElementById('pricing-' + key);
-    if (!row) return { budget: null, standard: null, luxury: null };
-    const budgetCell = row.querySelector('.budget-price');
-    const standardCell = row.querySelector('.standard-price');
-    const luxuryCell = row.querySelector('.luxury-price');
-    return {
+    const budgetCell = row ? row.querySelector('.budget-price') : null;
+    const standardCell = row ? row.querySelector('.standard-price') : null;
+    const luxuryCell = row ? row.querySelector('.luxury-price') : null;
+    const countryPrices = {
       budget: budgetCell ? parseFirstPrice(budgetCell.textContent) : null,
       standard: standardCell ? parseFirstPrice(standardCell.textContent) : null,
       luxury: luxuryCell ? parseFirstPrice(luxuryCell.textContent) : null,
+    };
+    const overrides = (itinerary && itinerary.priceOverrides) || {};
+    return {
+      budget: typeof overrides.budget === 'number' ? overrides.budget : countryPrices.budget,
+      standard: typeof overrides.standard === 'number' ? overrides.standard : countryPrices.standard,
+      luxury: typeof overrides.luxury === 'number' ? overrides.luxury : countryPrices.luxury,
     };
   }
 
@@ -411,10 +420,11 @@
     const hasImage = Boolean(itinerary.image);
     const coverStyle = hasImage ? ` style="background-image:url('${escapeHtml(itinerary.image)}')"` : '';
     const coverClass = 'itin-card-cover' + (hasImage ? ' has-image' : '');
+    const countryKey = getCountryKey(itinerary.country);
     return `
-      <div class="itin-card">
+      <div class="itin-card" data-country="${escapeHtml(countryKey)}">
         <div class="${coverClass}"${coverStyle}>
-          <span class="itin-card-badge">Package ${escapeHtml(itinerary.packageNumber || '?')}</span>
+          <span class="itin-card-badge">${escapeHtml(itinerary.country)}</span>
         </div>
         <div class="itin-card-body">
           <h4 class="itin-card-title">${escapeHtml(getDisplayTitle(itinerary))}</h4>
@@ -428,6 +438,9 @@
       </div>`;
   }
 
+  /** Renders every package into one unified grid — no per-country sectioning.
+   *  Each card carries its own country name (badge) and a data-country
+   *  attribute the destination filter uses to show/hide individual cards. */
   function renderBrochureItineraries() {
     const itineraries = sortItineraries(
       ensurePackageNumbers(getBrochurePackages(getAllItinerariesSync()))
@@ -438,37 +451,20 @@
     itineraryIndex = {};
     itineraries.forEach((it) => { itineraryIndex[it.id] = it; });
 
-    const insertBefore = document.getElementById('itin-morocco');
-    const grouped = groupByCountry(itineraries);
-
-    const sortedKeys = [...grouped.keys()].sort((a, b) => {
-      const orderA = COUNTRY_ORDER.indexOf(a);
-      const orderB = COUNTRY_ORDER.indexOf(b);
-      const oa = orderA === -1 ? 999 : orderA;
-      const ob = orderB === -1 ? 999 : orderB;
-      if (oa !== ob) return oa - ob;
-      return a.localeCompare(b);
-    });
-
-    sortedKeys.forEach((key) => {
-      const { country, items } = grouped.get(key);
-      const countryGroup = getOrCreateCountryGroup(itinerarySection, country, insertBefore);
-      clearCountryGroup(countryGroup);
-
-      let gridContainer = countryGroup.querySelector('.itin-card-grid');
-      if (!gridContainer) {
-        gridContainer = document.createElement('div');
-        gridContainer.className = 'itin-card-grid';
-        countryGroup.appendChild(gridContainer);
+    let gridContainer = document.getElementById('itin-all-packages');
+    if (!gridContainer) {
+      gridContainer = document.createElement('div');
+      gridContainer.className = 'itin-card-grid';
+      gridContainer.id = 'itin-all-packages';
+      const insertBefore = document.getElementById('itin-morocco');
+      if (insertBefore) {
+        itinerarySection.insertBefore(gridContainer, insertBefore);
+      } else {
+        itinerarySection.appendChild(gridContainer);
       }
+    }
 
-      gridContainer.innerHTML = items.map((itinerary) => buildCardHtml(itinerary)).join('');
-    });
-
-    itinerarySection.querySelectorAll('.itin-country-group').forEach((group) => {
-      if (group.id === 'itin-morocco' || group.id === 'itin-other') return;
-      group.style.display = group.querySelector('.itin-card') ? '' : 'none';
-    });
+    gridContainer.innerHTML = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('');
   }
 
   /* ---------- Trip detail modal ("See trip") ---------- */
@@ -656,7 +652,6 @@
     box.innerHTML = html;
   }
 
-  const BOOKING_INBOX = 'visitafrica21@gmail.com';
   const BOOKING_FORM_ENDPOINT = 'https://formspree.io/f/meepakev';
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -730,8 +725,8 @@
         content.innerHTML = `
           <div class="booking-success">
             <h3>Request sent</h3>
-            <p>Thanks! Your booking request has been sent to <strong>${escapeHtml(BOOKING_INBOX)}</strong>.
-              Our team will reply to <strong>${escapeHtml(email)}</strong> within 24 hours to confirm availability.</p>
+            <p>Thanks! Your booking request has been sent to our team.
+              We'll reply to <strong>${escapeHtml(email)}</strong> within 24 hours to confirm availability.</p>
             <button type="button" class="btn-see-trip full-width" onclick="window.ItineraryUtils.closeModal('booking-modal-overlay')">Close</button>
           </div>`;
       }
@@ -740,7 +735,7 @@
         submitBtn.disabled = false;
         submitBtn.textContent = 'Send Booking Request';
       }
-      alert('Something went wrong sending your request. Please try again, or email us directly at ' + BOOKING_INBOX + '.');
+      alert('Something went wrong sending your request. Please try again in a moment.');
     }
   }
 

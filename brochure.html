@@ -2626,7 +2626,6 @@
   <!-- Countries Banner / Filter -->
   <div class="countries-banner" id="explore-destinations">
     <div class="countries-container">
-      <div class="banner-label">Filter by Destination</div>
       <div class="countries-list">
         <button type="button" class="country-link active" data-filter="all"
           onclick="window.filterByCountry('all', this)">All</button>
@@ -2660,41 +2659,8 @@
       <p style="color:#777;font-size:15px;font-weight:300;margin-top:8px;margin-bottom:56px;">All itineraries are fully
         customisable. Below are the packages currently available from our portfolio. More destinations coming soon.</p>
 
-      <!-- Country packages below are rendered from itinerary data -->
-      <div class="itin-country-group" id="itin-uganda">
-        <div class="itin-country-label">Uganda, The Pearl of Africa</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-algeria">
-        <div class="itin-country-label">Algeria, Sahara's Best Kept Secret</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-benin">
-        <div class="itin-country-label">Benin, Cradle of African Spirituality</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-rwanda">
-        <div class="itin-country-label">Rwanda, Land of a Thousand Hills</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-kenya">
-        <div class="itin-country-label">Kenya, The Heart of the Safari</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-tanzania">
-        <div class="itin-country-label">Tanzania, The Crater Highlands</div>
-        <div class="itin-card-grid"></div>
-      </div>
-
-      <div class="itin-country-group" id="itin-zanzibar">
-        <div class="itin-country-label">Zanzibar, The Spice Island</div>
-        <div class="itin-card-grid"></div>
-      </div>
+      <!-- All packages render here together, unsorted by country section — each card carries its own country label -->
+      <div class="itin-card-grid" id="itin-all-packages"></div>
 
       <!-- MOROCCO -->
       <div class="itin-country-group" id="itin-morocco">
@@ -2829,7 +2795,7 @@
           <tbody>
             <tr id="pricing-uganda">
               <td>Uganda</td>
-              <td class="budget-price">€1,200</td>
+              <td class="budget-price">€993</td>
               <td class="standard-price">€1,840</td>
               <td class="luxury-price">€15,000</td>
             </tr>
@@ -2959,25 +2925,23 @@
       btn.classList.add('active');
     }
 
-    /** Filters the Day-by-Day Journey Plans section by country. 'all' resets it.
-     *  Only ever reveals a group that actually has packages to show. */
+    /** Filters the Day-by-Day Journey Plans grid by country. 'all' resets it.
+     *  Filters individual cards (each carries its own data-country), plus the
+     *  Morocco "coming soon" and "Other Countries" informational panels. */
     window.filterByCountry = function filterByCountry(filterKey, btn) {
       document.querySelectorAll('.country-link').forEach((b) => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
 
-      const groups = document.querySelectorAll('.itinerary-inner > .itin-country-group');
-      groups.forEach((group) => {
-        const isSpecial = group.id === 'itin-morocco' || group.id === 'itin-other';
-        const hasCards = Boolean(group.querySelector('.itin-card'));
-        const matchesFilter = filterKey === 'all' || group.id === 'itin-' + filterKey;
-
-        if (!matchesFilter) {
-          group.style.display = 'none';
-          return;
-        }
-        // Only show a group if it actually has content (packages, or a "coming soon" panel).
-        group.style.display = (hasCards || isSpecial) ? '' : 'none';
+      document.querySelectorAll('#itin-all-packages .itin-card').forEach((card) => {
+        const matches = filterKey === 'all' || card.dataset.country === filterKey;
+        card.style.display = matches ? '' : 'none';
       });
+
+      const morocco = document.getElementById('itin-morocco');
+      if (morocco) morocco.style.display = (filterKey === 'all' || filterKey === 'morocco') ? '' : 'none';
+
+      const other = document.getElementById('itin-other');
+      if (other) other.style.display = (filterKey === 'all') ? '' : 'none';
 
       const itinerarySection = document.querySelector('.itinerary-section');
       if (itinerarySection) itinerarySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
