@@ -267,12 +267,48 @@ document.getElementById("preview-btn").addEventListener("click", async () => {
         </div>`;
 });
 
+function normalizeName(name) {
+    return String(name || "")
+        .toLowerCase()
+        .replace(/[:\-–—]/g, " ")
+        .replace(/[^\w\s]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
 document.getElementById("itinerary-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
     const data = getItineraryData();
     let itineraries = utils.ensurePackageNumbers(await utils.getAllItinerariesAsync());
+
+    // Duplicate check — only when adding a brand-new package (not editing).
+    // Compares NORMALIZED country + package name, catching both exact
+    // matches (e.g. "Sacred Benin: X" vs "Sacred Benin – X") AND cases where
+    // one name is contained within the other (e.g. "Rwanda Discovery" vs
+    // "Rwanda Discovery: 5 Nights / 6 Days of Culture, Nature & Adventure")
+    // — real-world duplicates rarely match character-for-character.
+    if (!editingId) {
+        const newCountryKey = utils.getCountryKey(data.country);
+        const newName = normalizeName(data.packageName);
+        const possibleDupe = itineraries.find((it) => {
+            if (utils.getCountryKey(it.country) !== newCountryKey) return false;
+            const existingName = normalizeName(it.packageName);
+            if (!existingName || !newName) return false;
+            return existingName === newName
+                || existingName.includes(newName)
+                || newName.includes(existingName);
+        });
+        if (possibleDupe) {
+            const proceed = confirm(
+                `A package for ${possibleDupe.country} called "${possibleDupe.packageName}" already exists.\n\n` +
+                `Adding this will create a DUPLICATE that visitors will see twice.\n\n` +
+                `Tap Cancel to go back (you can Edit the existing one instead), or OK to add it anyway.`
+            );
+            if (!proceed) return;
+        }
+    }
 
     if (editingId) {
         const index = itineraries.findIndex((it) => it.id === editingId);

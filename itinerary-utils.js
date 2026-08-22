@@ -510,13 +510,26 @@
     document.head.appendChild(script);
   }
 
+  /** Renders every package into one unified grid — no per-country sectioning.
+   *  Each card carries its own country name (badge) and a data-country
+   *  attribute the destination filter uses to show/hide individual cards.
+   *  Works on any page: uses #itin-all-packages if it's already in the HTML
+   *  (e.g. a homepage section), otherwise creates it inside .itinerary-inner
+   *  (brochure.html's own section). Pass { includeMorocco: false } to omit
+   *  the "coming soon" tile — e.g. for a homepage preview of ready packages.
+   *
+   *  Only shows packages that have a photo. Stray/incomplete entries (partial
+   *  duplicates, admin drafts still missing an image) never reach visitors —
+   *  they stay fully visible in manage-packages.html / the admin panel for
+   *  cleanup, since those tools call getBrochurePackages()/getAllItinerariesAsync()
+   *  directly and never go through this function. */
   function renderBrochureItineraries(options) {
     const opts = options || {};
     const includeMorocco = opts.includeMorocco !== false;
 
     const itineraries = sortItineraries(
       ensurePackageNumbers(getBrochurePackages(getAllItinerariesSync()))
-    );
+    ).filter((it) => Boolean(it.image));
 
     itineraryIndex = {};
     itineraries.forEach((it) => { itineraryIndex[it.id] = it; });
