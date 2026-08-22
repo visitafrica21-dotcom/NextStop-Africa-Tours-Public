@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /manage-packages.html
+Disallow: /deep-clean-packages.html
+Disallow: /sync-all-packages.html
+Disallow: /set-gorilla-price.html
+Disallow: /reorder-uganda-packages.html
+Disallow: /import-new-packages.html
+Disallow: /package-insertion-tool.html
+
+Sitemap: https://nextstopafricatours.com/sitemap.xml

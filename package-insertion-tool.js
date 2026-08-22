@@ -107,10 +107,14 @@ async function renderSavedPackagesList() {
     const listEl = document.getElementById("saved-packages-list");
     if (!listEl) return;
 
+    // Read-only refresh — do NOT write back here. Writing on every list
+    // view/refresh is exactly what let stale local data silently overwrite
+    // the shared worker (including resurrecting deleted duplicates). Saves
+    // should only ever happen from a deliberate action (add/edit/delete),
+    // which already call saveItinerariesAsync themselves where needed.
     let itineraries = utils.sortItineraries(
         utils.ensurePackageNumbers(utils.getBrochurePackages(await utils.getAllItinerariesAsync()))
     );
-    await utils.saveItinerariesAsync(itineraries);
 
     if (itineraries.length === 0) {
         listEl.innerHTML = '<p class="empty-packages-msg">No packages found.</p>';

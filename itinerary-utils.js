@@ -409,12 +409,16 @@
       ? `<div class="itin-card-price"><span class="from-label">From</span>${formatEUR(price)}<span class="pp-label"> / person</span></div>${usdHint(price)}`
       : `<div class="itin-card-price itin-card-price-quote">Custom Quote</div>`;
     const hasImage = Boolean(itinerary.image);
-    const coverStyle = hasImage ? ` style="background-image:url('${escapeHtml(itinerary.image)}')"` : '';
     const coverClass = 'itin-card-cover' + (hasImage ? ' has-image' : '');
+    const altText = `${getDisplayTitle(itinerary)} — ${itinerary.country} safari tour package`;
+    const imgTag = hasImage
+      ? `<img src="${escapeHtml(itinerary.image)}" alt="${escapeHtml(altText)}" class="itin-card-img" loading="lazy">`
+      : '';
     const countryKey = getCountryKey(itinerary.country);
     return `
       <div class="itin-card" data-country="${escapeHtml(countryKey)}">
-        <div class="${coverClass}"${coverStyle}>
+        <div class="${coverClass}">
+          ${imgTag}
           <span class="itin-card-badge">${escapeHtml(itinerary.country)}</span>
         </div>
         <div class="itin-card-body">
@@ -461,6 +465,51 @@
    *  (e.g. a homepage section), otherwise creates it inside .itinerary-inner
    *  (brochure.html's own section). Pass { includeMorocco: false } to omit
    *  the "coming soon" tile — e.g. for a homepage preview of ready packages. */
+  /** Injects/updates a single Schema.org ItemList of TouristTrip entries so
+   *  search engines can show rich results (price, itinerary) for packages.
+   *  Base64-embedded photos are skipped here (they'd bloat the JSON-LD) —
+   *  only real hosted image URLs get included. */
+  function injectPackageStructuredData(itineraries) {
+    const existing = document.getElementById('itin-structured-data');
+    if (existing) existing.remove();
+    if (!itineraries.length) return;
+
+    const itemListElement = itineraries.map((it, idx) => {
+      const price = getFromPrice(it);
+      const trip = {
+        '@type': 'TouristTrip',
+        name: getDisplayTitle(it),
+        description: it.tagline || it.packageDesc || `${it.nights} night ${it.country} safari package`,
+        touristType: 'Leisure'
+      };
+      if (it.image && /^https?:\/\//.test(it.image)) trip.image = it.image;
+      if (price) {
+        trip.offers = { '@type': 'Offer', price: String(price), priceCurrency: 'EUR', availability: 'https://schema.org/InStock' };
+      }
+      if (Array.isArray(it.dayByDay) && it.dayByDay.length) {
+        trip.itinerary = {
+          '@type': 'ItemList',
+          itemListElement: it.dayByDay.map((day, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: day.title
+          }))
+        };
+      }
+      return { '@type': 'ListItem', position: idx + 1, item: trip };
+    });
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'itin-structured-data';
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement
+    });
+    document.head.appendChild(script);
+  }
+
   function renderBrochureItineraries(options) {
     const opts = options || {};
     const includeMorocco = opts.includeMorocco !== false;
@@ -489,6 +538,7 @@
 
     const cardsHtml = itineraries.map((itinerary) => buildCardHtml(itinerary)).join('');
     gridContainer.innerHTML = includeMorocco ? cardsHtml + buildMoroccoCardHtml() : cardsHtml;
+    injectPackageStructuredData(itineraries);
   }
 
   /* ---------- Trip detail modal ("See trip") ---------- */

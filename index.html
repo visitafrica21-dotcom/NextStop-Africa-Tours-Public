@@ -13,11 +13,38 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NextStop Africa Tours Agency</title>
+  <title>African Safari Tours: Uganda, Rwanda & Gorilla Trekking | NextStop Africa Tours</title>
 
-  <meta property="og:title" content="NextStop Africa Tours Agency" />
-  <meta property="og:description" content="Explore Africa's beauty, culture, and adventure." />
+  <meta name="description"
+    content="Family-run tour operator crafting authentic African safaris and gorilla trekking tours in Uganda, Rwanda, Kenya, Tanzania &amp; beyond. Tailor-made packages, transparent pricing, personal guidance for travelers from Europe and worldwide.">
+  <link rel="canonical" href="https://nextstopafricatours.com/">
+
+  <meta property="og:title" content="African Safari Tours: Uganda, Rwanda & Gorilla Trekking | NextStop Africa Tours" />
+  <meta property="og:description" content="Family-run tour operator crafting authentic African safaris and gorilla trekking tours across Uganda, Rwanda, Kenya, Tanzania and beyond." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nextstopafricatours.com/" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "NextStop Africa Tours",
+    "url": "https://nextstopafricatours.com/",
+    "logo": "https://nextstopafricatours.com/images/logo.jpg",
+    "image": "https://nextstopafricatours.com/images/logo.jpg",
+    "telephone": "+256770307890",
+    "email": "inquire@nextstopafricatours.com",
+    "priceRange": "€€",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Lumumba Avenue, Kampala Central Division",
+      "addressLocality": "Kampala",
+      "addressCountry": "UG"
+    },
+    "areaServed": ["Uganda", "Rwanda", "Kenya", "Tanzania", "Algeria", "Benin", "Zanzibar", "Europe"],
+    "sameAs": []
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,18 +97,29 @@
       display: flex;
       align-items: flex-end;
       padding: 16px;
+      overflow: hidden;
+    }
+
+    .itin-card-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
     }
 
     .itin-card-cover.has-image::after {
       content: '';
       position: absolute;
       inset: 0;
+      z-index: 1;
       background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 60%);
     }
 
     .itin-card-badge {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       background: rgba(255, 255, 255, 0.92);
       color: var(--deep-green);
       font-size: 10px;
